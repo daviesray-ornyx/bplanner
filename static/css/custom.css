@@ -551,3 +551,16 @@ nav li {
 }
 
 /* End---Section-builder */
+
+.center-div {
+    position: absolute;
+    margin: auto;
+    right: 0;
+    top: 150px;
+    left: 0;
+    width: 450px;
+    height: auto;
+    border-radius: 3px;
+    text-align: center;
+    vertical-align: middle;
+}
