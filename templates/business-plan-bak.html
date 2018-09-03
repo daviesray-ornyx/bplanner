@@ -1,0 +1,363 @@
+{% extends "base-dashboard.html" %}
+{% load static from staticfiles %}
+
+{% block dashboard_content %}
+
+    <div class="page-container" style="min-height:591px">
+		<!-- Page content -->
+		<div class="page-content">
+			<!-- Main content -->
+			<div class="content-wrapper">
+
+				<!-- Info alert -->
+{#				<div class="alert alert-info alert-styled-left alert-arrow-left alert-component">#}
+{#					<button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>#}
+{#					<h6 class="alert-heading text-semibold">Affix and Scrollspy</h6>#}
+{#					This is an example of Affix and Scrollspy bootstrap components working together. Scroll down or use the links in the right nav menu to navigate the page.#}
+{#			    </div>#}
+			    <!-- /info alert -->
+                <div class="row padd-20">
+                    <form method="post" action="/dashboard/new/business-plan" style="width: 100%">
+                        <div id="smartwizard" style="width: 100%">
+{#                            http://www.lutcte.cn/service/extra_affix.html#}
+                            <ul class="nav flex-column">
+                                <li><a href="#step-1">1. Title Page<br /><small></small></a></li>
+                                <li class="">
+                                    <span class="">2. Mission & Vission Statement</span>
+                                    <ul class="nav flex-column inner-ul">
+                                        <li><a href="#step-2"><i class="fa fa-caret-right"></i> Mission</a></li>
+                                        <li><a href="#step-2"><i class="fa fa-caret-right"></i> Vission</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#step-3">3. Executive Summary<br /><small></small></a></li>
+                                <li><a href="#step-4">4. Company Description<br /><small></small></a></li>
+                                <li><a href="#step-5">5. Key Success Factors<br /><small></small></a></li>
+                                <li><a href="#step-6">6. Objectives<br /><small></small></a></li>
+                                <li><a href="#step-7">7. Industry Analysis<br /><small></small></a></li>
+                                <li>
+                                    <span class="">8. TAM-SAM-SOM Analysis </span>
+                                    <ul class="nav flex-column inner-ul">
+                                        <li><a href="#step-2"><i class="fa fa-caret-right"></i> TAM</a></li>
+                                        <li><a href="#step-2"><i class="fa fa-caret-right"></i> SAM</a></li>
+                                        <li><a href="#step-2"><i class="fa fa-caret-right"></i> SOM</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <span class="">9. SWOT Analysis</span>
+                                    <ul class="nav flex-column inner-ul">
+                                        <li><a href="#step-2"><i class="fa fa-caret-right"></i> Strengths</a></li>
+                                        <li><a href="#step-2"><i class="fa fa-caret-right"></i> Weaknesses</a></li>
+                                        <li><a href="#step-2"><i class="fa fa-caret-right"></i> Opportunities</a></li>
+                                        <li><a href="#step-2"><i class="fa fa-caret-right"></i> Threats</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#step-10">10. Insights<br /><small></small></a></li>
+                                <li><a href="#step-11">11. Marketing Plan<br /><small></small></a></li>
+                                <li><a href="#step-12">12. Ownership & Management Plan<br /><small></small></a></li>
+                                <li><a href="#step-13">13. Milestones<br /><small></small></a></li>
+                                <li><a href="#step-14">14. Finance<br /><small></small></a></li>
+                                <li><a href="#step-15">15. References<br /><small></small></a></li>
+                            </ul>
+                            <div class="content">
+                                <div id="step-1" class="">
+                                    <div class="alert-styled-left">
+                                        <div class="alert-info">
+                                            info
+                                        </div>
+                                        <div class="alert-info-text text-small text-muted">
+                                            <div class="alert-heading">Title Page Information</div>
+                                            <a href="/-/help" target="_blank" class="text-underline" title="Open advanced help in a new tab"> Need more help <i class="fas fa-question-circle text-info"  title="Advanced help"></i></a>
+                                        </div>
+                                    </div>
+                                    <br/>
+
+                                    <div class="form-group">
+                                        <label for="cover-company_name" class="">Company Name </label>
+                                        <input type="text" class="form-control col-md-6" name="cover-company_name" placeholder="Company, Business, or Project name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cover-tagline" class="">Your Tagline </label>
+                                        <input type="text" class="form-control col-md-6" name="cover-tagline" placeholder="Tagline" required="">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tagline" class="">Contact information </label>
+                                        <div class="">
+                                            <input type="text" class="form-control col-md-5 grouped-input" name="cover-business_address" placeholder="Company/Business/Project name" required>
+                                            <input type="text" class="form-control col-md-5 grouped-input" name="cover-phone" placeholder="Phone number" required>
+                                            <input type="email" class="form-control col-md-5 grouped-input" name="cover-email" placeholder="Email" required>
+                                            <input type="text" class="form-control col-md-5 grouped-input" name="cover-website" placeholder="Website" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cover-presented_to" class="">If adressing to a company or individual include:</label>
+                                        <input type="text" class="form-control col-md-6 grouped-input" name="cover-presented_to" placeholder="Presented to" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cover-logo " class="">Logo input</label>
+                                        <input type="file" class="form-control-file" name="cover-logo" aria-describedby="fileHelp">
+                                        <small id="fileHelp" class="form-text text-muted">This image/logo will be displayed in the generated business plan document. Ensure you use your intended/final logo.</small>
+                                    </div>
+
+                                </div>
+                                <div id="step-2" class="">
+                                    <div class="alert-styled-left">
+                                        <div class="alert-info">
+                                            info
+                                        </div>
+                                        <div class="alert-info-text text-small text-muted">
+                                            <div class="alert-heading "> Mission & Vision Statement</div>
+                                            This section explains the why the business exists. It expounds on the company's values and what does it aim to accomplish in the long run.  The mission and vision statement should be concise and clear lines. It should be the ethos of the organisation and ingrained in the organisation.
+                                            <br/><a href="/-/help?section=02_mission_and_vision_statement" target="_blank" class="text-underline alert-info-help" title="Open advanced help in a new tab"> Need more help <i class="fas fa-question-circle text-info"  title="Advanced help"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="executive_summary" class="alert-heading">Mission Statement</label>
+                                        <textarea class="form-control" name="mission_statement" placeholder="Type your mission statement" rows="3" wrap="hard"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="executive_summary" class="alert-heading">Vision Statement</label>
+                                        <textarea class="form-control" name="vision_statement" placeholder="Type your vision statement" rows="3" wrap="hard"></textarea>
+                                    </div>
+                                </div>
+                                <div id="step-3" class="">
+                                    <div class="alert-styled-left">
+                                        <div class="alert-info">
+                                            info
+                                        </div>
+                                        <div class="alert-info-text text-small text-muted">
+                                            <div class="alert-heading"> Executive summary</div>
+                                            The executive summary of a business is a brief introduction of the entire business plan. It provides a short, concise, and optimistic overview of business that captures the reader's attention. The executive summary is usually the first thing a reader will read and if it's poorly written, it will also be the last thing. The executive summary should be relatively short and succinct.
+                                            <br/><a href="/-/help?section=03_executive_summary" target="_blank" class="text-underline" title="Open advanced help in a new tab"> Need more help <i class="fas fa-question-circle text-info"  title="Advanced help"></i></a>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+{#                                        <label for="executive_summary">Example textarea</label>#}
+                                        <textarea class="form-control" name="executive_summary" placeholder="Executive summary..." rows="25" wrap="hard"></textarea>
+                                    </div>
+                                </div>
+                                <div id="step-4" class="">
+                                    <div class="alert-styled-left">
+                                        <div class="alert-info">
+                                            info
+                                        </div>
+                                        <div class="alert-info-text text-small text-muted">
+                                            <div class="alert-heading">Company Description</div>
+                                            A company description provides a basic and useful introduction. It provides the key deyails about a company. It gives out vital information such as where company is located, how large the company is, what is the business of the company and what company wishes to accomplish. It should give a brief intro about what products and services does the company offer.
+                                            <br/><a href="/-/help?section=04_company_description" target="_blank" class="text-underline" title="Open advanced help in a new tab"> Need more help <i class="fas fa-question-circle text-info"  title="Advanced help"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <textarea class="form-control no-border" name="company_description" placeholder="Click to start writing..." rows="20" wrap="hard"></textarea>
+                                    </div>
+                                </div>
+                                <div id="step-5" class="">
+                                    <div class="alert-styled-left">
+                                        <div class="alert-info">
+                                            info
+                                        </div>
+                                        <div class="alert-info-text text-small text-muted">
+                                            <div class="alert-heading">Key Success Factors</div>
+                                             Key success factors are key indicators and milestones that company sets to measure the success of the company. It assists the management in assessing their performance based on strentghs of business or its management team or personnel.
+                                            <br/><a href="/-/help?section=05_key_success_factors" target="_blank" class="text-underline" title="Open advanced help in a new tab"> Need more help <i class="fas fa-question-circle text-info"  title="Advanced help"></i></a>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <textarea class="form-control"  name="key_success_factors" placeholder="Key success factors..." rows="25" wrap="hard"></textarea>
+                                    </div>
+                                </div>
+                                <div id="step-6" class="">
+                                    <div class="alert-styled-left">
+                                        <div class="alert-info">
+                                            info
+                                        </div>
+                                        <div class="alert-info-text text-small text-muted">
+                                            <div class="alert-heading">Objectives</div>
+                                            Objectives highlights the long term goals of the company in the form of financial, strategic and operational segment. Objectives should be SMART and realistic.
+                                            <br/>The SMART (<strong>Specific, Measurable, Achievable, Realistic, and Timed</strong>) structure is useful for testing assumptions and ensuring that it can really be implemented.
+                                            <br/><a href="/-/help?section=06_objectives" target="_blank" class="text-underline" title="Open advanced help in a new tab"> Need more help <i class="fas fa-question-circle text-info"  title="Advanced help"></i></a>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <textarea class="form-control" name="objectives" placeholder="Objectives..." rows="25" wrap="hard"></textarea>
+                                    </div>
+                                </div>
+                                <div id="step-7" class="">
+                                    <div class="alert-styled-left">
+                                        <div class="alert-info">
+                                            info
+                                        </div>
+                                        <div class="alert-info-text text-small text-muted">
+                                            <div class="alert-heading">Industry Analysis</div>
+                                            In this section, you will provide the data and statistics regarding the industry and markets in which the company plans to enter.  Analysing the information will enable you to identify the risks and opportunities confronting the company and develop strategies to take the full benefit of opportunities and devising the ways to minimise the impact of adverse situations.  
+                                            <br/><a href="/-/help?section=07_industry_analysis" target="_blank" class="text-underline" title="Open advanced help in a new tab"> Need more help <i class="fas fa-question-circle text-info"  title="Advanced help"></i></a>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <textarea class="form-control" name="industry_analysis" placeholder="Industry analysis..." rows="20" wrap="hard"></textarea>
+                                    </div>
+                                </div>
+                                <div id="step-8" class="">
+                                    <div class="alert-styled-left">
+                                        <div class="alert-info">
+                                            info
+                                        </div>
+                                        <div class="alert-info-text text-small text-muted">
+                                            <div class="alert-heading">TAM-SAM-SOM Analysis</div>
+                                            <p>
+                                                The analysis provides an idea about the size of the industry which is targeted by the company. Investors are always looking for the profitable ventures so that their investments gets multiplied. This analysis will help the potential investors to take the decisions with regard to pooling their money into the venture or not.
+                                                <br/><a href="/-/help?section=08_tam_sam_som_analysis" target="_blank" class="text-underline" title="Open advanced help in a new tab"> Need more help <i class="fas fa-question-circle text-info"  title="Advanced help"></i></a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <textarea class="form-control" name="tam_sam_som_analysis" placeholder="TAM, SAM, and SOM analysis..." rows="25" wrap="hard"></textarea>
+                                    </div>
+                                </div>
+                                <div id="step-9" class="">
+                                    <div class="alert-styled-left">
+                                        <div class="alert-info">
+                                            info
+                                        </div>
+                                        <div class="alert-info-text text-small text-muted">
+                                            <div class="alert-heading">SWOT Analysis</div>
+                                            <p>
+                                                SWOT anlaysis is the summary of strengths, weaknesses, opportunities and threats being faced by the company for operating in the targeted industry. Company can perform a SWOT analysis as a way of deciding which marketing strategy to implement.
+                                                <br/><a href="/-/help?section=09_swot_analysis" target="_blank" class="text-underline" title="Open advanced help in a new tab"> Need more help <i class="fas fa-question-circle text-info"  title="Advanced help"></i></a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="step-10" class="">
+                                    <div class="alert-styled-left">
+                                        <div class="alert-info">
+                                            info
+                                        </div>
+                                        <div class="alert-info-text -small text-muted">
+                                            <div class="alert-heading">Insights</div>
+                                            <p>
+                                                Insight provides an idea to the potential investors about the growth opportunities which will be captured by the company and how the company will take effective decisions leading to the success of the business in future.
+                                                <br/><a href="/-/help?section=10_insights" target="_blank" class="text-underline" title="Open advanced help in a new tab"> Need more help <i class="fas fa-question-circle text-info"  title="Advanced help"></i></a>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+{#                                        <label for="executive_summary">Example textarea</label>#}
+                                        <textarea class="form-control" name="insights" placeholder="Insights..." rows="25" wrap="hard"></textarea>
+                                    </div>
+                                </div>
+                                <div id="step-11" class="">
+                                    <div class="alert-styled-left">
+                                        <div class="alert-info">
+                                            info
+                                        </div>
+                                        <div class="alert-info-text text-small text-muted">
+                                            <div class="alert-heading">Marketing Plan</div>
+                                            <p>
+                                                The marketing plan section of the business plan explains how company is going to get their customers to buy its products and/or services. The plan should explain the characteristics of your market and suggest how much of the market company is expecting  to capture. A strong Market plan also shows why customers want to buy what you offer rather that the competition’s products or services.
+                                                <br/><a href="/-/help?section=11_marketing_plan" target="_blank" class="text-underline" title="Open advanced help in a new tab"> Need more help <i class="fas fa-question-circle text-info"  title="Advanced help"></i></a>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <textarea class="form-control" name="marketing_plan" placeholder="Marketing plan..." rows="25" wrap="hard"></textarea>
+                                    </div>
+                                </div>
+                                <div id="step-12" class="">
+                                    <div class="alert-styled-left">
+                                        <div class="alert-info">
+                                            info
+                                        </div>
+                                        <div class="alert-info-text text-small text-muted">
+                                            <div class="alert-heading">Ownership and Management Plan</div>
+                                            <p>
+                                                The Management and Ownership section of a business plan features short (one to three paragraphs) biographies of the key personnel involved in forming and running the business. It covers the sections like management summary, personnel hiring plan, corporate structure and job descriptions etc.
+                                                <br/><a href="/-/help?section=12_ownership_and_management_plan" target="_blank" class="text-underline" title="Open advanced help in a new tab"> Need more help <i class="fas fa-question-circle text-info"  title="Advanced help"></i></a>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <textarea class="form-control" name="ownership_and_management_plan" placeholder="Ownership & Management plan..." rows="25" wrap="hard"></textarea>
+                                    </div>
+                                </div>
+                                <div id="step-13" class="">
+                                    <div class="alert-styled-left">
+                                        <div class="alert-info">
+                                            info
+                                        </div>
+                                        <div class="alert-info-text text-small text-muted">
+                                            <div class="alert-heading">Milestones</div>
+                                            <p>
+                                                Milestones breakdown a plan into quantifiable dates with specific deadlines, and management responsibilities. Milestones lists all key actions and goals for products, services, marketing, administration, and finance. It includes launch dates, review dates, prototype availabilities, advertising, social media, website development, and programs to generate leads and traffic. It also includes goals in terms of reaching X sales by Y date etc.
+                                                <br/><a href="/-/help?section=13_milestones" target="_blank" class="text-underline" title="Open advanced help in a new tab"> Need more help <i class="fas fa-question-circle text-info"  title="Advanced help"></i></a>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <textarea class="form-control" name="milestones" placeholder="Milestones..." rows="25" wrap="hard"></textarea>
+                                    </div>
+                                </div>
+                                <div id="step-14" class="">
+                                    <div class="alert-styled-left">
+                                        <div class="alert-info">
+                                            info
+                                        </div>
+                                        <div class="alert-info-text text-small text-muted">
+                                            <div class="alert-heading">Finance</div>
+                                            <p>
+                                                The financial section of the template is intended for business planning purposes only. If financial tables are to be used for any other purpose other than cash flow management, then we strongly recommend you consult an accountant or tax advisor
+                                                <br/><a href="/-/help?section=14_finance" target="_blank" class="text-underline" title="Open advanced help in a new tab"> More help <i class="fas fa-question-circle text-info"  title="Advanced help"></i></a>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+{#                                        <label for="executive_summary">Example textarea</label>#}
+                                        <textarea class="form-control no-border" name="finance" placeholder="References..." rows="20" wrap="hard"></textarea>
+                                    </div>
+                                </div>
+                                <div id="step-15" class="">
+                                    <div class="alert-styled-left">
+                                        <div class="alert-info">
+                                            info
+                                        </div>
+                                        <div class="alert-info-text text-small text-muted">
+                                            <div class="alert-heading">References</div>
+                                            <p>
+                                                References are included at the end of the business plan to enable the readers to cross check the information provided in the business plan.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+{#                                        <label for="executive_summary">Example textarea</label>#}
+                                        <textarea class="form-control no-border" name="references" placeholder="References..." rows="20" wrap="hard"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+			</div>
+        </div>
+		<!-- /page content -->
+
+
+		<!-- Footer -->
+		<div class="footer text-muted">
+			© 2018. <a href="#">Business Plan Developer</a> by <a href="#" target="_blank">Davies Ray</a>
+		</div>
+		<!-- /footer -->
+
+	</div>
+{% endblock %}

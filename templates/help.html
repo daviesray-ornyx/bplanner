@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+
+{% block page_content %}
+    <!-- page content -->
+    <div class="right_col" role="main"  style="background-color: #ffffff;">
+      <div class="container-fluid">
+        <div class="page-title">
+{#              <div class="title_left">#}
+{#                <h3>Projects <small>Listing design</small></h3>#}
+{#              </div>#}
+
+{#              <div class="title_right">#}
+{#                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">#}
+{#                  <div class="input-group">#}
+{#                    <input type="text" class="form-control" placeholder="Search for...">#}
+{#                    <span class="input-group-btn">#}
+{#                      <button class="btn btn-default" type="button">Go!</button>#}
+{#                    </span>#}
+{#                  </div>#}
+{#                </div>#}
+{#              </div>#}
+        </div>
+
+        <div class="clearfix"></div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="x_panel" style="border: none;">
+              <div class="x_content">
+                <div class="row">
+                    <div class="sm-10 sm-off-1 lg-8 lg-off-2 xxl-6 xxl-off-3">
+                        <div class="alert-styled-left">
+                            <div class="alert-info">
+                                info
+                            </div>
+                            <div class="alert-info-text text-small text-muted">
+                                <div class="alert-heading "> {{ help_section.title | safe }}</div>
+                                {{ help_section.description | safe }}
+                            </div>
+                        </div>
+                      <div class="textStack">
+                          {% for rel_help_sub_section in help_section.rel_help_sections.all %}
+                              <div class="help-subsection">
+                                  <h6 class="help-subsection-title">
+                                    {{ rel_help_sub_section.title | safe }}
+                                  </h6>
+                                  <p class="text-muted help-subsection-instruction">{{ rel_help_sub_section.instruction | safe }}</p>
+            {#                     Iterating through examples#}
+                                  <div class="examples-container">
+                                  <h6 class="examples-container-title">Examples</h6>
+                                  {% for rel_help_sub_section_example in rel_help_sub_section.rel_help_sub_section_examples.all %}
+                                      <div class="example-container">
+                                          <div class="example-title text-muted">
+                                            <strong>{{ rel_help_sub_section_example.title }}</strong>
+                                          </div>
+                                          <div class="example-text text-muted">
+                                            {{ rel_help_sub_section_example.example | safe }}
+                                          </div>
+                                      </div>
+                                  {% endfor %}
+                                  </div>
+                              </div>
+                          {% endfor %}
+                      </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}

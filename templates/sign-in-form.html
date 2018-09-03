@@ -1,0 +1,31 @@
+<form class="auth-form" method="post" action="/-/login">
+    {% csrf_token %}
+    <h2 class="modal-h3">Sign In</h2>
+{#    <p>Please use your work email address, so we can connect you with your team in Business Planner.</p>#}
+    <div class="form-input-content-left">
+        <div class="form-group">
+            <label for="emailInput" class="bold-p">Email address</label>
+            <input type="email" class="form-control" name="email" aria-describedby="emailHelp"
+                   placeholder="Enter email" required>
+            <small id="emailHelp" class="form-text text-muted">Enter your email address. Format &nbsp;(name@company.com).</small>
+        </div>
+        <div class="form-group">
+            <label for="passwordInput" class="bold-p">Password</label>
+            <input type="password" class="form-control" name="password" aria-describedby="emailHelp"
+                   placeholder="Enter password" required>
+        </div>
+        {% if status != 'NEW' %}
+        <div class="form-group">
+            <small class="form-text {% if status == 'ERR' %}text-danger {% else %} text-success {% endif %}">{{ message }}</small>
+        </div>
+        {% endif %}
+        <div class="form-group">
+            <button type="submit" class="form-control button -large">
+                Sign In
+            </button>
+        </div>
+
+    </div>
+    <p class="bold-p hover-underline"><a href="/-/password/reset">Forgot password?</a> </p>
+    <p>Don't have an account? <a class="bold-a" href="/-/register">Sign up</a></p>
+</form>

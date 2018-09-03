@@ -1,0 +1,209 @@
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>SME Business Planner | </title>
+
+{#      This is a nice example of a good design...#}
+
+    <!-- Bootstrap -->
+    <link href="{% static 'vendors/bootstrap/dist/css/bootstrap.min.css'%}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="{% static 'vendors/font-awesome/css/font-awesome.min.css'%}" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="{% static 'vendors/nprogress/nprogress.css' %}" rel="stylesheet">
+    <!-- iCheck -->
+    <link href="{% static 'vendors/iCheck/skins/flat/green.css' %}" rel="stylesheet">
+
+    <!-- Datatables -->
+    <link href="{% static 'vendors/datatables.net-bs/css/dataTables.bootstrap.min.css'%}" rel="stylesheet">
+    <link href="{% static 'vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css'%}" rel="stylesheet">
+    <link href="{% static 'vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css'%}" rel="stylesheet">
+    <link href="{% static 'vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css'%}" rel="stylesheet">
+    <link href="{% static 'vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css'%}" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="{% static 'css/custom-gentellela.css' %}" rel="stylesheet">
+    <link href="{% static 'css/custom.css' %}" rel="stylesheet">
+  </head>
+
+  <body class="nav-md footer_fixed" style="background-color: #fff;">
+    <div class="container body">
+      <div class="main_container">
+        <!-- top navigation -->
+        <div id="top_nav" class="top_nav">
+          <div class="nav_menu" style="background-color: #3a7fd5; color: #f3f3f3;">
+            <nav>
+                <ul class="nav navbar-nav navbar-left">
+                    <li><a href="/"><h3>SME Business Planner |</h3></a></li>
+                    {% if user.username != '' %}
+                    <li style="margin-top: 10px;"><a href="/dashboard/new/business-plan" class="collapse-link scalable" ><i class="fa fa-plus"></i> New Business Plan</a></li>
+                    {% else %}
+
+                    {% endif %}
+                </ul>
+
+              <ul class="nav navbar-nav navbar-right" style="margin-top: 8px;">
+
+                {% if user.username != '' %}
+                <li class="">
+                  <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <img src="{% static 'imgs/img.jpg' %}" alt="">{{ user.username }}
+                    <span class=" fa fa-angle-down"></span>
+                  </a>
+
+                  <ul class="dropdown-menu dropdown-usermenu pull-right">
+                    <li><a href="-/logout"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                  </ul>
+                </li>
+                <li class="">
+                  <a href="javascript:;" class="user-profile dropdown-toggle scalable" data-toggle="dropdown" aria-expanded="false">
+                    Samples
+                  </a>
+                  <ul class="dropdown-menu dropdown-usermenu pull-right">
+                      <li><a href="{% static 'files/Business Plan Sample Art Organization.xlsx' %}" target="_blank" >Art organization</a></li>
+                      <li><a href="{% static 'files/Business Plan Sample Non-Profit Organisation.xlsx'%}" target="_blank" > Non-profit organization</a></li>
+                  </ul>
+                </li>
+                <li class="">
+                  <a href="javascript:;" class="user-profile dropdown-toggle scalable" data-toggle="dropdown" aria-expanded="false">
+                    Guide <span class=" fa fa-question-circle"></span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-usermenu pull-right">
+                      <li><a href="/-/help?section=01" target="_blank" >Title page</a></li>
+                      <li><a href="/-/help?section=02_mission_and_vision_statement" target="_blank" > Mission & Vision Statement</a></li>
+                      <li><a href="/-/help?section=03_executive_summary" target="_blank" > Executive summary</a></li>
+                      <li><a href="/-/help?section=04_company_description" target="_blank" > Company Description</a></li>
+                      <li><a href="/-/help?section=05_key_success_factors" target="_blank" > Key Success Factors</a></li>
+                      <li><a href="/-/help?section=06_objectives" target="_blank" > Objectives</a></li>
+                      <li><a href="/-/help?section=07_industry_analysis" target="_blank" > Industry Analysis</a></li>
+                      <li><a href="/-/help?section=08_tam_sam_som_analysis" target="_blank" > TAM-SAM-SOM Analysis</a></li>
+                      <li><a href="/-/help?section=09_swot_analysis" target="_blank" > SWOT Analysis</a></li>
+                      <li><a href="/-/help?section=10_insights" target="_blank" > Insights</a></li>
+                      <li><a href="/-/help?section=11_marketing_plan" target="_blank" > Marketing Plan</a></li>
+                      <li><a href="/-/help?section=12_ownership_and_management_plan" target="_blank" > Ownership and Management Plan</a></li>
+                      <li><a href="/-/help?section=13_milestones" target="_blank" > Milestones</a></li>
+                  </ul>
+                </li>
+                <li class="">
+                    <a href="dashboard"  class="nav-link scalable">Dashboard</a>
+                </li>
+                {% else %}
+
+                    <li class="">
+                        <a  class="nav-link" data-toggle="modal" data-target="#signup">Register</a>
+                    </li>
+                    <li class="">
+                        <a  class="nav-link" data-toggle="modal" data-target="#signin">Login</a>
+                    </li>
+                    <li class="">
+                        <a  class="nav-link">About</a>
+                    </li>
+
+                {% endif %}
+
+              </ul>
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        {% block page_content %}
+
+        {% endblock %}
+        <!-- /page content -->
+
+        <!-- footer content -->
+{#        <footer id="footer">#}
+{#          <div class="pull-right">#}
+{#            <span id="step_toggle" class="btn btn-warning">Show Steps</span>#}
+{#            <span id="step_finish" class="btn btn-default">Finish</span>#}
+{#            <span id="step_next" class="btn btn-success">Next</span>#}
+{#            <span id="step_previous" class="btn btn-primary">Previous</span>#}
+{#          </div>#}
+{#          <div class="clearfix"></div>#}
+{#        </footer>#}
+        <!-- /footer content -->
+            <div class="modal fade" id="signup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                      {% include "sign-up-form.html" %}
+                    </div>
+                </div>
+              </div>
+          </div>
+
+          <div class="modal fade" id="signin" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                      {% include "sign-in-form.html" %}
+                    </div>
+                </div>
+              </div>
+          </div>
+
+          <div class="modal fade" id="reset-password" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                      {% include "password-reset-form.html" %}
+                    </div>
+                </div>
+              </div>
+          </div>
+      </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="{% static 'vendors/jquery/dist/jquery.min.js' %}"></script>
+    <!-- Bootstrap -->
+    <script src="{% static 'vendors/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    <!-- FastClick -->
+    <script src="{% static 'vendors/fastclick/lib/fastclick.js' %}"></script>
+    <!-- NProgress -->
+    <script src="{% static 'vendors/nprogress/nprogress.js' %}"></script>
+    <!-- bootstrap-progressbar -->
+    <script src="{% static 'vendors/bootstrap-progressbar/bootstrap-progressbar.min.js' %}"></script>
+
+     <!-- jQuery Smart Wizard -->
+    <script src="{% static 'vendors/jQuery-Smart-Wizard/js/jquery.smartWizard.js' %}"></script>
+
+    <!-- bootstrap-wysiwyg -->
+    <link href="{% static 'vendors/google-code-prettify/bin/prettify.min.css' %}" rel="stylesheet">
+
+    <!-- Datatables -->
+    <script src="{% static 'vendors/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'vendors/datatables.net-bs/js/dataTables.bootstrap.min.js' %}"></script>
+    <script src="{% static 'vendors/datatables.net-buttons/js/dataTables.buttons.min.js' %}"></script>
+    <script src="{% static 'vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js' %}"></script>
+    <script src="{% static 'vendors/datatables.net-buttons/js/buttons.flash.min.js' %}"></script>
+    <script src="{% static 'vendors/datatables.net-buttons/js/buttons.html5.min.js' %}"></script>
+    <script src="{% static 'vendors/datatables.net-buttons/js/buttons.print.min.js' %}"></script>
+    <script src="{% static 'vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js' %}"></script>
+    <script src="{% static 'vendors/datatables.net-keytable/js/dataTables.keyTable.min.js' %}"></script>
+    <script src="{% static 'vendors/datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js' %}"></script>
+    <script src="{% static 'vendors/datatables.net-scroller/js/dataTables.scroller.min.js' %}"></script>
+    <script src="{% static 'vendors/jszip/dist/jszip.min.js' %}"></script>
+    <script src="{% static 'vendors/pdfmake/build/pdfmake.min.js' %}"></script>
+    <script src="{% static 'vendors/pdfmake/build/vfs_fonts.js' %}"></script>
+
+    <!-- bootstrap-wysiwyg -->
+    <script src="{% static 'vendors/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js' %}"></script>
+    <script src="{% static 'vendors/jquery.hotkeys/jquery.hotkeys.js' %}"></script>
+    <script src="{% static 'vendors/google-code-prettify/src/prettify.js' %}"></script>
+
+    <!-- Custom Theme Scripts -->
+    <script src="{% static 'js/custom-gentellela.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+  </body>
+</html>

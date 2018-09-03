@@ -1,0 +1,228 @@
+{% extends "base-dashboard.html" %}
+{% load static from staticfiles %}
+
+{% block dashboard_content %}
+
+    <div class="page-container">
+			<!-- Main content -->
+        <div class="content-wrapper">
+            <form method="post" action="/dashboard/new/business-plan" style="width: 100%; height: 100%; overflow: visible;" autocomplete="off">
+                 {% csrf_token %}
+                <div class="alert-styled-left">
+                    <div class="alert-info">
+                        info
+                    </div>
+                    <div class="alert-info-text text-small text-muted">
+                        <div class="alert-heading">Finance</div>
+                        <p>
+                            The financial section of the template is intended for business planning purposes only. If financial tables are to be used for any other purpose other than cash flow management, then we strongly recommend you consult an accountant or tax advisor
+                            <br/><a href="/-/help?section=14_finance" target="_blank" class="text-underline" title="Open advanced help in a new tab"> More help <i class="fas fa-question-circle text-info"  title="Advanced help"></i></a>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="content-bordered">
+                    <table id="finance-1" class="table table-x2">
+                        <thead>
+                            <tr>
+                                <td colspan="2"><span class="table-heading">Assumptions Details</span></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="td-label"><span class="input-label">Currency</span></td>
+                                <td class="td-input" style="width: 300px;">
+                                    <select class="form-control" id="assumptions_currency" required="required">
+                                        {% for currency in currencies %}
+                                            <option value="{{ currency.id }}">{{ currency.code }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="td-label"><span class="input-label">Business Name</span></td>
+                                <td>
+                                    <input type="text" class="form-control" id="assumptions_business_name" placeholder="Name of Business" required="required">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="td-label"><span class="input-label">Financial Year Starting From</span></td>
+                                <td>
+                                    <input type="number" class="form-control" id="assumptions_first_financial_year" placeholder="Financial Year Starting From e.g 2018" min="2000" max="3000" required="required">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="td-label"><span class="input-label">Month of starting operations</span></td>
+                                <td>
+                                    <select class="form-control" id="assumptions_first_financial_month" required="required">
+                                        {% for month in months %}
+                                            <option value="{{ month.id }}">{{ month.code }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                            </tr>
+    {#                                        Period of projections in years#}
+                            <tr>
+                                <td class="td-label"><span class="input-label">Period of Projections in Years</span></td>
+                                <td>
+                                    <input type="number" class="form-control" id="assumptions_period_of_projections_in_years" placeholder="Period in Years" min="1" max="5" required="required">
+                                </td>
+                            </tr>
+    {#                                        Products or Services Offered#}
+                            <tr>
+                                <td class="td-label"><span class="input-label">Products or Services Offered</span></td>
+                                <td>
+                                    <select class="form-control" id="assumptions_products_or_services">
+                                        <option value="0">Products</option>
+                                        <option value="1">Services</option>
+                                    </select>
+                                </td>
+                            </tr>
+    {#                                        Number of product or services offered#}
+                            <tr>
+                                <td class="td-label"><span class="input-label">Number of Products or Services Offered</span></td>
+                                <td><input type="number" class="form-control" id="assumptions_number_of_products_or_services" placeholder="Number of Products or Services Offered" min="1" value="1" required="required"></td>
+                            </tr>
+    {#                                        Number of Months in a year#}
+                            <tr class="tr-blank">
+                                <td colspan="2"></td>
+                            <tr/>
+                            <tr class="tr-heading">
+                                <td colspan="2"><span class="table-heading">Other Assumptions</span></td>
+                            <tr/>
+                            <tr>
+                                <td class="td-label"><span class="input-label">Number of Months in Projection Year</span></td>
+                                <td class="td-input">
+                                    <input type="number" class="form-control" id="assumptions_number_of_months_in_year" placeholder="Number of Months in a Year" min="1" value="12" required="required">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="td-label"><span class="input-label">Inflation Rate (Per Annum)</span></td>
+                                <td class="td-input">
+                                    <input type="number" class="form-control" id="assumptions_inflation_rate_pa" placeholder="% Growth" min="0" required="required">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="td-label"><span class="input-label">Salary Growth Rate (Per Annum)</span></td>
+                                <td class="td-input">
+                                    <input type="number" class="form-control" id="assumptions_salar_growth_rate_pa" placeholder="% Growth" min="0"  required="required">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="td-label"><span class="input-label">Startup Cost Amortization Period (in Years)</span></td>
+                                <td class="td-input">
+                                    <input type="number" class="form-control" id="assumptions_startup_cost_amortization_period" placeholder="Amortization Period (in Years)" min="0" required="required">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br/>
+                    <table id="tbl_assumptions_number_of_products_or_services" class="table table-bordered table-hover">
+                            <thead>
+                                <tr >
+                                    <th class="text-center">
+                                        Product/Service Name
+                                    </th>
+                                    <th class="text-center">
+                                        Units of Measuring Revenue
+                                    </th>
+                                    <th class="text-center">
+                                        Growth Rate (% Per Month)
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr id='product_1'>
+                                    <td class="td-input">
+                                        <input type="text" name='product_1_name' data-product_id="product_1" data-prop_affected="name"  placeholder='Product/Service Name' class="form-control product-change" required="required"/>
+                                    </td>
+                                    <td class="td-input">
+                                        <input type="text" name='product_1_units_of_measuring_revenue' data-product_id="product_1" data-prop_affected="units_of_measuring_revenue"  placeholder='E.g Numer of hours' class="form-control product-change" required="required"/>
+                                    </td>
+                                    <td class="td-input">
+                                        <input type="number" name='product_1_growth_rate_per_month' data-product_id="product_1" data-prop_affected="growth_rate_per_month"  placeholder='E.g 5' class="form-control product-change" required="required"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                </div>
+
+                <br/>
+                <button id="btn-generate_pricing_tables" type="button" class="btn btn-primary btn-sm">Generate Pricing Tables</button>
+
+                <div class="clearfix"/>
+                <br/>
+                <div class="content-bordered" style="display: none;">
+    {#                          Beginning of Price Per Product table#}
+                    <table id="tbl_assumptions_price_per_product" class="table table-bordered table-hover table-dynamic margin-15">
+                        <thead>
+                        </thead>
+                    </table>
+    {#                          End of Price Per Product table #}
+    {#                          Beginning of Direct Cost Per Product table #}
+                    <table id="tbl_assumptions_direct_cost_per_product" class="table table-bordered table-hover table-dynamic margin-15">
+                        <thead>
+
+                        </thead>
+                    </table>
+                </div>
+    {#                              End of Price Per Product table #}
+    {#                              Beginning of Units of Measurement Per Product table #}
+                <table id="tbl_assumptions_units_of_measurement_per_product" class="table table-bordered table-hover table-dynamic margin-15">
+                    <thead>
+
+                    </thead>
+                </table>
+    {#                         End of Price Per Product table #}
+    {#                          Operating costs  #}
+                <div class="content-bordered">
+                    <table id="tbl_assumptions_operating_costs" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th class="assumptions_operating_cost_1"></th>
+                                <th colspan="2">Operating Costs</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="td-action">
+                                    <button type="button" class="btn btn-transparent action-danger" title="Delete row" data-toggle="confirmation"><i class="fas fa-times" style="font-size:24px" aria-hidden="true"></i></button>
+                                </td>
+                                <td class="td-input td-x4">
+                                    <input type="text" class="form-control" id="assumptions_operating_cost_1" placeholder="Name of operating cost" required="required" >
+                                </td>
+                                <td class="td-input td-x1">
+                                    <select class="form-control" id="assumptions_assumptions_operating_cost_1-period" required="required">
+                                        <option value="1">Per Month</option>
+                                        <option value="2">Per Annum</option>
+                                        <option value="3">% of Revenue</option>
+                                        <option value="4">% of Employee Salary</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="table-footer" data-table="#tbl_assumptions_operating_costs" >
+                        <button type="button" class="btn btn-sm btn-info btn-round btn-footer" title="Add row to table">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </button> Add Row
+                        <button type="button" class="btn btn-sm btn-danger btn-round btn-footer" title="Remove selected row from table" style="margin-left: 20px;">
+                            <i class="fa fa-minus" aria-hidden="true"></i>
+                        </button> Remove Row
+                        <button type="button" class="btn btn-large btn-primary" data-toggle="confirmation"
+                                data-btn-ok-label="Continue" data-btn-ok-class="btn-success"
+                                data-btn-ok-icon-class="material-icons" data-btn-ok-icon-content="check"
+                                data-btn-cancel-label="Stoooop!" data-btn-cancel-class="btn-danger"
+                                data-btn-cancel-icon-class="material-icons" data-btn-cancel-icon-content="close"
+                                data-title="Is it ok?" data-content="This might be dangerous">
+                          Confirmation
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+	</div>
+{% endblock %}

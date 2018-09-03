@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+
+{% block page_content %}
+
+    <!-- page content -->
+    <div class="right_col" role="main"  style="background-color: #ffffff;">
+      <div class="container-fluid">
+        <div class="page-title">
+{#              <div class="title_left">#}
+{#                <h3>Projects <small>Listing design</small></h3>#}
+{#              </div>#}
+
+{#              <div class="title_right">#}
+{#                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">#}
+{#                  <div class="input-group">#}
+{#                    <input type="text" class="form-control" placeholder="Search for...">#}
+{#                    <span class="input-group-btn">#}
+{#                      <button class="btn btn-default" type="button">Go!</button>#}
+{#                    </span>#}
+{#                  </div>#}
+{#                </div>#}
+{#              </div>#}
+        </div>
+
+        <div class="clearfix"></div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="x_panel" style="border: none;">
+              <div class="x_title">
+                <h2>My Business Plans</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                  <li><a href="/dashboard/new/business-plan" class="collapse-link" ><i class="fa fa-plus"></i> New Business Plan</a>
+                  </li>
+{#                      <li class="dropdown">#}
+{#                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>#}
+{#                        <ul class="dropdown-menu" role="menu">#}
+{#                          <li><a href="#">Settings 1</a>#}
+{#                          </li>#}
+{#                          <li><a href="#">Settings 2</a>#}
+{#                          </li>#}
+{#                        </ul>#}
+{#                      </li>#}
+{#                      <li><a class="close-link"><i class="fa fa-close"></i></a>#}
+{#                      </li>#}
+                </ul>
+                <div class="clearfix"></div>
+              </div>
+              <div class="x_content">
+                <div class="row">
+                    <div class="col-md-8">
+                        {% if bplans.count < 1 %}
+                            <h3>You don't have any business plans.  </h3><a href="/dashboard/new/business-plan" style="text-decoration: underline;"><i class="fa fa-plus"></i> Create business plan</a>
+                        {% else %}
+                            <!-- start project list -->
+                            <table class="table table-striped" style="width: 100%;">
+            {#                  <thead>#}
+            {#                    <tr>#}
+            {#                      <th style="width: 1%">#</th>#}
+            {#                      <th style="width: 20%">Business Name</th>#}
+            {#                      <th style="width: 20%">Actions</th>#}
+            {#                    </tr>#}
+            {#                  </thead>#}
+                              <tbody>
+            {#                  Need to do a foreach to iterate through and display business plans#}
+                                {% for bplan in bplans %}
+                                <tr>
+                                  <td>#</td>
+                                  <td>
+                                    <a>{{ bplan.company_name }}</a>
+                                    <br />
+                                    <small>Created {{ bplan.date_created }}</small>
+                                  </td>
+                                  <td>
+                                    <a href="dashboard/view/business-plan?id={{ bplan.id }}" class="btn btn-primary btn-xs"><i class="fa fa-folder"></i> View </a>
+{#                                    <a href="dashboard/edit/business-plan?id={{ bplan.id }}" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>#}
+                                    <a href="dashboard/delete/business-plan?id={{ bplan.id }}" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
+                                  </td>
+                                </tr>
+                              {% endfor %}
+                              </tbody>
+                            </table>
+                            <!-- end project list -->
+                        {% endif %}
+                    </div>
+                    <div class="col-md-4">
+                        <section class="panel">
+
+                            <div class="x_title">
+                              <h2>Account Summary</h2>
+                              <div class="clearfix"></div>
+                            </div>
+                            <div class="panel-body">
+                              <h3 class="green"><i class="fa fa-paint-brush"></i> BPlanner</h3>
+                              <p>Hello {{ user.first_name }} {{ user.last_name }}, here's a summary of your BPlanner account.</p>
+                              <div class="project_detail">
+
+                                <p class="title">Number of Business plans </p>
+                                <p>{{ bplans.count }}</p>
+                                <p class="title">Space used:</p>
+                                <p> {{ user_profile.usage }} Mbs</p>
+                              </div>
+
+                              <br />
+                              <h5>Project files</h5>
+                              <ul class="list-unstyled project_files">
+                                <li><a href=""><i class="fa fa-file-word-o"></i> Functional-requirements.docx</a>
+                                </li>
+                                <li><a href=""><i class="fa fa-file-pdf-o"></i> UAT.pdf</a>
+                                </li>
+                                <li><a href=""><i class="fa fa-mail-forward"></i> Email-from-flatbal.mln</a>
+                                </li>
+                                <li><a href=""><i class="fa fa-picture-o"></i> Logo.png</a>
+                                </li>
+                                <li><a href=""><i class="fa fa-file-word-o"></i> Contract-10_12_2014.docx</a>
+                                </li>
+                              </ul>
+                              <br />
+{##}
+{#                              <div class="text-center mtop20">#}
+{#                                <a href="#" class="btn btn-sm btn-primary">Add files</a>#}
+{#                                <a href="#" class="btn btn-sm btn-warning">Report contact</a>#}
+{#                              </div>#}
+                            </div>
+
+                          </section>
+                    </div>
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!-- /page content -->
+
+{% endblock %}
