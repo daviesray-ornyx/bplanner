@@ -453,7 +453,7 @@
                                     </table>
         {#                          End of Price Per Product table #}
         {#                          Beginning of Direct Cost Per Product table #}
-                                    <table id="tbl_assumptions_direct_cost_per_product" class="table table-bordered table-hover table-dynamic margin-15 manual-value-attr-update">
+                                    <table id="tbl_assumptions_direct_cost_per_product" class="table table-bordered table-hover table-dynamic margin-15">
                                         <caption style="color: #73879C;"><label class="control-label">Direct Cost per Product/Service</label></caption>
                                         <thead>
                                         </thead>
@@ -469,7 +469,7 @@
         {#                         End of Price Per Product table #}
         {#                          Operating costs  #}
                                     <div id="div_assumptions_operating_costs" class="content-bordered ">
-                                        <table id="tbl_assumptions_operating_costs" class="table table-bordered table-hover manual-value-attr-update" >
+                                        <table id="tbl_assumptions_operating_costs" class="table table-bordered table-hover" >
                                             <caption style="color: #73879C;"><label class="control-label">Operating Costs</label></caption>
                                         </table>
                                         <div class="table-footer" data-table="#tbl_assumptions_operating_costs">
@@ -485,7 +485,7 @@
         {#                          End--- Operating costs  #}
         {#                         Employee details tables #}
                                     <div id="div_assumptions_employee_roles_list" class="content-bordered">
-                                        <table id="tbl_assumptions_employee_roles_list" class="table table-bordered table-hover manual-value-attr-update" >
+                                        <table id="tbl_assumptions_employee_roles_list" class="table table-bordered table-hover" >
                                             <caption style="color: #73879C;"><label class="control-label">Employee Costs</label></caption>
                                         </table>
                                         <div class="table-footer" data-table="#tbl_assumptions_employees_details_cost">
@@ -499,13 +499,13 @@
                                     </div>
                                     <div id="div_assumptions_employees_working_hours" class="content-bordered">
         {#                                Number of working hours#}
-                                        <table id="tbl_assumptions_employees_working_hours" class="table table-bordered table-hover manual-value-attr-update" >
+                                        <table id="tbl_assumptions_employees_working_hours" class="table table-bordered table-hover" >
                                             <caption style="color: #73879C;"><label class="control-label">Number of Working Hours per Month</label></caption>
                                         </table>
                                     </div>
                                     <div id="div_assumptions_employees_hourly_rates" class="content-bordered">
         {#                                Hourly rate#}
-                                        <table id="tbl_assumptions_employees_hourly_rates" class="table table-bordered table-hover manual-value-attr-update" >
+                                        <table id="tbl_assumptions_employees_hourly_rates" class="table table-bordered table-hover" >
                                             <caption style="color: #73879C;"><label class="control-label">Rate per Hour</label></caption>
                                         </table>
                                     </div>
@@ -514,7 +514,7 @@
         {#                        Sources tables #}
                                     <div id="div_assumptions_capital" class="content-bordered">
         {#                                Number of working hours#}
-                                        <table id="tbl_assumptions_capital" class="table table-bordered table-hover manual-value-attr-update" >
+                                        <table id="tbl_assumptions_capital" class="table table-bordered table-hover " >
                                             <caption style="color: #73879C;"><label class="control-label">Capital Sources</label></caption>
                                         </table>
                                     </div>
@@ -522,7 +522,7 @@
         {#                        Usage Tables#}
                                     <div id="div_assumptions_usage_tangible_assets" class="content-bordered">
         {#                                Tangible assets#}
-                                        <table id="tbl_assumptions_usage_tangible_assets" class="table table-bordered table-hover manual-value-attr-update" >
+                                        <table id="tbl_assumptions_usage_tangible_assets" class="table table-bordered table-hover" >
                                             <caption style="color: #73879C;"><label class="control-label">Usage: Investment in Tangible Fixed Assets</label></caption>
                                         </table>
                                         <div class="table-footer" data-table="#tbl_assumptions_usage_tangible_assets">
@@ -536,7 +536,7 @@
         {#                                End -- Tangible assets#}
                                         <br/>
         {#                                Intangible assets#}
-                                        <table id="tbl_assumptions_usage_intangible_assets" class="table table-bordered table-hover manual-value-attr-update" >
+                                        <table id="tbl_assumptions_usage_intangible_assets" class="table table-bordered table-hover" >
                                             <caption style="color: #73879C;"><label class="control-label">Usage: Investment in Intangible Fixed Assets</label></caption>
                                         </table>
                                         <div class="table-footer" data-table="#tbl_assumptions_usage_intangible_assets">
@@ -550,7 +550,7 @@
         {#                                End -- Intangible assets#}
                                         <br/>
         {#                                Deposits Table#}
-                                        <table id="tbl_assumptions_usage_deposits" class="table table-bordered table-hover manual-value-attr-update" >
+                                        <table id="tbl_assumptions_usage_deposits" class="table table-bordered table-hover" >
                                             <caption style="color: #73879C;"><label class="control-label">Usage: Deposits</label></caption>
                                         </table>
                                         <div class="table-footer" data-table="#tbl_assumptions_usage_deposits">
@@ -564,7 +564,7 @@
         {#                                End -- Deposits table#}
                                         <br/>
         {#                                Other Startup Costs Table#}
-                                        <table id="tbl_assumptions_usage_other_startup_costs" class="table table-bordered table-hover manual-value-attr-update" >
+                                        <table id="tbl_assumptions_usage_other_startup_costs" class="table table-bordered table-hover" >
                                             <caption style="color: #73879C;"><label class="control-label">Usage: Other Start-up Costs</label></caption>
                                         </table>
                                         <div class="table-footer" data-table="#tbl_assumptions_usage_other_startup_costs">
@@ -623,9 +623,92 @@
                                     {{ bplanner_form.rpt_balance_sheet.value | safe }}
                                 {% endif %}
                             </div>
-                            <div class="tab-pane step-5" id="rpt_dashboard">
+                            <div class="tab-pane step-5 container-fluid" id="rpt_dashboard">
+{#                                This will be updated when tests are done#}
                                 {% if mode == 'new' %}
-                                    <h3>Coming Soon!!</h3>
+                                    <h3>Dashboard</h3>
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="x_panel">
+                                              <div class="x_content">
+                                                <div id="totalAssetsBar" style="height:250px;width: 500px;"></div>
+                                              </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-6 col-xs-12">
+                                            <div class="x_panel">
+                                              <div class="x_content">
+                                                <div id="totalLiabilitiesBar" style="height:250px;width: 500px;"></div>
+                                              </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12 col-xs-12">
+                                            <div class="x_panel">
+                                              <div class="x_content">
+                                                <div id="fixedAssetsClassificationsBar" style="height:250px;width: 1000px;"></div>
+                                              </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12 col-xs-12">
+                                            <div class="x_panel">
+                                              <div class="x_content">
+                                                <div id="cashFlowAnalysisBar" style="height:250px;width: 1000px;"></div>
+                                              </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="x_panel">
+                                              <div class="x_content">
+                                                <div id="totalRevenueBar" style="height:250px;width: 500px;"></div>
+                                              </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="x_panel">
+                                              <div class="x_content">
+                                                <div id="totalDirectCostBar" style="height:250px;width: 500px;"></div>
+                                              </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="x_panel">
+                                              <div class="x_content">
+                                                <div id="grossProfitBar" style="height:250px;width: 500px;"></div>
+                                              </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="x_panel">
+                                              <div class="x_content">
+                                                <div id="totalOperatingCostBar" style="height:250px;width: 500px;"></div>
+                                              </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="x_panel">
+                                              <div class="x_content">
+                                                <div id="earningsAfterTaxtBar" style="height:250px;width: 500px;"></div>
+                                              </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="x_panel">
+                                              <div class="x_content">
+                                                <div id="netMarginBar" style="height:250px;width: 500px;"></div>
+                                              </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 {% else %}
 {#                                    Proceed to display what is saved #}
                                     {{ bplanner_form.rpt_dashboard.value | safe }}

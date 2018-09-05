@@ -35,6 +35,7 @@
               </div>
             </div>
           </div>
+          {% if user.username == None or user.username == '' %}
           <div class="row -small-center">
             <div class="col-xsmall-12 col-small-8 col-large-6 col-xlarge-4">
               <button class="signupForm-submit submit button -large" tabindex="" title="Sign Up" data-toggle="modal" data-target="#signup">
@@ -42,6 +43,7 @@
                 </button>
             </div>
           </div>
+          {% endif %}
       </div>
 
 

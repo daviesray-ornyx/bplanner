@@ -62,6 +62,8 @@ $(document).ready(function () {
     var productCount = 1;
     var products = {}
 
+    var theme = {}
+
 
     var costAppropriationMethods = ['Per Month', 'Per Annum', '% of Revenue', '% of Employee Salary']
 
@@ -87,6 +89,22 @@ $(document).ready(function () {
         'Legal Expenses', 'Formation Expenses', 'Marketing Costs', 'Utility',
         'Stationery', 'Business Name Registration Cost'
     ]
+
+    var totalAssets = {}
+    var totalLiabilities = {}
+    var tangibleAssetsBalanceTotal = {}
+    var intangibleAssetsBalanceTotal = {}
+    var cashFlowChangesDuringTheYearPerMonth = {}   // netCashFlowFromOperatingActivities - netCashFlowsFromInvestingActivities + netCashFlowFromFinancingActivities
+    var closingCashBalancePerMonth = {}
+    var revenueTotalsPerYear = {}       // Revenue totals per year
+    var directCostTotalsPerYear = {}    // directCostTotals Aggregated per year
+    var grossProfit = {}            // Revenue - Direct Cost // Per month
+    var operatingCostTotalsPeryear = {}  // operatingCostPerMonthTotals aggregated per yearv
+    var EAT = {}                    //Earnings after Tax // Per month
+    var netMarginPerMonth = {}      // Monthly net margin
+
+
+
 
     function getCookie(name) {
         var cookieValue = null;
@@ -494,11 +512,11 @@ $(document).ready(function () {
                                  var isReadonlyField = (colOrder != 0);
                                  var readonlyText = (isReadonlyField) ? 'readonly' : '';
                                  var autoFilledText = (isReadonlyField) ? 'auto-filled' : '';
-                                 var unitChangeText = (!isReadonlyField) ? 'unit-change' : '';
                                  var inputName = operatingCostId + '_' + projectionYear
-             strRow +=       '<td class="cost td-input td-sm' + readonlyText + ' ' + autoFilledText + ' ' + unitChangeText + ' " '
+                                 var operatingCostChange = (colOrder == 0) ? 'operating-cost-change' : '';
+             strRow +=       '<td class="cost td-input td-sm ' + readonlyText + ' ' + autoFilledText + '" '
                       +             ' data-projection_year= "'+ projectionYear +'">'
-                      +          '<input type="number" class="form-control input-md text-right" name="' + inputName + '" min="0" value="" required="required" ' + readonlyText + '>'
+                      +          '<input type="number" class="form-control input-md text-right ' + operatingCostChange + '" name="' + inputName + '" min="0" value="" required="required" ' + readonlyText + '>'
                       +      '</td>'
                                  colOrder++;
                              })
@@ -533,6 +551,10 @@ $(document).ready(function () {
         // Unbind and bind events again
         $('.action-delete-row').unbind('click');
         $('.action-delete-row').click(deleteRowEventHandler);
+
+        // Unbind bind change events
+        $('.operating-cost-change').unbind('change');
+        $('.operating-cost-change').change(operatingCostChangeHandler);
 
         // Show div section
         $('#div_assumptions_operating_costs').css('display','block');
@@ -667,8 +689,8 @@ $(document).ready(function () {
              var readonlyText = (isReadonlyField) ? 'readonly' : '';
              var autoFilledText = (isReadonlyField) ? 'auto-filled' : '';
              var hourlyRateChangeText = (!isReadonlyField) ? 'hourly-rate-change' : '';
-            strRowHtml +=       '<td class="hourly_rate td-input td-sm ' + readonlyText + ' ' + autoFilledText + ' ' + hourlyRateChangeText +'">'
-                       +            '<input type="number" name="' + inputName + '" class="form-control text-right" placeholder="" min="0" value="" required="required" ' + readonlyText + '>'
+            strRowHtml +=       '<td class="hourly_rate td-input td-sm ' + readonlyText + ' ' + autoFilledText + '">'
+                       +            '<input type="number" name="' + inputName + '" class="form-control text-right ' + hourlyRateChangeText +' " placeholder="" min="0" value="" required="required" ' + readonlyText + '>'
                        +        '</td>'
             colOrder++;
         });
@@ -699,8 +721,12 @@ $(document).ready(function () {
         })
 
         // Unbind and bind events again
-        $('.action-delete-row').unbind('click');
+        $('.action-delete-row').unbind('change');
         $('.action-delete-row').click(deleteRowEventHandler);
+
+        // Unbind and bind events again
+        $('.hourly-rate-change').unbind('click');
+        $('.hourly-rate-change').change(employeeHourlyRateChangeHandler);
 
         // Show div section
         $('#div_assumptions_employees_hourly_rates').css('display','block');
@@ -1141,6 +1167,40 @@ $(document).ready(function () {
         $(this).attr('value', $(this).val());
     }
 
+    function operatingCostChangeHandler(event){
+        $(this).attr('value', $(this).val());
+        // Operating cost changed
+        var inflationRate = parseFloat($('#assumptions_inflation_rate_pa').val() || 0)/100;
+        var principal = parseFloat($(this).val() | 0); // Get's the value or zero
+        // get auto filled tds
+        var currentTD = $(this).parent();
+        var autoFillTDs = $(currentTD).siblings('.auto-filled');
+        $.each(autoFillTDs, function (tdIndex, autofillTD) {
+            // compute compounded growth
+            var compoundedGrowth = Math.round(calculateCompoundedGrowth(principal, inflationRate, 1, (tdIndex + 1)) * 100)/100;
+            // Update dt value
+            var currentInput = $(autofillTD).children('input')[0];
+            $(currentInput).val(compoundedGrowth)
+        })
+    }
+
+    function employeeHourlyRateChangeHandler(event){
+        $(this).attr('value', $(this).val());
+        // Operating cost changed
+        var salaryGrowthRate = parseFloat($('#assumptions_salar_growth_rate_pa').val() || 0)/100;
+        var principal = parseFloat($(this).val() | 0); // Get's the value or zero
+        // get auto filled tds
+        var currentTD = $(this).parent();
+        var autoFillTDs = $(currentTD).siblings('.auto-filled');
+        $.each(autoFillTDs, function (tdIndex, autofillTD) {
+            // compute compounded growth
+            var compoundedGrowth = Math.round(calculateCompoundedGrowth(principal, salaryGrowthRate, 1, (tdIndex + 1)) * 100)/100;
+            // Update dt value
+            var currentInput = $(autofillTD).children('input')[0];
+            $(currentInput).val(compoundedGrowth)
+        })
+    }
+
     function deleteRowEventHandler(event){
         // This happended from button within td
         // Check table id
@@ -1218,6 +1278,8 @@ $(document).ready(function () {
     $('.product-change').change(productDetailsChangeHandler);
     $('.price-change').change(productPriceChangeHandler);
     $('.cost-change').change(productCostChangeHandler);
+    $('.operating-cost-change').change(operatingCostChangeHandler);
+    $('.hourly-rate-change').change(employeeHourlyRateChangeHandler);
     $('.table-footer button').click(function(event){
         // Get nearest table
         var tableFooter = $(this).closest('.table-footer');
@@ -2013,28 +2075,28 @@ $(document).ready(function () {
 
         // Totals
         var revenueTotals = {}              // Revenue totals per month
-        var revenueTotalsPerYear = {}       // Revenue totals per year
+        revenueTotalsPerYear = {}       // Revenue totals per year
         var receivableTotalsPerYear = {}    // Receivable totals per year
         var receivablesPerMonth = {};       // Receivables appropriated per month
         var employeeCostTotals = {}
         var operatingCostPerMonthTotals = {} //Operating cost + BAd debts
-        var operatingCostTotalsPeryear = {}  // operatingCostPerMonthTotals aggregated per year
+        operatingCostTotalsPeryear = {}  // operatingCostPerMonthTotals aggregated per year
         var otherExpensesPayableTotalsPerYear = {}  // Other expensesPayable bit of operatingCostTotalsPeryear using payables formula
         var otherExpensesPayablePerMonth = {}   // otherExpensesPayableTotalsPerYear appropriated per month
 
         var directCostTotals = {}           // Direct Production cost + EmployeeCost , and is given monthly
-        var directCostTotalsPerYear = {}    // directCostTotals Aggregated per year
+        directCostTotalsPerYear = {}    // directCostTotals Aggregated per year
         var payableTotalsPerYear = {}       // Payable bit of directCostTotalsPerYear using payables formula
         var payablesPerMonth = {}           // payableTotalsPerYear appropriated per month of the said year
-        var grossProfit = {}            // Revenue - Direct Cost
+        grossProfit = {}            // Revenue - Direct Cost
         var overallCost = {}            // Total direct costs + opearting costs
         var EBITDA = {}                 // RevenueTotals - Overall Costs
         var amortizationSchedule = generateAmortizationSchedule();
         var depreciationPerMonthTotals = {}
         var EBT = {};                   // Earnings before tax
         var taxPerMonth = {};
-        var EAT = {}                    //Earnings after Tax
-        var netMarginPerMonth = {}      // Monthly net margin
+        EAT = {}                    //Earnings after Tax
+        netMarginPerMonth = {}      // Monthly net margin
 
         var tangibleAssetInvestmentDict = getAssetsInvestmentDict(true);
         var tangibleAssetInvestmentPerAssetPerMonth = getInvestmentPerAssetPerMonth(tangibleAssetInvestmentDict);
@@ -3149,9 +3211,9 @@ $(document).ready(function () {
         var netCashFlowsFromInvestingActivities = {}    // Tangible Assets Investment + Intangible Assets investment
         var debtAndInterestRepaymentPerMonth = getDebtAndInterestRepaymentPerMonth(amortizationSchedule);
         var netCashFlowFromFinancingActivities = {}     // Share Capital + Debt Capital - Repayment of Debt and Interest
-        var cashFlowChangesDuringTheYearPerMonth = {}   // netCashFlowFromOperatingActivities - netCashFlowsFromInvestingActivities + netCashFlowFromFinancingActivities
+        cashFlowChangesDuringTheYearPerMonth = {}   // netCashFlowFromOperatingActivities - netCashFlowsFromInvestingActivities + netCashFlowFromFinancingActivities
         var openingCashBalancePerMonth = {}
-        var closingCashBalancePerMonth = {}
+        closingCashBalancePerMonth = {}
 
 
         // Table header
@@ -3769,17 +3831,17 @@ $(document).ready(function () {
         var tangibleAssetsInvestmentPerYear = getInvestmentPerAssetPerYear(tangibleAssetInvestmentDict);
         var depreciationPerAssetPerYear = getDepreciationPerAssetPerYear(depreciationPerAssetPerMonth);     // Depreciation on tangible assets
         var tangibleAssetsBalancePerYear = {};
-        var tangibleAssetsBalanceTotal = {}
+        tangibleAssetsBalanceTotal = {}
         var intangibleAssetsInvestmentPerYear = getInvestmentPerAssetPerYear(intangibleAssetsInvestmentDict);
-        var intangibleAssetsBalanceTotal = {}
+        intangibleAssetsBalanceTotal = {}
         var totalFixedAssets = {};
         var totalCurrentAssets = {}
         var otherStartUpCostsFirstYear = getOtherStartUpCostItemsFirstYear();
         var otherStartUpCostAppropriatedOverAmortizationYears = appropriateOtherStartUpCostsOverAmortizationYears(otherStartUpCostsFirstYear)
-        var totalAssets = {} // Given by Total Fixed Assets + Total Current Assets + Total Misc. Assets
+        totalAssets = {} // Given by Total Fixed Assets + Total Current Assets + Total Misc. Assets
         var totalCapital = {} // Given by Share Capital + Reserves & Surpluses + Profit/Loss for the year
         var totalCurrentLiabilities = {} // Trade payables + Other Expenses Payables
-        var totalLiabilities = {} // Given by Total current liabilities + Net debt + total capital
+        totalLiabilities = {} // Given by Total current liabilities + Net debt + total capital
         var debtAndInterestRepaymentPerYear = getDebtAndInterestRepaymentPerYear(amortizationSchedule);
         var interestOnDebtRepaymentPerYear = getInterestRepaymentOnDebtPerYear(monthlyInterestOnDebt)
         var debtRepaymentPerYear = {} // Given by debtAndInterestRepaymentPerYear - interestOnDebtRepaymentPerYear
@@ -4574,10 +4636,6 @@ $(document).ready(function () {
                     stepMonitor[clickedStep]['auto_generate'] = false
                     stepMonitor[clickedStep]['passed'] = true
 
-                    $('.manual-value-attr-update input,textarea,select').unbind('change');
-                    $('.manual-value-attr-update input,textarea,select').change(function(event){
-                        $(this).attr('value', $(this).val());
-                    })
                 }
             }else if(previousStep == '#step-4'){
                 // We're into step 5:-
@@ -4605,6 +4663,19 @@ $(document).ready(function () {
                         $('.step-5 input,textarea,select').change(function(event){
                             $(this).attr('value', $(this).val());
                         })
+
+                        // Generate graphs
+                        prepareAndRenderTotalAssetsBar();
+                        prepareAndRenderTotalLiabilitiesBar();
+                        prepareAndRenderFixedAssetClassificationBar();
+                        prepareAndRenderCashFlowAnalysisBar();
+                        prepareAndRenderTotalRevenueBar();
+                        prepareAndRenderTotalDirectCostBar();
+                        prepareAndRenderGrossProfitBar();
+                        prepareAndRenderTotalOperatingCostBar();
+                        prepareAndRenderEarningsAfterTaxtBar();
+                        prepareAndRenderNetMarginBar();
+
                         // Enable save button
                         $('#li-save').css('display', 'block');
                     }
@@ -4619,6 +4690,10 @@ $(document).ready(function () {
         event.preventDefault();
         // This should then proceed to submit as default..
 
+        var inputFields = $('#frm_bplanner input,textarea,select');
+        $.each(inputFields, function (index, inputField) {
+            $(inputField).attr('value', $(inputField).val());
+        })
         // retrieve the various sections
         var mainContent = String($('#editor-one').html());
         var financialAssumptions = String($('#financial_assumptions').html());
@@ -4658,6 +4733,498 @@ $(document).ready(function () {
 
 
     })
+
+
+    /* ECHRTS */
+    function init_echarts_dboard() {
+        if( typeof (echarts) === 'undefined'){ return; }
+          theme = {
+          color: [
+              '#26B99A', '#34495E', '#BDC3C7', '#3498DB',
+              '#9B59B6', '#8abb6f', '#759c6a', '#bfd3b7'
+          ],
+
+          title: {
+              itemGap: 8,
+              textStyle: {
+                  fontWeight: 'normal',
+                  color: '#408829'
+              }
+          },
+
+          dataRange: {
+              color: ['#1f610a', '#97b58d']
+          },
+
+          toolbox: {
+              color: ['#408829', '#408829', '#408829', '#408829']
+          },
+
+          tooltip: {
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              axisPointer: {
+                  type: 'line',
+                  lineStyle: {
+                      color: '#408829',
+                      type: 'dashed'
+                  },
+                  crossStyle: {
+                      color: '#408829'
+                  },
+                  shadowStyle: {
+                      color: 'rgba(200,200,200,0.3)'
+                  }
+              }
+          },
+
+          dataZoom: {
+              dataBackgroundColor: '#eee',
+              fillerColor: 'rgba(64,136,41,0.2)',
+              handleColor: '#408829'
+          },
+          grid: {
+              borderWidth: 0
+          },
+
+          categoryAxis: {
+              axisLine: {
+                  lineStyle: {
+                      color: '#408829'
+                  }
+              },
+              splitLine: {
+                  lineStyle: {
+                      color: ['#eee']
+                  }
+              }
+          },
+
+          valueAxis: {
+              axisLine: {
+                  lineStyle: {
+                      color: '#408829'
+                  }
+              },
+              splitArea: {
+                  show: true,
+                  areaStyle: {
+                      color: ['rgba(250,250,250,0.1)', 'rgba(200,200,200,0.1)']
+                  }
+              },
+              splitLine: {
+                  lineStyle: {
+                      color: ['#eee']
+                  }
+              }
+          },
+          timeline: {
+              lineStyle: {
+                  color: '#408829'
+              },
+              controlStyle: {
+                  normal: {color: '#408829'},
+                  emphasis: {color: '#408829'}
+              }
+          },
+
+          k: {
+              itemStyle: {
+                  normal: {
+                      color: '#68a54a',
+                      color0: '#a9cba2',
+                      lineStyle: {
+                          width: 1,
+                          color: '#408829',
+                          color0: '#86b379'
+                      }
+                  }
+              }
+          },
+          map: {
+              itemStyle: {
+                  normal: {
+                      areaStyle: {
+                          color: '#ddd'
+                      },
+                      label: {
+                          textStyle: {
+                              color: '#c12e34'
+                          }
+                      }
+                  },
+                  emphasis: {
+                      areaStyle: {
+                          color: '#99d2dd'
+                      },
+                      label: {
+                          textStyle: {
+                              color: '#c12e34'
+                          }
+                      }
+                  }
+              }
+          },
+          force: {
+              itemStyle: {
+                  normal: {
+                      linkStyle: {
+                          strokeColor: '#408829'
+                      }
+                  }
+              }
+          },
+          chord: {
+              padding: 4,
+              itemStyle: {
+                  normal: {
+                      lineStyle: {
+                          width: 1,
+                          color: 'rgba(128, 128, 128, 0.5)'
+                      },
+                      chordStyle: {
+                          lineStyle: {
+                              width: 1,
+                              color: 'rgba(128, 128, 128, 0.5)'
+                          }
+                      }
+                  },
+                  emphasis: {
+                      lineStyle: {
+                          width: 1,
+                          color: 'rgba(128, 128, 128, 0.5)'
+                      },
+                      chordStyle: {
+                          lineStyle: {
+                              width: 1,
+                              color: 'rgba(128, 128, 128, 0.5)'
+                          }
+                      }
+                  }
+              }
+          },
+          gauge: {
+              startAngle: 225,
+              endAngle: -45,
+              axisLine: {
+                  show: true,
+                  lineStyle: {
+                      color: [[0.2, '#86b379'], [0.8, '#68a54a'], [1, '#408829']],
+                      width: 8
+                  }
+              },
+              axisTick: {
+                  splitNumber: 10,
+                  length: 12,
+                  lineStyle: {
+                      color: 'auto'
+                  }
+              },
+              axisLabel: {
+                  textStyle: {
+                      color: 'auto'
+                  }
+              },
+              splitLine: {
+                  length: 18,
+                  lineStyle: {
+                      color: 'auto'
+                  }
+              },
+              pointer: {
+                  length: '90%',
+                  color: 'auto'
+              },
+              title: {
+                  textStyle: {
+                      color: '#333'
+                  }
+              },
+              detail: {
+                  textStyle: {
+                      color: 'auto'
+                  }
+              }
+          },
+          textStyle: {
+              fontFamily: 'Arial, Verdana, sans-serif'
+          }
+      };
+    }
+
+    init_echarts_dboard();
+
+    function renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData){
+        // containerId without
+        if ($('#' + containerId).length ){
+          var echartBar = echarts.init(document.getElementById(containerId), theme);
+          echartBar.setOption({
+            title: {
+              text: title,
+              subtext: subTitle
+            },
+            tooltip: {
+              trigger: 'axis'
+            },
+            legend: {
+              data: legendData
+            },
+            toolbox: {
+              show: true
+            },
+            calculable: false,
+            xAxis: [{
+              type: 'category',
+              data: dataX
+            }],
+            yAxis: [{
+              type: 'value'
+            }],
+            series: seriesData
+          });
+        }
+    }
+
+    // Total assets bar graph
+    function prepareAndRenderTotalAssetsBar(){
+        var containerId = 'totalAssetsBar';
+        var title = 'Total Assets';
+        var subTitle = '';
+        var dataX = projectionYearsList;
+        var data = [];
+        var legendData = ['Capital',]
+        $.each(totalAssets, function (projectionYear, amount) {
+            data.push(amount);
+        })
+        var seriesData = [
+            {
+              name: 'Capital',
+              type: 'bar',
+              data: data
+            },
+        ]
+        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData);
+    }
+
+    // totalLiabilitiesBar
+    function prepareAndRenderTotalLiabilitiesBar(){
+        var containerId = 'totalLiabilitiesBar';
+        var title = 'Total Liabilities';
+        var subTitle = '';
+        var dataX = projectionYearsList;
+        var data = [];
+        var legendData = ['Capital',]
+        $.each(totalLiabilities, function (projectionYear, amount) {
+            data.push(amount);
+        })
+        var seriesData = [
+            {
+              name: 'Liabilities',
+              type: 'bar',
+              data: data
+            },
+        ]
+        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData);
+    }
+
+    // fixedAssetsClassifications
+    function prepareAndRenderFixedAssetClassificationBar(){
+        var containerId = 'fixedAssetsClassificationsBar';
+        var title = 'Fixed Assets Classification';
+        var subTitle = '';
+        var dataX = projectionYearsList;
+        var dataTangibleAssets = [];
+        var dataInTangibleAssets = [];
+        var legendData = ['Tangible Assets', 'Intangible Assets']
+        $.each(tangibleAssetsBalanceTotal, function (projectionYear, amount) {
+            dataTangibleAssets.push(amount);
+        })
+        $.each(intangibleAssetsBalanceTotal, function (projectionYear, amount) {
+            dataInTangibleAssets.push(amount);
+        })
+        var seriesData = [
+            {
+              name: 'Tangible Assets',
+              type: 'bar',
+              data: dataTangibleAssets
+            },
+            {
+              name: 'Intangible Assets',
+              type: 'bar',
+              data: dataInTangibleAssets
+            },
+        ]
+        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData);
+    }
+
+    // cashFlowAnalysisBar
+    function prepareAndRenderCashFlowAnalysisBar(){
+        var containerId = 'cashFlowAnalysisBar';
+        var title = 'Cash Flow Analysis';
+        var subTitle = '';
+        var dataX = projectionMonthsList; // NB We are using projection months in this case
+        var dataCashGenerated = [];
+        var dataClosingCashBalance = [];
+        var legendData = ['Closing Cash Balance', 'Cash Generated During the Year']
+        //cashFlowChangesDuringTheYearPerMonth  closingCashBalancePerMonth
+
+        $.each(cashFlowChangesDuringTheYearPerMonth, function (projectionMonthIndex, amount) {
+            if(projectionMonthIndex.indexOf('total') < 0)
+                dataCashGenerated.push(amount);
+        })
+        $.each(closingCashBalancePerMonth, function (projectionMonthIndex, amount) {
+            if(projectionMonthIndex.indexOf('total') < 0)
+                dataClosingCashBalance.push(amount);
+        })
+        var seriesData = [
+            {
+              name: 'Closing Cash Balance',
+              type: 'line',
+              data: dataClosingCashBalance
+            },
+            {
+              name: 'Cash Generated During the Year',
+              type: 'line',
+              data: dataCashGenerated
+            },
+        ]
+        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData);
+    }
+
+    // totalRevenueBar
+    function prepareAndRenderTotalRevenueBar(){
+        var containerId = 'totalRevenueBar';
+        var title = 'Total Revenue';
+        var subTitle = '';
+        var dataX = projectionYearsList;
+        var data = [];
+        var legendData = []
+        $.each(revenueTotalsPerYear, function (projectionYear, amount) {
+            data.push(amount);
+        })
+        var seriesData = [
+            {
+              name: 'Revenue',
+              type: 'bar',
+              data: data
+            },
+        ]
+        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData);
+    }
+
+    // totalDirectCostBar
+    function prepareAndRenderTotalDirectCostBar(){
+        var containerId = 'totalDirectCostBar';
+        var title = 'Total Direct Cost';
+        var subTitle = '';
+        var dataX = projectionYearsList;
+        var data = [];
+        var legendData = []
+        $.each(directCostTotalsPerYear, function (projectionYear, amount) {
+            data.push(amount);
+        })
+        var seriesData = [
+            {
+              name: 'Direct Cost',
+              type: 'bar',
+              data: data
+            },
+        ]
+        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData);
+    }
+
+    // grossProfitBar
+    function prepareAndRenderGrossProfitBar(){
+        var containerId = 'grossProfitBar';
+        var title = 'Gross Profit';
+        var subTitle = '';
+        var dataX = projectionYearsList;
+        var data = [];
+        var legendData = []
+        $.each(grossProfit, function (projectionMonthIndex, amount) {
+            if(projectionMonthIndex.indexOf('total') > -1)
+                data.push(amount);
+        })
+        var seriesData = [
+            {
+              name: 'Gross Profit',
+              type: 'bar',
+              data: data
+            },
+        ]
+        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData);
+    }
+
+    // totalOperatingCostBars
+    function prepareAndRenderTotalOperatingCostBar(){
+        var containerId = 'totalOperatingCostBar';
+        var title = 'Total Operating Cost';
+        var subTitle = '';
+        var dataX = projectionYearsList;
+        var data = [];
+        var legendData = []
+        $.each(operatingCostTotalsPeryear, function (projectionYear, amount) {
+            data.push(amount);
+        })
+        var seriesData = [
+            {
+              name: 'Operating Cost',
+              type: 'bar',
+              data: data
+            },
+        ]
+        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData);
+    }
+
+    // earningsAfterTaxtBar
+    function prepareAndRenderEarningsAfterTaxtBar(){
+        var containerId = 'earningsAfterTaxtBar';
+        var title = 'Earnings After Tax';
+        var subTitle = '';
+        var dataX = projectionYearsList;
+        var data = [];
+        var legendData = []
+        $.each(EAT, function (projectionMonthIndex, amount) {
+            if(projectionMonthIndex.indexOf('total') > -1)
+                data.push(amount);
+        })
+        var seriesData = [
+            {
+              name: 'Earning aftr Tax',
+              type: 'bar',
+              data: data
+            },
+        ]
+        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData);
+    }
+
+    // netMarginBar  netMarginPerMonth
+    function prepareAndRenderNetMarginBar(){
+        var containerId = 'netMarginBar';
+        var title = 'Net Margin (%)';
+        var subTitle = '';
+        var dataX = projectionYearsList;
+        var data = [];
+        var legendData = []
+        $.each(netMarginPerMonth, function (projectionMonthIndex, amount) {
+            if(projectionMonthIndex.indexOf('total') > -1)
+                data.push(amount);
+        })
+        var seriesData = [
+            {
+              name: 'Net Margin',
+              type: 'bar',
+              data: data
+            },
+        ]
+        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData);
+    }
+
+
+    // operatingCostChart
+
+    // revenueBreakdownBar
+
+
 
 
 
