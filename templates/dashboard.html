@@ -73,9 +73,9 @@
                                     <small>Created {{ bplan.date_created }}</small>
                                   </td>
                                   <td>
-                                    <a href="dashboard/view/business-plan?id={{ bplan.id }}" class="btn btn-primary btn-xs"><i class="fa fa-folder"></i> View </a>
+                                    <a href="/dashboard/view/business-plan?id={{ bplan.id }}" class="btn btn-primary btn-xs"><i class="fa fa-folder"></i> View / Edit </a>
 {#                                    <a href="dashboard/edit/business-plan?id={{ bplan.id }}" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>#}
-                                    <a href="dashboard/delete/business-plan?id={{ bplan.id }}" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
+                                    <a href="/dashboard/delete/business-plan?id={{ bplan.id }}" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
                                   </td>
                                 </tr>
                               {% endfor %}
@@ -99,7 +99,7 @@
                                 <p class="title">Number of Business plans </p>
                                 <p>{{ bplans.count }}</p>
                                 <p class="title">Space used:</p>
-                                <p> {{ user_profile.usage }} Mbs</p>
+                                <p> {{ user_profile.get_usage }} Mbs</p>
                               </div>
 
                               <br />

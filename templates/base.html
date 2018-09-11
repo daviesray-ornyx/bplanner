@@ -28,9 +28,153 @@
     <link href="{% static 'vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css'%}" rel="stylesheet">
     <link href="{% static 'vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css'%}" rel="stylesheet">
 
-    <!-- Custom Theme Style -->
+{#    <!-- Bootstrap Confirmation -->#}
+{#    <link rel="stylesheet" href="{% static 'vendors/Bootstrap-Confirmation/bootstrap-confirmation.js' %} ">#}
+
+      <!-- Custom Theme Style -->
     <link href="{% static 'css/custom-gentellela.css' %}" rel="stylesheet">
     <link href="{% static 'css/custom.css' %}" rel="stylesheet">
+
+    <script type="text/javascript">
+        var settingsId = {% if bplan_settings.id == None %} null {% else %} {{ bplan_settings.id }} {% endif %}
+        var stepMonitor = {{ bplan_settings.step_monitor | safe }}
+        var calendarMonths =  {{ bplan_settings.calendar_months | safe }}
+        var projectionMonthsList = {{bplan_settings.projection_months_list | safe }}
+        var projectionYears = {% if bplan_settings.projection_years == None %} null {% else %} {{bplan_settings.projection_years | safe }} {% endif %};
+        var firstFinancialYear = {% if bplan_settings.first_financial_year == None %} null {% else %} {{bplan_settings.first_financial_year | safe }} {% endif %};
+        var lastFinancialYear = {% if bplan_settings.last_financial_year == None %} null {% else %} {{bplan_settings.last_financial_year | safe }} {% endif %};
+        var countOfMonthsInFinancialYear = {{bplan_settings.count_of_months_in_financial_year | safe }}
+        var projectionYearsList = {{bplan_settings.projection_years_list | safe }}
+        var productCount = {% if bplan_settings.product_count == None %} null {% else %} {{bplan_settings.product_count | safe }} {% endif %};
+        var products = {{bplan_settings.products | safe }}
+
+        var theme = {{bplan_settings.theme | safe }}
+
+        var costAppropriationMethods = {{bplan_settings.cost_appropriation_methods | safe }}
+
+        var operatingCostList = {{bplan_settings.operating_cost_list | safe }}
+
+        var employeesList = {{bplan_settings.employees_list | safe }}
+
+        var capitalSourcesList = {{bplan_settings.capital_sources_list | safe }}
+
+        var tangibleAssetsList = {{bplan_settings.tangible_assets_list | safe }}
+
+        var intangibleAssetsList = {{bplan_settings.intangible_assets_list | safe }}
+
+        var depositItemList = {{bplan_settings.deposit_item_list | safe }}
+
+        var startupCostItemList = {{bplan_settings.startup_cost_item_list | safe }}
+
+        var totalAssets = {{bplan_settings.total_assets | safe }}
+        var totalLiabilities = {{bplan_settings.total_liabilities | safe }}
+        var tangibleAssetsBalanceTotal = {{bplan_settings.tangible_assets_balance_total | safe }}
+        var intangibleAssetsBalanceTotal = {{bplan_settings.intangible_assets_balance_total | safe }}
+        var cashFlowChangesDuringTheYearPerMonth = {{bplan_settings.cashFlow_changes_during_the_year_per_month | safe }}
+        var closingCashBalancePerMonth = {{bplan_settings.closing_cash_balance_per_month | safe }}
+        var revenueTotalsPerYear = {{bplan_settings.revenue_totals_per_year | safe }}
+        var directCostTotalsPerYear = {{bplan_settings.direct_cost_totals_per_year | safe }}
+        var grossProfit = {{bplan_settings.gross_profit | safe }}
+        var operatingCostTotalsPeryear = {{bplan_settings.operating_cost_totals_per_year | safe }}
+        var EAT = {{bplan_settings.eat | safe }}
+        var netMarginPerMonth = {{bplan_settings.net_margin_per_month | safe }}
+
+        var currentStepId = '#step-1'; // By default this is the current step
+    </script>
+{#    <script type="text/javascript">#}
+{#        // Add javascript queries#}
+{#        var stepMonitor = {#}
+{#            '#step-1': {#}
+{#                'passed' : false,#}
+{#                'auto_generate': false,#}
+{#                'validate_steps': []#}
+{#            },#}
+{#            '#step-2': {#}
+{#                'passed' : false,#}
+{#                'auto_generate': false,#}
+{#                'validate_steps': ['#page_title', ]#}
+{#            },#}
+{#            '#step-3': {#}
+{#                'passed' : false,#}
+{#                'auto_generate': false,#}
+{#                'validate_steps': ['#page_title', ]#}
+{#            },#}
+{#            '#step-4': {#}
+{#                'passed' : false,#}
+{#                'auto_generate': true,#}
+{#                'validate_steps': ['#page_title', '#financial_assumptions']#}
+{#            },#}
+{#            '#step-5': {#}
+{#                'passed' : false,#}
+{#                'auto_generate': true,#}
+{#                'validate_steps': ['page_title', '#financial_assumptions', '#financial_data_input']#}
+{#            }#}
+{#        }#}
+{#        var calendarMonths = {#}
+{#            'January': {'name': 'January', 'order': 1, 'code': 'Jan', 'next': 'February','previous': 'December' },#}
+{#            'February': {'name': 'February', 'order': 2, 'code': 'Feb', 'next': 'March', 'previous': 'January'},#}
+{#            'March': {'name': 'March', 'order': 3, 'code': 'Mar', 'next': 'April', 'previous': 'February'},#}
+{#            'April': {'name': 'April', 'order': 4, 'code': 'Apr', 'next': 'May', 'previous': 'March'},#}
+{#            'May': {'name': 'May', 'order': 5, 'code': 'May', 'next': 'June', 'previous': 'April'},#}
+{#            'June': {'name': 'June', 'order': 6, 'code': 'Jun', 'next': 'July', 'previous': 'May'},#}
+{#            'July': {'name': 'July', 'order': 7, 'code': 'Jul', 'next': 'August', 'previous': 'June'},#}
+{#            'August': {'name': 'August', 'order': 8, 'code': 'Aug', 'next': 'September', 'previous': 'July'},#}
+{#            'September': {'name': 'September', 'order': 9, 'code': 'Sep', 'next': 'October', 'previous': 'August'},#}
+{#            'October': {'name': 'October', 'order': 10, 'code': 'Oct', 'next': 'November', 'previous': 'September'},#}
+{#            'November': {'name': 'November', 'order': 11, 'code': 'Nov', 'next': 'December', 'previous': 'October'},#}
+{#            'December': {'name': 'December', 'order': 12, 'code': 'Dec', 'next': 'January', 'previous': 'November'}#}
+{#        }#}
+{#        var projectionMonthsList = {}#}
+{#        var projectionYears = 0;#}
+{#        var firstFinancialYear = 0;#}
+{#        var lastFinancialYear = 0;#}
+{#        var countOfMonthsInFinancialYear = 12;#}
+{#        var projectionYearsList = []#}
+{#        var productCount = 1;#}
+{#        var products = {}#}
+{##}
+{#        var theme = {}#}
+{##}
+{##}
+{#        var costAppropriationMethods = ['Per Month', 'Per Annum', '% of Revenue', '% of Employee Salary']#}
+{##}
+{#        var operatingCostList = [#}
+{#            'Rent and Rates', 'Heat and Light', 'Insurances', 'Marketing/Advertisement', 'Printing & Stationary',#}
+{#            'Misc. Expenses'#}
+{#        ]#}
+{##}
+{#        var employeesList = [#}
+{#            'Director', 'Account Manager', 'Additional Account Manager', 'Coordinator', 'Additional Coordinator',#}
+{#            'Quality Control Manager', 'Marketing Officer', 'Receptionist', 'Human Resource Manager', 'Secretary'#}
+{#        ]#}
+{##}
+{#        var capitalSourcesList = ['Share Capital', 'Debt', 'Annual Interest Rate', 'Loan Period (In months)']#}
+{##}
+{#        var tangibleAssetsList = ['Computers', 'Printers', 'Furniture and Fixtures', 'Office Equipment', 'Fit Outs']#}
+{##}
+{#        var intangibleAssetsList = ['Website Development', 'Patents & Trademarks']#}
+{##}
+{#        var depositItemList = ['Rental Deposits', 'Other Deposits']#}
+{##}
+{#        var startupCostItemList = [#}
+{#            'Legal Expenses', 'Formation Expenses', 'Marketing Costs', 'Utility',#}
+{#            'Stationery', 'Business Name Registration Cost'#}
+{#        ]#}
+{##}
+{#        var totalAssets = {}#}
+{#        var totalLiabilities = {}#}
+{#        var tangibleAssetsBalanceTotal = {}#}
+{#        var intangibleAssetsBalanceTotal = {}#}
+{#        var cashFlowChangesDuringTheYearPerMonth = {}   // netCashFlowFromOperatingActivities - netCashFlowsFromInvestingActivities + netCashFlowFromFinancingActivities#}
+{#        var closingCashBalancePerMonth = {}#}
+{#        var revenueTotalsPerYear = {}       // Revenue totals per year#}
+{#        var directCostTotalsPerYear = {}    // directCostTotals Aggregated per year#}
+{#        var grossProfit = {}            // Revenue - Direct Cost // Per month#}
+{#        var operatingCostTotalsPeryear = {}  // operatingCostPerMonthTotals aggregated per yearv#}
+{#        var EAT = {}                    //Earnings after Tax // Per month#}
+{#        var netMarginPerMonth = {}      // Monthly net margin#}
+{#    </script>#}
+
   </head>
 
   <body class="nav-md footer_fixed" style="background-color: #fff;">
@@ -59,7 +203,7 @@
                   </a>
 
                   <ul class="dropdown-menu dropdown-usermenu pull-right">
-                    <li><a href="-/logout"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                    <li><a href="/-/logout"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
                   </ul>
                 </li>
                 <li class="">
@@ -92,7 +236,7 @@
                   </ul>
                 </li>
                 <li class="">
-                    <a href="dashboard"  class="nav-link scalable">Dashboard</a>
+                    <a href="/dashboard"  class="nav-link scalable">Dashboard</a>
                 </li>
                 {% else %}
 
@@ -157,6 +301,23 @@
                 </div>
               </div>
           </div>
+
+          <div class="modal fade" id="message-dialog" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h2 class="modal-h3 header text-left">Heading</h2>
+{#                        <div class="ln_solid"></div>#}
+                        <p class="message text-left text-danger">Don't have an account?</p>
+                        <div class="ln_solid"></div>
+                        <div class="table-container"></div>
+                        <button class="btn btn-primary btn-sm" style="float: left;" data-toggle="modal" data-target="#message-dialog">Close</button>
+                        <br/>
+                    </div>
+                </div>
+              </div>
+          </div>
+
       </div>
     </div>
 
@@ -202,6 +363,9 @@
     <script src="{% static 'vendors/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js' %}"></script>
     <script src="{% static 'vendors/jquery.hotkeys/jquery.hotkeys.js' %}"></script>
     <script src="{% static 'vendors/google-code-prettify/src/prettify.js' %}"></script>
+
+    <!-- Bootstrap Confirmation -->
+    <script src="{% static 'vendors/Bootstrap-Confirmation/bootstrap-confirmation.js' %}"></script>
 
     <!-- Custom Theme Scripts -->
     <script src="{% static 'js/custom-gentellela.js' %}"></script>

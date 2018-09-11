@@ -21,8 +21,9 @@ from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from bplanner.views import (
     LandingPageView, RegisterView, LoginView, LogoutView, PasswordResetView,
-    PasswordChangeView, DashboardView, BusinessPlanDetailView, BusinessPlanHelpView,
-    BusinessPlanDeleteView)
+    PasswordChangeView, DashboardView, BusinessPlanDetailView, BusinessPlanHelpView, BusinessPlanDeleteView,
+    save_title_page, save_main_content_page, save_financial_assumptions_page, save_financial_data_input_page,
+    save_bplanner_settings)
 
 
 urlpatterns = [
@@ -35,10 +36,15 @@ urlpatterns = [
     url(r'-/logout$', LogoutView.as_view(), name='logout-page'),
     url(r'-/password/change$', PasswordChangeView.as_view(), name='password-change-page'),
     url(r'-/help', BusinessPlanHelpView.as_view(), name='business-plan-help'),
+    url(r'dashboard/new/business-plan/title_page$', save_title_page, name='save-title-page'),
+    url(r'dashboard/new/business-plan/main_content_page$', save_main_content_page, name='save-main-content-page'),
+    url(r'dashboard/new/business-plan/financial_assumptions_page$', save_financial_assumptions_page, name='save-financial-assumptions-page'),
+    url(r'dashboard/new/business-plan/financial_data_input_page$', save_financial_data_input_page, name='save-financial-data-input-page'),
     url(r'dashboard/new/business-plan$', BusinessPlanDetailView.as_view(), name='business-plan-detail'),
-    url(r'dashboard/view/business-plan$', BusinessPlanDetailView.as_view(), name='business-plan-detail'),
-    url(r'dashboard/edit/business-plan$', BusinessPlanDetailView.as_view(), name='business-plan-detail'),
-    url(r'dashboard/delete/business-plan$', BusinessPlanDeleteView.as_view(), name='business-plan-detail'),
+    url(r'dashboard/view/business-plan$', BusinessPlanDetailView.as_view(), name='business-plan-view-detail'),
+    url(r'dashboard/edit/business-plan$', BusinessPlanDetailView.as_view(), name='business-plan-edit-detail'),
+    url(r'dashboard/save/business-plan/settings$', save_bplanner_settings, name='business-plan-save-settings'),
+    url(r'dashboard/delete/business-plan$', BusinessPlanDeleteView.as_view(), name='business-plan-delete-detail'),
     url(r'dashboard$', DashboardView.as_view(), name='dashboard'),
     url(r'', LandingPageView.as_view(), name='landing-page'),
 

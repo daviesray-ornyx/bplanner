@@ -370,7 +370,7 @@ nav li {
 }
 
 .margin-15{
-    margin-bottom: 45px;
+    margin-bottom: 15px;
 }
 
 .hover-underline:hover{
@@ -487,20 +487,32 @@ nav li {
     font-size: 19px;
 }
 
-.alert-info{
-    flex: 0 0 66px;
-    height: 100%;
-    margin: auto;
-    margin-left: -66px;
-    color: #fff;
-    background-color: #3a7fd5!important;
-    font-family: 'icomoon';
-    font-style: italic;
-    font-size: 22px;
-    font-weight: 400;
-    line-height: 1;
-    text-align: center;
-    -webkit-font-smoothing: antialiased;
+/*.alert-info{*/
+    /*flex: 0 0 66px;*/
+    /*height: 100%;*/
+    /*margin: auto;*/
+    /*margin-left: -66px;*/
+    /*color: #fff;*/
+    /*background-color: #3a7fd5!important;*/
+    /*font-family: 'icomoon';*/
+    /*font-style: italic;*/
+    /*font-size: 22px;*/
+    /*font-weight: 400;*/
+    /*line-height: 1;*/
+    /*text-align: center;*/
+    /*-webkit-font-smoothing: antialiased;*/
+/*}*/
+.alert-info {
+    background-color: #d9edf7;
+    border-color: #bcdff1;
+    color: #31708f;
+}
+
+.nav-tabs .alert {
+    padding: 5px 15px;
+    margin-bottom: 0px;
+    border: 1px solid transparent;
+    border-radius: 4px;
 }
 
 .alert-info-text{

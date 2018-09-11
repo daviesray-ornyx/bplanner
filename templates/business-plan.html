@@ -93,148 +93,164 @@
             </div>
         </div>
 
+        <div id="alert_main" class="alert alert-info alert-dismissible hidden text-center" style="background-color: transparent!important;border: none!important;">
+            <strong class="status">  Saving</strong> <span class="message"></span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12 ">
                 <div class="x_content">
-                    <form id="frm_bplanner" method="post" action="/dashboard/new/business-plan" class="form-horizontal form-label-left" autocomplete="off" data-parsley-validate>
-                        {% csrf_token %}
                         <!-- tabs -->
                       <div class="tabbable tabs-bottom">
                         <div class="tab-content">
-                            <div class="tab-pane active container-fluid" id="page_title" style="">
-                                <h2>Title page</h2>
-                                <div class="ln_solid"></div>
-                                <div class="form-group">
-                                    <label class="control-label col-md-2 col-sm-2 col-xs-12" for="cover-company_name" >Company Name <span class="required">*</span></label>
-                                    <div class="col-md-6 col-sm-6 col-xs-12">
-                                        {% render_field  bplanner_form.company_name class="form-control col-md-7 col-xs-12" placeholder="Company / Business / Project name"  required='required' %}
+                            <div class="tab-pane active container-fluid" id="page_title" data-friendly_name="Title Page" style="">
+                                <form id="frm_bplanner_title_page" method="post" action="/dashboard/new/business-plan/title_page" class="form-horizontal form-label-left" autocomplete="off" data-parsley-validate>
+                                    {% csrf_token %}
+                                    <input type="number" name="id" value="{{ id }}" class="hidden id">
+                                    <h2>Title page</h2>
+                                    <div class="ln_solid"></div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-12" for="cover-company_name" >Company Name <span class="required">*</span></label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            {% render_field  bplan_title_page_form.company_name class="form-control col-md-7 col-xs-12 render_required" placeholder="Company / Business / Project name"  required='required' %}
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-md-2 col-sm-2 col-xs-12" for="cover-tagline" >Your Tagline <span class="required">*</span></label>
-                                    <div class="col-md-6 col-sm-6 col-xs-12">
-                                        {% render_field bplanner_form.tagline class="form-control col-md-7 col-xs-12" placeholder="Tagline"  required='required' %}
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-12" for="cover-tagline" >Your Tagline <span class="required">*</span></label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            {% render_field bplan_title_page_form.tagline class="form-control col-md-7 col-xs-12" placeholder="Tagline"  required='required' %}
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group ">
-                                    <label class="control-label col-md-2 col-sm-2 col-xs-12" for="tagline">Contact information </label>
-                                    <div class="col-md-6 col-sm-6 col-xs-12">
-                                        {% render_field bplanner_form.address class="form-control col-md-7 col-xs-12" placeholder="Business address" %}
+                                    <div class="form-group ">
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-12" for="tagline">Contact information </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            {% render_field bplan_title_page_form.address class="form-control col-md-7 col-xs-12" placeholder="Business address" %}
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-md-2 col-sm-2 col-xs-12" for="tagline"> </label>
-                                    <div class="col-md-6 col-sm-6 col-xs-12">
-                                        {% render_field bplanner_form.phone_number class="form-control col-md-7 col-xs-12" placeholder="Phone number" %}
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-12" for="tagline"> </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            {% render_field bplan_title_page_form.phone_number class="form-control col-md-7 col-xs-12" placeholder="Phone number" %}
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-md-2 col-sm-2 col-xs-12" for=""></label>
-                                    <div class="col-md-6 col-sm-6 col-xs-12">
-                                        {% render_field bplanner_form.email class="form-control col-md-7 col-xs-12" placeholder="Email" %}
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-12" for=""></label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            {% render_field bplan_title_page_form.email class="form-control col-md-7 col-xs-12" placeholder="Email" %}
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-md-2 col-sm-2 col-xs-12" for=""></label>
-                                    <div class="col-md-6 col-sm-6 col-xs-12">
-                                        {% render_field bplanner_form.website class="form-control col-md-7 col-xs-12" placeholder="Website" %}
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-12" for=""></label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            {% render_field bplan_title_page_form.website class="form-control col-md-7 col-xs-12" placeholder="Website" %}
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label  col-md-2 col-sm-2 col-xs-12" for="cover-presented_to">If adressing to a company or individual include:</label>
-                                    <div class="col-md-6 col-sm-6 col-xs-12">
-                                        {% render_field bplanner_form.presented_to class="form-control col-md-7 col-xs-12" placeholder="Presented to" %}
+                                    <div class="form-group">
+                                        <label class="control-label  col-md-2 col-sm-2 col-xs-12" for="cover-presented_to">If adressing to a company or individual include:</label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            {% render_field bplan_title_page_form.presented_to class="form-control col-md-7 col-xs-12" placeholder="Presented to" %}
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-md-2 col-sm-2 col-xs-12" for="cover-logo ">Logo input</label>
-                                    <div class="col-md-6 col-sm-6 col-xs-12">
-                                        {% render_field bplanner_form.logo class="form-control-file" %}
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-12" for="cover-logo ">Logo input</label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            {% render_field bplan_title_page_form.logo class="form-control-file" %}
+                                        </div>
                                     </div>
-                                </div>
+                                </form>
                             </div>
-                            <div class="tab-pane container-fluid" id="page_main_content">
-                                <h2>Main business plan content</h2>
-                                <div class="ln_solid"></div>
-                                <div class="btn-toolbar editor sticky-top" data-role="editor-toolbar" data-target="#editor-one">
-                                    <div class="btn-group">
-                                      <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font"><i class="fa fa-font"></i><b class="caret"></b></a>
-                                      <ul class="dropdown-menu">
-                                      </ul>
-                                    </div>
+                            <div class="tab-pane container-fluid" id="page_main_content"  data-friendly_name="Main business plan content page">
+                                <form id="frm_bplanner_main_content_page" method="post" action="/dashboard/new/business-plan/main_content_page" class="form-horizontal form-label-left" autocomplete="off" data-parsley-validate>
+                                    {% csrf_token %}
+                                    <input name="id" value="{{ bplan_main_content_page_form.id }}" class="hidden id">
+                                    <h2>Main business plan content</h2>
+                                    <div class="ln_solid"></div>
+                                    <div class="btn-toolbar editor sticky-top" data-role="editor-toolbar" data-target="#editor-one">
+                                        <div class="btn-group">
+                                          <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font"><i class="fa fa-font"></i><b class="caret"></b></a>
+                                          <ul class="dropdown-menu">
+                                          </ul>
+                                        </div>
 
-                                    <div class="btn-group">
-                                      <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font Size"><i class="fa fa-text-height"></i>&nbsp;<b class="caret"></b></a>
-                                      <ul class="dropdown-menu">
-                                        <li>
-                                          <a data-edit="fontSize 5">
-                                            <p style="font-size:17px">Huge</p>
-                                          </a>
-                                        </li>
-                                        <li>
-                                          <a data-edit="fontSize 3">
-                                            <p style="font-size:14px">Normal</p>
-                                          </a>
-                                        </li>
-                                        <li>
-                                          <a data-edit="fontSize 1">
-                                            <p style="font-size:11px">Small</p>
-                                          </a>
-                                        </li>
-                                      </ul>
-                                    </div>
+                                        <div class="btn-group">
+                                          <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font Size"><i class="fa fa-text-height"></i>&nbsp;<b class="caret"></b></a>
+                                          <ul class="dropdown-menu">
+                                            <li>
+                                              <a data-edit="fontSize 5">
+                                                <p style="font-size:17px">Huge</p>
+                                              </a>
+                                            </li>
+                                            <li>
+                                              <a data-edit="fontSize 3">
+                                                <p style="font-size:14px">Normal</p>
+                                              </a>
+                                            </li>
+                                            <li>
+                                              <a data-edit="fontSize 1">
+                                                <p style="font-size:11px">Small</p>
+                                              </a>
+                                            </li>
+                                          </ul>
+                                        </div>
 
-                                    <div class="btn-group">
-                                      <a class="btn" data-edit="bold" title="Bold (Ctrl/Cmd+B)"><i class="fa fa-bold"></i></a>
-                                      <a class="btn" data-edit="italic" title="Italic (Ctrl/Cmd+I)"><i class="fa fa-italic"></i></a>
-                                      <a class="btn" data-edit="strikethrough" title="Strikethrough"><i class="fa fa-strikethrough"></i></a>
-                                      <a class="btn" data-edit="underline" title="Underline (Ctrl/Cmd+U)"><i class="fa fa-underline"></i></a>
-                                    </div>
+                                        <div class="btn-group">
+                                          <a class="btn" data-edit="bold" title="Bold (Ctrl/Cmd+B)"><i class="fa fa-bold"></i></a>
+                                          <a class="btn" data-edit="italic" title="Italic (Ctrl/Cmd+I)"><i class="fa fa-italic"></i></a>
+                                          <a class="btn" data-edit="strikethrough" title="Strikethrough"><i class="fa fa-strikethrough"></i></a>
+                                          <a class="btn" data-edit="underline" title="Underline (Ctrl/Cmd+U)"><i class="fa fa-underline"></i></a>
+                                        </div>
 
-                                    <div class="btn-group">
-                                      <a class="btn" data-edit="insertunorderedlist" title="Bullet list"><i class="fa fa-list-ul"></i></a>
-                                      <a class="btn" data-edit="insertorderedlist" title="Number list"><i class="fa fa-list-ol"></i></a>
-                                      <a class="btn" data-edit="outdent" title="Reduce indent (Shift+Tab)"><i class="fa fa-dedent"></i></a>
-                                      <a class="btn" data-edit="indent" title="Indent (Tab)"><i class="fa fa-indent"></i></a>
-                                    </div>
+                                        <div class="btn-group">
+                                          <a class="btn" data-edit="insertunorderedlist" title="Bullet list"><i class="fa fa-list-ul"></i></a>
+                                          <a class="btn" data-edit="insertorderedlist" title="Number list"><i class="fa fa-list-ol"></i></a>
+                                          <a class="btn" data-edit="outdent" title="Reduce indent (Shift+Tab)"><i class="fa fa-dedent"></i></a>
+                                          <a class="btn" data-edit="indent" title="Indent (Tab)"><i class="fa fa-indent"></i></a>
+                                        </div>
 
-                                    <div class="btn-group">
-                                      <a class="btn" data-edit="justifyleft" title="Align Left (Ctrl/Cmd+L)"><i class="fa fa-align-left"></i></a>
-                                      <a class="btn" data-edit="justifycenter" title="Center (Ctrl/Cmd+E)"><i class="fa fa-align-center"></i></a>
-                                      <a class="btn" data-edit="justifyright" title="Align Right (Ctrl/Cmd+R)"><i class="fa fa-align-right"></i></a>
-                                      <a class="btn" data-edit="justifyfull" title="Justify (Ctrl/Cmd+J)"><i class="fa fa-align-justify"></i></a>
-                                    </div>
+                                        <div class="btn-group">
+                                          <a class="btn" data-edit="justifyleft" title="Align Left (Ctrl/Cmd+L)"><i class="fa fa-align-left"></i></a>
+                                          <a class="btn" data-edit="justifycenter" title="Center (Ctrl/Cmd+E)"><i class="fa fa-align-center"></i></a>
+                                          <a class="btn" data-edit="justifyright" title="Align Right (Ctrl/Cmd+R)"><i class="fa fa-align-right"></i></a>
+                                          <a class="btn" data-edit="justifyfull" title="Justify (Ctrl/Cmd+J)"><i class="fa fa-align-justify"></i></a>
+                                        </div>
 
-                                    <div class="btn-group">
-                                      <a class="btn dropdown-toggle" data-toggle="dropdown" title="Hyperlink"><i class="fa fa-link"></i></a>
-                                      <div class="dropdown-menu input-append">
-                                        <input class="span2" placeholder="URL" type="text" data-edit="createLink" />
-                                        <button class="btn" type="button">Add</button>
-                                      </div>
-                                      <a class="btn" data-edit="unlink" title="Remove Hyperlink"><i class="fa fa-cut"></i></a>
-                                    </div>
+                                        <div class="btn-group">
+                                          <a class="btn dropdown-toggle" data-toggle="dropdown" title="Hyperlink"><i class="fa fa-link"></i></a>
+                                          <div class="dropdown-menu input-append">
+                                            <input class="span2" placeholder="URL" type="text" data-edit="createLink" />
+                                            <button class="btn" type="button">Add</button>
+                                          </div>
+                                          <a class="btn" data-edit="unlink" title="Remove Hyperlink"><i class="fa fa-cut"></i></a>
+                                        </div>
 
-                                    <div class="btn-group">
-                                      <a class="btn" title="Insert picture (or just drag & drop)" id="pictureBtn"><i class="fa fa-picture-o"></i></a>
-                                      <input type="file" data-role="magic-overlay" data-target="#pictureBtn" data-edit="insertImage" />
-                                    </div>
+                                        <div class="btn-group">
+                                          <a class="btn" title="Insert picture (or just drag & drop)" id="pictureBtn"><i class="fa fa-picture-o"></i></a>
+                                          <input type="file" data-role="magic-overlay" data-target="#pictureBtn" data-edit="insertImage" />
+                                        </div>
 
-                                    <div class="btn-group">
-                                      <a class="btn" data-edit="undo" title="Undo (Ctrl/Cmd+Z)"><i class="fa fa-undo"></i></a>
-                                      <a class="btn" data-edit="redo" title="Redo (Ctrl/Cmd+Y)"><i class="fa fa-repeat"></i></a>
+                                        <div class="btn-group">
+                                          <a class="btn" data-edit="undo" title="Undo (Ctrl/Cmd+Z)"><i class="fa fa-undo"></i></a>
+                                          <a class="btn" data-edit="redo" title="Redo (Ctrl/Cmd+Y)"><i class="fa fa-repeat"></i></a>
+                                        </div>
+
                                     </div>
-                                  </div>
-                                <div id="editor-one" class="editor-wrapper">
-                                    {% if bplanner_form.main_content == '' %}
-                                        Click to start writing...
-                                    {% else %}
-                                        {{  bplanner_form.main_content.value | safe }}
-                                    {% endif %}
-                                </div>
-                                {% render_field bplanner_form.main_content style="display:none;" %}
+                                    <div id="editor-one" class="editor-wrapper">
+                                        {% if bplan_main_content_page_form.main_content == '' %}
+                                            Click to start writing...
+                                        {% else %}
+                                            {{  bplan_main_content_page_form.main_content.value | safe }}
+                                        {% endif %}
+                                    </div>
+                                    {% render_field bplan_main_content_page_form.main_content style="display:none;" %}
+                                </form>
                             </div>
-                            <div class="tab-pane container-fluid" id="financial_assumptions">
-                                {% if mode == 'new' %}
+                            <div class="tab-pane container-fluid" id="financial_assumptions" data-friendly_name="Financial assumptions page">
+                                <form id="frm_bplanner_financial_assumptions_page" method="post" action="/dashboard/new/business-plan/financial_assumptions_page" class="form-horizontal form-label-left" autocomplete="off" data-parsley-validate>
+                                    {% csrf_token %}
+                                    <input name="id" value="{{ bplan_financial_assumptions_page_form.id }}" class="hidden id">
                                     <h2>Financial assumptions</h2>
                                     <div class="ln_solid"></div>
                                     <div class="row">
@@ -242,23 +258,19 @@
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Currency</label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    <select class="form-control" id="assumptions_currency" required="required">
-                                                        {% for currency in currencies %}
-                                                            <option value="{{ currency.id }}">{{ currency.code }}</option>
-                                                        {% endfor %}
-                                                    </select>
+                                                    {% render_field bplan_financial_assumptions_page_form.currency class="form-control render_required" required="required" %}
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Financial Year Starting From <span class="required">*</span></label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    <input name="" type="number" class="form-control" id="assumptions_first_financial_year" placeholder="Financial Year Starting From e.g 2018" min="2000" max="3000" required="required">
+                                                    {% render_field bplan_financial_assumptions_page_form.first_financial_year class="form-control render_required" placeholder="Financial Year Starting From e.g 2018" min="2000" max="3000" required="required" %}
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Month of starting operations <span class="required">*</span></label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    <select class="form-control" id="assumptions_first_financial_month" required="required">
+                                                    <select class="form-control" id="id_first_financial_year_month" name="first_financial_year_month render_required" required="required">
                                                         {% for month in months %}
                                                             <option value="{{ month.id }}">{{ month.code }}</option>
                                                         {% endfor %}
@@ -269,79 +281,80 @@
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Period of Projections in Years <span class="required">*</span></label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    <input type="number" class="form-control" id="assumptions_period_of_projections_in_years" placeholder="Period in Years" min="1" max="5" required="required">
+                                                    {% render_field bplan_financial_assumptions_page_form.projection_years class="form-control render_required" placeholder="Period in Years" min="1" max="5" required="required" %}
                                                 </div>
                                             </div>
             {#                                        Products or Services Offered#}
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Products or Services Offered <span class="required">*</span></label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    <select class="form-control" id="assumptions_products_or_services">
-                                                        <option value="0">Products</option>
-                                                        <option value="1">Services</option>
-                                                    </select>
+                                                    {% render_field bplan_financial_assumptions_page_form.offerings_products_or_services class="form-control render_required" required="required" %}
                                                 </div>
                                             </div>
             {#                                        Number of product or services offered#}
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Number of Products or Services Offered <span class="required">*</span></label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    <input type="number" class="form-control" id="assumptions_number_of_products_or_services" placeholder="Number of Products or Services Offered" min="1" value="1" required="required">
+                                                    {% render_field bplan_financial_assumptions_page_form.number_of_products_or_services class="form-control render_required" placeholder="Number of Products or Services Offered" min="1" max="5" value="1"  required="required" %}
                                                 </div>
                                             </div>
             {#                                        Number of Months in a year#}
                                             <div class="ln_solid"></div>
                                             <table id="tbl_assumptions_number_of_products_or_services" class="table table-bordered table-hover " style="right: 1px!important;">
-                                                <thead>
-                                                    <tr >
-                                                        <th  class="text-left td-md">
-                                                            Product/Service Name
-                                                        </th>
-                                                        <th  class="text-left td-md">
-                                                            Units of Measuring Revenue
-                                                        </th>
-                                                        <th  class="text-right td-md">
-                                                            Growth Rate (% Per Month)
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr id="tbl_assumptions_number_of_products_or_services_1" class="">
-                                                        <td id="tbl_assumptions_number_of_products_or_services_1_name" class="td-input">
-                                                            <input type="text" name='product_or_service_1_name' data-product_id="tbl_assumptions_number_of_products_or_services_1" data-prop_affected="name"  placeholder='Product/Service Name' class="form-control product-change text-left" required="required"/>
-                                                        </td>
-                                                        <td id="tbl_assumptions_number_of_products_or_services_1_units" class="td-input">
-                                                            <input type="text" name='product_or_service_1_units' data-product_id="tbl_assumptions_number_of_products_or_services_1" data-prop_affected="units"  placeholder='E.g Numer of hours' class="form-control product-change text-left" required="required"/>
-                                                        </td>
-                                                        <td id="tbl_assumptions_number_of_products_or_services_1_growth_rate" class="td-input">
-                                                            <input type="number" name='product_or_service_1_growth_rate' data-product_id="tbl_assumptions_number_of_products_or_services_1" data-prop_affected="growth_rate"  placeholder='E.g 5' class="form-control product-change text-right" required="required"/>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
+                                                {% if mode == 'new' %}
+                                                    <thead>
+                                                        <tr >
+                                                            <th  class="text-left td-md">
+                                                                Product/Service Name
+                                                            </th>
+                                                            <th  class="text-left td-md">
+                                                                Units of Measuring Revenue
+                                                            </th>
+                                                            <th  class="text-right td-md">
+                                                                Growth Rate (% Per Month)
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr id="tbl_assumptions_number_of_products_or_services_1" class="">
+                                                            <td id="tbl_assumptions_number_of_products_or_services_1_name" class="td-input">
+                                                                <input type="text" name='product_or_service_1_name' data-product_id="tbl_assumptions_number_of_products_or_services_1" data-prop_affected="name"  placeholder='Product/Service Name' class="form-control product-change text-left render_required" required="required"/>
+                                                            </td>
+                                                            <td id="tbl_assumptions_number_of_products_or_services_1_units" class="td-input">
+                                                                <input type="text" name='product_or_service_1_units' data-product_id="tbl_assumptions_number_of_products_or_services_1" data-prop_affected="units"  placeholder='E.g Numer of hours' class="form-control product-change text-left render_required" required="required"/>
+                                                            </td>
+                                                            <td id="tbl_assumptions_number_of_products_or_services_1_growth_rate" class="td-input">
+                                                                <input type="number" name='product_or_service_1_growth_rate' data-product_id="tbl_assumptions_number_of_products_or_services_1" data-prop_affected="growth_rate"  placeholder='E.g 5' class="form-control product-change text-right render_required" required="required"/>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                {% else %}
+                                                    {{ bplan_financial_assumptions_page_form.product_services_table.value | safe }}
+                                                {% endif %}
                                             </table>
                                             <div class="ln_solid"></div>
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Number of Months in Projection Year <span class="required">*</span></label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    <input type="number" class="form-control" id="assumptions_number_of_months_in_year" placeholder="Number of Months in a Year" min="1" value="12" required="required">
+                                                    {% render_field bplan_financial_assumptions_page_form.count_of_months_in_financial_year class="form-control render_required" placeholder="Number of Months in a Year" min="1" value="12" required="required" %}
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Inflation Rate (Per Annum) <span class="required">*</span></label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    <input type="number" class="form-control" id="assumptions_inflation_rate_pa" placeholder="% Growth" min="0" required="required">
+                                                    {% render_field bplan_financial_assumptions_page_form.inflation_rate class="form-control render_required" placeholder="% Growth" min="0" required="required" %}
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Salary Growth Rate (Per Annum) <span class="required">*</span></label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    <input type="number" class="form-control" id="assumptions_salar_growth_rate_pa" placeholder="% Growth" min="0"  required="required">
+                                                    {% render_field bplan_financial_assumptions_page_form.salary_growth_rate class="form-control render_required" placeholder="% Growth" min="0" required="required" %}
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Startup Cost Amortization Period (in Years) <span class="required">*</span></label>
                                                 <div class="col-md-7 col-sm-7 col-xs-12">
-                                                    <input type="number" class="form-control" id="assumptions_startup_cost_amortization_period" placeholder="Amortization Period (in Years)" min="0" required="required">
+                                                    {% render_field bplan_financial_assumptions_page_form.amortization_period class="form-control render_required" placeholder="Amortization Period (in Years)" min="0" required="required" %}
                                                 </div>
                                             </div>
 
@@ -349,82 +362,81 @@
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Trade Receivables <span class="required">*</span></label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    <input id="assumptions_trade_receivables_period" type="number" class="form-control" name="assumptions_trade_receivables_period" placeholder="Period in Months" min="0" max="24" required="required">
+                                                    {% render_field bplan_financial_assumptions_page_form.trade_receivables class="form-control render_required" placeholder="Period in Months" min="0" max="24" required="required" %}
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Trade Payables <span class="required">*</span></label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    <input id="assumptions_trade_payables_period" type="number" class="form-control" name="assumptions_trade_payables_period" placeholder="Period in Months" min="0" max="24" required="required">
+                                                    {% render_field bplan_financial_assumptions_page_form.trade_payables class="form-control render_required" placeholder="Period in Months" min="0" max="25" required="required" %}
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Other Expenses Payable <span class="required">*</span></label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    <input id="assumptions_other_expenses_payable_period" type="number" class="form-control" name="assumptions_other_expenses_payable_period" placeholder="Period in Months" min="0" max="24" required="required">
+                                                    {% render_field bplan_financial_assumptions_page_form.other_expenses_payables class="form-control render_required" placeholder="Period in Months" min="0" max="24" required="required" %}
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Bad Debts <span class="required">*</span></label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    <input id="assumptions_bad_debts" type="number" min="0" class="form-control" name="assumptions_bad_debts" placeholder="% of Revenue" min="0" max="100" required="required">
+                                                    {% render_field bplan_financial_assumptions_page_form.bad_debts class="form-control render_required" placeholder="% of Revenue" min="0" max="100" required="required" %}
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Taxation System <span class="required">*</span></label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    <select class="form-control" id="assumptions_taxation_system" required="required">
-                                                        <option value="0">Slab System</option>
-                                                        <option value="1">Single Rate</option>
-                                                    </select>
+                                                    {% render_field bplan_financial_assumptions_page_form.taxation_system class="form-control render_required" placeholder="Period in Years" required="required" %}
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Corporate Tax Rate <span class="required">*</span></label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    <input id="assumptions_corporate_tax_rate" type="number" min="0" class="form-control" name="assumptions_corporate_tax_rate" placeholder="Corporate Tax Rate(%)" min="0" max="100" value="20" required="required">
+                                                    {% render_field bplan_financial_assumptions_page_form.corporate_tax_rate class="form-control" placeholder="Corporate Tax Rate(%)" min="0" max="100" required="required" %}
                                                 </div>
                                             </div>
             {#                                Tax Slabs Table #}
                                             <div class="ln_solid"></div>
                                             <table id="tbl_assumptions_tax_slabs" class="table table-bordered table-x2">
-                                                <caption style="color: #73879C;"><label class="control-label">Tax Slabs</label></caption>
-                                                <thead>
-                                                    <tr>
-                                                        <th></th>
-                                                        <th class="text-right"><span class="table-heading">Over</span></th>
-                                                        <th class="text-right"><span class="table-heading">But not Over</span></th>
-                                                        <th class="text-right"><span class="table-heading">Tax Rate</span></th>
-                                                        <th class="text-right"><span class="table-heading">Difference</span></th>
-                                                        <th class="text-right"><span class="table-heading">Tax</span></th>
-                                                        <th class="text-right"><span class="table-heading">Cumulative Tax</span></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr id="tbl_assumptions_tax_slabs_1">
-                                                        <td class="action"></td>
-                                                        <td class="td-input readonly lower-limit">
-                                                            <input type="number" class="form-control text-right" name="tbl_assumptions_tax_slabs_1_lower" placeholder="" min="0" value="0" readonly>
-                                                        </td>
-                                                        <td class="td-input upper-limit">
-                                                            <input type="number" class="form-control text-right" name="tbl_assumptions_tax_slabs_1_upper" placeholder="" min="0">
-                                                        </td>
-                                                        <td class="td-input taxt-rate td-input">
-                                                            <input type="number" class="form-control text-right" name="tbl_assumptions_tax_slabs_1_tax_rate" placeholder="" min="1">
-                                                        </td>
-                                                        <td class="td-input readonly difference">
-                                                            <input type="number" class="form-control input-md text-right" name="tbl_assumptions_tax_slabs_1_difference" min="0" readonly>
-                                                        </td>
-                                                        <td class="td-input readonly tax">
-                                                            <input type="number" class="form-control input-md text-right" name="tbl_assumptions_tax_slabs_1_tax" min="0" readonly>
-                                                        </td>
-                                                        <td class="td-input readonly cumulative_tax">
-                                                            <input type="number" class="form-control input-md text-right" name="tbl_assumptions_tax_slabs_1_cumulative_tax" min="0" readonly>
-                                                        </td>
-                                                    </tr>
-
-
-                                                </tbody>
+                                                {% if mode == 'new' %}
+                                                    <caption style="color: #73879C;"><label class="control-label">Tax Slabs</label></caption>
+                                                    <thead>
+                                                        <tr>
+                                                            <th></th>
+                                                            <th class="text-right"><span class="table-heading">Over</span></th>
+                                                            <th class="text-right"><span class="table-heading">But not Over</span></th>
+                                                            <th class="text-right"><span class="table-heading">Tax Rate</span></th>
+                                                            <th class="text-right"><span class="table-heading">Difference</span></th>
+                                                            <th class="text-right"><span class="table-heading">Tax</span></th>
+                                                            <th class="text-right"><span class="table-heading">Cumulative Tax</span></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr id="tbl_assumptions_tax_slabs_1">
+                                                            <td class="action"></td>
+                                                            <td class="td-input readonly lower-limit">
+                                                                <input type="number" class="form-control text-right" name="tbl_assumptions_tax_slabs_1_lower" placeholder="" min="0" value="0" readonly>
+                                                            </td>
+                                                            <td class="td-input upper-limit">
+                                                                <input type="number" class="form-control text-right" name="tbl_assumptions_tax_slabs_1_upper" placeholder="" min="0">
+                                                            </td>
+                                                            <td class="td-input taxt-rate td-input">
+                                                                <input type="number" class="form-control text-right" name="tbl_assumptions_tax_slabs_1_tax_rate" placeholder="" min="1">
+                                                            </td>
+                                                            <td class="td-input readonly difference">
+                                                                <input type="number" class="form-control input-md text-right" name="tbl_assumptions_tax_slabs_1_difference" min="0" readonly>
+                                                            </td>
+                                                            <td class="td-input readonly tax">
+                                                                <input type="number" class="form-control input-md text-right" name="tbl_assumptions_tax_slabs_1_tax" min="0" readonly>
+                                                            </td>
+                                                            <td class="td-input readonly cumulative_tax">
+                                                                <input type="number" class="form-control input-md text-right" name="tbl_assumptions_tax_slabs_1_cumulative_tax" min="0" readonly>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                {% else %}
+                                                    {{ bplan_financial_assumptions_page_form.tax_slabs_table.value | safe }}
+                                                {% endif %}
                                             </table>
                                             <div class="table-footer" data-table="#tbl_assumptions_tax_slabs">
                                                 <button type="button" class="btn btn-sm btn-info btn-footer"
@@ -437,299 +449,322 @@
             {#                                End -- Tax Slabs Table #}
                                         </div>
                                     </div>
-                                {% else %}
-{#                                    Proceed to display what is saved #}
-                                    {{ bplanner_form.financial_assumptions.value | safe }}
-                                {% endif %}
+                                </form>
                             </div>
-                            <div class="tab-pane container-fluid" id="financial_data_input">
-                                {% if mode == 'new' %}
-                                    <h2>Financial data input</h2>
-                                    <div class="ln_solid"></div>
-                                    <table id="tbl_assumptions_price_per_product" class="table table-bordered table-hover table-dynamic margin-15">
-                                        <caption style="color: #73879C;"><label class="control-label">Price per Product/Service</label></caption>
-                                        <thead>
-                                        </thead>
-                                    </table>
-        {#                          End of Price Per Product table #}
-        {#                          Beginning of Direct Cost Per Product table #}
-                                    <table id="tbl_assumptions_direct_cost_per_product" class="table table-bordered table-hover table-dynamic margin-15">
-                                        <caption style="color: #73879C;"><label class="control-label">Direct Cost per Product/Service</label></caption>
-                                        <thead>
-                                        </thead>
-                                    </table>
-    {#                              End of Price Per Product table #}
-    {#                              Beginning of Units of Measurement Per Product table #}
-                                    <table id="tbl_assumptions_units_of_measurement_per_product" class="table table-bordered table-hover table-dynamic margin-15 ">
-                                        <caption style="color: #73879C;"><label class="control-label">Units of Measurement</label></caption>
-                                        <thead>
+                            <div class="tab-pane container-fluid" id="financial_data_input" data-friendly_name="Monthly summary P&L page" >
+                                <form id="frm_bplanner_settings" method="post" action="/dashboard/save/business-plan/settings" class="form-horizontal form-label-left" autocomplete="off" data-parsley-validate>
+                                    {% csrf_token %}
+                                </form>
+                                    <form id="frm_bplanner_financial_data_input_page" method="post" action="/dashboard/new/business-plan/financial_data_input_page" class="form-horizontal form-label-left" autocomplete="off" data-parsley-validate>
+                                        {% csrf_token %}
+                                        {% if mode == 'new' %}
+                                            <input name="id" value="{{ frm_bplanner_financial_data_input_page.id }}" class="hidden id">
+                                            <h2>Financial data input</h2>
+                                            <div class="ln_solid"></div>
+                                            <table id="tbl_assumptions_price_per_product" class="table table-bordered table-hover table-dynamic margin-15">
+                                            </table>
+                {#                          End of Price Per Product table #}
+                {#                          Beginning of Direct Cost Per Product table #}
+                                            <table id="tbl_assumptions_direct_cost_per_product" class="table table-bordered table-hover table-dynamic margin-15">
+                                            </table>
+            {#                              End of Price Per Product table #}
+            {#                              Beginning of Units of Measurement Per Product table #}
+                                            <table id="tbl_assumptions_units_of_measurement_per_product" class="table table-bordered table-hover table-dynamic margin-15 ">
+                                            </table>
+                {#                         End of Price Per Product table #}
+                {#                          Operating costs  #}
+                                            <div id="div_assumptions_operating_costs" class="content-bordered ">
+                                                <table id="tbl_assumptions_operating_costs" class="table table-bordered table-hover" >
+                                                </table>
+                                                <div class="table-footer" data-table="#tbl_assumptions_operating_costs">
+                                                    <button type="button" class="btn btn-sm btn-info btn-footer"
+                                                            data-action="add-row"
+                                                            data-row_html="Some thing that contains row html" title="Add row to table">
+                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                        Add Row
+                                                    </button>
+                                                </div>
+                                            </div>
 
-                                        </thead>
-                                    </table>
-        {#                         End of Price Per Product table #}
-        {#                          Operating costs  #}
-                                    <div id="div_assumptions_operating_costs" class="content-bordered ">
-                                        <table id="tbl_assumptions_operating_costs" class="table table-bordered table-hover" >
-                                            <caption style="color: #73879C;"><label class="control-label">Operating Costs</label></caption>
-                                        </table>
-                                        <div class="table-footer" data-table="#tbl_assumptions_operating_costs">
-                                            <button type="button" class="btn btn-sm btn-info btn-footer"
-                                                    data-action="add-row"
-                                                    data-row_html="Some thing that contains row html" title="Add row to table">
-                                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                                Add Row
-                                            </button>
-                                        </div>
-                                    </div>
+                {#                          End--- Operating costs  #}
+                {#                         Employee details tables #}
+                                            <div id="div_assumptions_employee_roles_list" class="content-bordered">
+                                                <table id="tbl_assumptions_employee_roles_list" class="table table-bordered table-hover" >
+                                                </table>
+                                                <div class="table-footer" data-table="#tbl_assumptions_employees_details_cost">
+                                                    <button type="button" class="btn btn-sm btn-info btn-footer"
+                                                            data-action="add-row"
+                                                            data-row_html="Some thing that contains row html" title="Add row to table">
+                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                        Add Row
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div id="div_assumptions_employees_working_hours" class="content-bordered">
+                {#                                Number of working hours#}
+                                                <table id="tbl_assumptions_employees_working_hours" class="table table-bordered table-hover" >
+                                                </table>
+                                            </div>
+                                            <div id="div_assumptions_employees_hourly_rates" class="content-bordered">
+                {#                                Hourly rate#}
+                                                <table id="tbl_assumptions_employees_hourly_rates" class="table table-bordered table-hover" >
+                                                    <caption style="color: #73879C;"><label class="control-label">Rate per Hour</label></caption>
+                                                </table>
+                                            </div>
 
-        {#                          End--- Operating costs  #}
-        {#                         Employee details tables #}
-                                    <div id="div_assumptions_employee_roles_list" class="content-bordered">
-                                        <table id="tbl_assumptions_employee_roles_list" class="table table-bordered table-hover" >
-                                            <caption style="color: #73879C;"><label class="control-label">Employee Costs</label></caption>
-                                        </table>
-                                        <div class="table-footer" data-table="#tbl_assumptions_employees_details_cost">
-                                            <button type="button" class="btn btn-sm btn-info btn-footer"
-                                                    data-action="add-row"
-                                                    data-row_html="Some thing that contains row html" title="Add row to table">
-                                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                                Add Row
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div id="div_assumptions_employees_working_hours" class="content-bordered">
-        {#                                Number of working hours#}
-                                        <table id="tbl_assumptions_employees_working_hours" class="table table-bordered table-hover" >
-                                            <caption style="color: #73879C;"><label class="control-label">Number of Working Hours per Month</label></caption>
-                                        </table>
-                                    </div>
-                                    <div id="div_assumptions_employees_hourly_rates" class="content-bordered">
-        {#                                Hourly rate#}
-                                        <table id="tbl_assumptions_employees_hourly_rates" class="table table-bordered table-hover" >
-                                            <caption style="color: #73879C;"><label class="control-label">Rate per Hour</label></caption>
-                                        </table>
-                                    </div>
-
-        {#                          End---- Employee details tables#}
-        {#                        Sources tables #}
-                                    <div id="div_assumptions_capital" class="content-bordered">
-        {#                                Number of working hours#}
-                                        <table id="tbl_assumptions_capital" class="table table-bordered table-hover " >
-                                            <caption style="color: #73879C;"><label class="control-label">Capital Sources</label></caption>
-                                        </table>
-                                    </div>
-        {#                        End--- Sources #}
-        {#                        Usage Tables#}
-                                    <div id="div_assumptions_usage_tangible_assets" class="content-bordered">
-        {#                                Tangible assets#}
-                                        <table id="tbl_assumptions_usage_tangible_assets" class="table table-bordered table-hover" >
-                                            <caption style="color: #73879C;"><label class="control-label">Usage: Investment in Tangible Fixed Assets</label></caption>
-                                        </table>
-                                        <div class="table-footer" data-table="#tbl_assumptions_usage_tangible_assets">
-                                            <button type="button" class="btn btn-sm btn-info btn-footer"
-                                                    data-action="add-row"
-                                                    data-row_html="Some thing that contains row html" title="Add row to table">
-                                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                                Add Row
-                                            </button>
-                                        </div>
-        {#                                End -- Tangible assets#}
-                                        <br/>
-        {#                                Intangible assets#}
-                                        <table id="tbl_assumptions_usage_intangible_assets" class="table table-bordered table-hover" >
-                                            <caption style="color: #73879C;"><label class="control-label">Usage: Investment in Intangible Fixed Assets</label></caption>
-                                        </table>
-                                        <div class="table-footer" data-table="#tbl_assumptions_usage_intangible_assets">
-                                            <button type="button" class="btn btn-sm btn-info btn-footer"
-                                                    data-action="add-row"
-                                                    data-row_html="Some thing that contains row html" title="Add row to table">
-                                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                                Add Row
-                                            </button>
-                                        </div>
-        {#                                End -- Intangible assets#}
-                                        <br/>
-        {#                                Deposits Table#}
-                                        <table id="tbl_assumptions_usage_deposits" class="table table-bordered table-hover" >
-                                            <caption style="color: #73879C;"><label class="control-label">Usage: Deposits</label></caption>
-                                        </table>
-                                        <div class="table-footer" data-table="#tbl_assumptions_usage_deposits">
-                                            <button type="button" class="btn btn-sm btn-info btn-footer"
-                                                    data-action="add-row"
-                                                    data-row_html="Some thing that contains row html" title="Add row to table">
-                                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                                Add Row
-                                            </button>
-                                        </div>
-        {#                                End -- Deposits table#}
-                                        <br/>
-        {#                                Other Startup Costs Table#}
-                                        <table id="tbl_assumptions_usage_other_startup_costs" class="table table-bordered table-hover" >
-                                            <caption style="color: #73879C;"><label class="control-label">Usage: Other Start-up Costs</label></caption>
-                                        </table>
-                                        <div class="table-footer" data-table="#tbl_assumptions_usage_other_startup_costs">
-                                            <button type="button" class="btn btn-sm btn-info btn-footer"
-                                                    data-action="add-row"
-                                                    data-row_html="Some thing that contains row html" title="Add row to table">
-                                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                                Add Row
-                                            </button>
-                                        </div>
-        {#                                End -- Other Startup Costs table#}
-                                    </div>
-        {#                        End-- Uses Tables#}
-                                {% else %}
-{#                                    Proceed to display what is saved #}
-                                    {{ bplanner_form.financial_input.value | safe }}
-                                {% endif %}
+                {#                          End---- Employee details tables#}
+                {#                        Sources tables #}
+                                            <div id="div_assumptions_capital" class="content-bordered">
+                {#                                Number of working hours#}
+                                                <table id="tbl_assumptions_capital" class="table table-bordered table-hover " >
+                                                </table>
+                                            </div>
+                {#                        End--- Sources #}
+                {#                        Usage Tables#}
+                                            <div id="div_assumptions_usage_tangible_assets" class="content-bordered">
+                {#                                Tangible assets#}
+                                                <table id="tbl_assumptions_usage_tangible_assets" class="table table-bordered table-hover" >
+                                                </table>
+                                                <div class="table-footer" data-table="#tbl_assumptions_usage_tangible_assets">
+                                                    <button type="button" class="btn btn-sm btn-info btn-footer"
+                                                            data-action="add-row"
+                                                            data-row_html="Some thing that contains row html" title="Add row to table">
+                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                        Add Row
+                                                    </button>
+                                                </div>
+                {#                                End -- Tangible assets#}
+                                                <br/>
+                {#                                Intangible assets#}
+                                                <table id="tbl_assumptions_usage_intangible_assets" class="table table-bordered table-hover" >
+                                                </table>
+                                                <div class="table-footer" data-table="#tbl_assumptions_usage_intangible_assets">
+                                                    <button type="button" class="btn btn-sm btn-info btn-footer"
+                                                            data-action="add-row"
+                                                            data-row_html="Some thing that contains row html" title="Add row to table">
+                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                        Add Row
+                                                    </button>
+                                                </div>
+                {#                                End -- Intangible assets#}
+                                                <br/>
+                {#                                Deposits Table#}
+                                                <table id="tbl_assumptions_usage_deposits" class="table table-bordered table-hover" >
+                                                </table>
+                                                <div class="table-footer" data-table="#tbl_assumptions_usage_deposits">
+                                                    <button type="button" class="btn btn-sm btn-info btn-footer"
+                                                            data-action="add-row"
+                                                            data-row_html="Some thing that contains row html" title="Add row to table">
+                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                        Add Row
+                                                    </button>
+                                                </div>
+                {#                                End -- Deposits table#}
+                                                <br/>
+                {#                                Other Startup Costs Table#}
+                                                <table id="tbl_assumptions_usage_other_startup_costs" class="table table-bordered table-hover" >
+                                                </table>
+                                                <div class="table-footer" data-table="#tbl_assumptions_usage_other_startup_costs">
+                                                    <button type="button" class="btn btn-sm btn-info btn-footer"
+                                                            data-action="add-row"
+                                                            data-row_html="Some thing that contains row html" title="Add row to table">
+                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                        Add Row
+                                                    </button>
+                                                </div>
+                {#                                End -- Other Startup Costs table#}
+                                            </div>
+                {#                        End-- Uses Tables#}
+                                        {% else %}
+                                            {{ bplan_financial_data_input_page_form.financial_input.value | safe }}
+                                        {% endif %}
+                                    </form>
                             </div>
-                            <div class="tab-pane step-5" id="rpt_pnl" >
-                                {% if mode == 'new' %}
-                                    <table id="tbl_pnl" class="table table-bordered ">
-                                        <caption style="color: #73879C;"><label class="control-label">Monthly Summary P&L</label></caption>
-                                    </table>
-                                {% else %}
-{#                                    Proceed to display what is saved #}
-                                    {{ bplanner_form.rpt_pnl.value | safe }}
-                                {% endif %}
+                            <div class="tab-pane step-5" id="rpt_pnl"  data-friendly_name="#" >
+                                <table id="tbl_pnl" class="table table-bordered ">
+                                    <caption style="color: #73879C;"><label class="control-label">Monthly Summary P&L</label></caption>
+                                </table>
                             </div>
-                            <div class="tab-pane step-5" id="rpt_amortization">
-                                {% if mode == 'new' %}
-                                    <table id="tbl_amortization" class="table table-bordered">
-                                        <caption style="color: #73879C;"><label class="control-label">Amortization Schedule</label></caption>
-                                    </table>
-                                {% else %}
-{#                                    Proceed to display what is saved #}
-                                    {{ bplanner_form.rpt_amortization.value | safe }}
-                                {% endif %}
+                            <div class="tab-pane step-5" id="rpt_amortization"  data-friendly_name="Amortization Schedule">
+                                <table id="tbl_amortization" class="table table-bordered">
+                                    <caption style="color: #73879C;"><label class="control-label">Amortization Schedule</label></caption>
+                                </table>
                             </div>
-                            <div class="tab-pane step-5" id="rpt_cash_flow">
-                                {% if mode == 'new' %}
-                                    <table id="tbl_cash_flow" class="table table-bordered ">
-                                        <caption style="color: #73879C;"><label class="control-label">Cash Flow</label></caption>
-                                    </table>
-                                {% else %}
-{#                                    Proceed to display what is saved #}
-                                    {{ bplanner_form.rpt_cash_flow.value | safe }}
-                                {% endif %}
+                            <div class="tab-pane step-5" id="rpt_cash_flow"  data-friendly_name="Cash Flow">
+                                <table id="tbl_cash_flow" class="table table-bordered ">
+                                    <caption style="color: #73879C;"><label class="control-label">Cash Flow</label></caption>
+                                </table>
                             </div>
-                            <div class="tab-pane step-5" id="rpt_balance_sheet">
-                                {% if mode == 'new' %}
-                                    <table id="tbl_balance_sheet" class="table table-bordered">
-                                        <caption style="color: #73879C;"><label class="control-label">Balance Sheet</label></caption>
-                                    </table>
-                                {% else %}
-{#                                    Proceed to display what is saved #}
-                                    {{ bplanner_form.rpt_balance_sheet.value | safe }}
-                                {% endif %}
+                            <div class="tab-pane step-5" id="rpt_balance_sheet" data-friendly_name="Balance Sheet">
+                                <table id="tbl_balance_sheet" class="table table-bordered">
+                                    <caption style="color: #73879C;"><label class="control-label">Balance Sheet</label></caption>
+                                </table>
                             </div>
-                            <div class="tab-pane step-5 container-fluid" id="rpt_dashboard">
-{#                                This will be updated when tests are done#}
-                                {% if mode == 'new' %}
-                                    <h3>Dashboard</h3>
-                                    <div class="row">
-                                        <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <div class="x_panel">
-                                              <div class="x_content">
-                                                <div id="totalAssetsBar" style="height:250px;width: 500px;"></div>
-                                              </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-6 col-xs-12">
-                                            <div class="x_panel">
-                                              <div class="x_content">
-                                                <div id="totalLiabilitiesBar" style="height:250px;width: 500px;"></div>
-                                              </div>
-                                            </div>
+                            <div class="tab-pane step-5 container-fluid" id="rpt_dashboard" data-friendly_name="Dashboard">
+                                <h3>Dashboard</h3>
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <div class="x_panel">
+                                          <div class="x_content">
+                                            <div id="totalAssetsBar" style="height:250px;width: 500px;"></div>
+                                          </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-12 col-sm-12 col-xs-12">
-                                            <div class="x_panel">
-                                              <div class="x_content">
-                                                <div id="fixedAssetsClassificationsBar" style="height:250px;width: 1000px;"></div>
-                                              </div>
-                                            </div>
+                                    <div class="col-md-6 col-6 col-xs-12">
+                                        <div class="x_panel">
+                                          <div class="x_content">
+                                            <div id="totalLiabilitiesBar" style="height:250px;width: 500px;"></div>
+                                          </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-12 col-sm-12 col-xs-12">
-                                            <div class="x_panel">
-                                              <div class="x_content">
-                                                <div id="cashFlowAnalysisBar" style="height:250px;width: 1000px;"></div>
-                                              </div>
-                                            </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <div class="x_panel">
+                                          <div class="x_content">
+                                            <div id="fixedAssetsClassificationsBar" style="height:250px;width: 1000px;"></div>
+                                          </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <div class="x_panel">
-                                              <div class="x_content">
-                                                <div id="totalRevenueBar" style="height:250px;width: 500px;"></div>
-                                              </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <div class="x_panel">
-                                              <div class="x_content">
-                                                <div id="totalDirectCostBar" style="height:250px;width: 500px;"></div>
-                                              </div>
-                                            </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <div class="x_panel">
+                                          <div class="x_content">
+                                            <div id="cashFlowAnalysisBar" style="height:250px;width: 1000px;"></div>
+                                          </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <div class="x_panel">
-                                              <div class="x_content">
-                                                <div id="grossProfitBar" style="height:250px;width: 500px;"></div>
-                                              </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <div class="x_panel">
-                                              <div class="x_content">
-                                                <div id="totalOperatingCostBar" style="height:250px;width: 500px;"></div>
-                                              </div>
-                                            </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <div class="x_panel">
+                                          <div class="x_content">
+                                            <div id="totalRevenueBar" style="height:250px;width: 500px;"></div>
+                                          </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <div class="x_panel">
-                                              <div class="x_content">
-                                                <div id="earningsAfterTaxtBar" style="height:250px;width: 500px;"></div>
-                                              </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <div class="x_panel">
-                                              <div class="x_content">
-                                                <div id="netMarginBar" style="height:250px;width: 500px;"></div>
-                                              </div>
-                                            </div>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <div class="x_panel">
+                                          <div class="x_content">
+                                            <div id="totalDirectCostBar" style="height:250px;width: 500px;"></div>
+                                          </div>
                                         </div>
                                     </div>
-                                {% else %}
-{#                                    Proceed to display what is saved #}
-                                    {{ bplanner_form.rpt_dashboard.value | safe }}
-                                {% endif %}
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <div class="x_panel">
+                                          <div class="x_content">
+                                            <div id="grossProfitBar" style="height:250px;width: 500px;"></div>
+                                          </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <div class="x_panel">
+                                          <div class="x_content">
+                                            <div id="totalOperatingCostBar" style="height:250px;width: 500px;"></div>
+                                          </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <div class="x_panel">
+                                          <div class="x_content">
+                                            <div id="earningsAfterTaxtBar" style="height:250px;width: 500px;"></div>
+                                          </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <div class="x_panel">
+                                          <div class="x_content">
+                                            <div id="netMarginBar" style="height:250px;width: 500px;"></div>
+                                          </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <!-- tab content -->
                         <ul class="nav nav-tabs">
-                            <li class="active"><a href="#page_title" data-step="#step-1" data-step_previous="" data-toggle="tab">Title Page</a></li>
-                            <li><a href="#page_main_content" data-step="#step-2" data-step_previous="#step-1" data-toggle="tab">Main Content</a></li>
-                            <li><a href="#financial_assumptions" data-step="#step-3" data-step_previous="#step-2" data-toggle="tab">Financial Assumptions</a></li>
-                            <li><a href="#financial_data_input" data-step="#step-4" data-step_previous="#step-3" data-toggle="tab">Financial Data Input</a></li>
-                            <li><a href="#rpt_pnl" data-step="#step-5" data-step_previous="#step-4" data-toggle="tab">Monthly Summary P&L</a></li>
-                            <li><a href="#rpt_amortization" data-step="#step-5" data-step_previous="#step-4" data-toggle="tab">Amortization Schedule</a></li>
-                            <li><a href="#rpt_cash_flow" data-step="#step-5" data-step_previous="#step-4" data-toggle="tab">Cash Flow</a></li>
-                            <li><a href="#rpt_balance_sheet" data-step="#step-5" data-step_previous="#step-4" data-toggle="tab">Balance Sheet</a></li>
-                            <li><a href="#rpt_dashboard" data-step="#step-5" data-step_previous="#step-4" data-toggle="tab">Dashboard</a></li>
-                            {% if mode == 'new' %}
-                            <li id="li-save" style="display: none;"><button class="btn btn-primary" data-step="#step-5" data-step_previous="#step-4" style="margin-top: 5px;"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button></li>
-                            {% else %}
-                            {% endif %}
+                            <li class="active">
+                                <a id="a_bplanner_title_page" href="#page_title" data-step="#step-1" data-step_previous=""  data-toggle="tab">
+                                    <div class="alert alert-default">
+                                        <span class="tab-name">Title Page </span><img class="loading-gif hidden" src="{% static 'imgs/loading-2.gif' %}" style="height: 28px;margin-left: 20px;"/>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a id="a_bplanner_main_content_page" href="#page_main_content" data-step="#step-2" data-step_previous="#step-1"  data-toggle="tab">
+                                    <div class="alert alert-default">
+                                        <span class="tab-name">Main Content </span><img class="loading-gif hidden" src="{% static 'imgs/loading-2.gif' %}" style="height: 28px;"/>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a id="a_bplanner_financial_assumptions_page" href="#financial_assumptions" data-step="#step-3" data-step_previous="#step-2" data-toggle="tab">
+                                    <div class="alert alert-default">
+                                        <span class="tab-name">Financial Assumptions </span><img class="loading-gif hidden" src="{% static 'imgs/loading-2.gif' %}" style="height: 28px;"/>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a id="a_bplanner_financial_data_input_page" href="#financial_data_input" data-step="#step-4" data-step_previous="#step-3" data-toggle="tab">
+                                    <div class="alert alert-default">
+                                        <span class="tab-name">Financial Data Input </span><img class="loading-gif hidden" src="{% static 'imgs/loading-2.gif' %}" style="height: 28px;"/>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#rpt_pnl" data-step="#step-5" data-step_previous="#step-4" data-toggle="tab">
+                                    <div class="alert alert-default">
+                                        <span class="tab-name">Monthly Summary P&L </span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#rpt_amortization" data-step="#step-5" data-step_previous="#step-4" data-toggle="tab">
+                                    <div class="alert alert-default">
+                                        <span class="tab-name">Amortization Schedule </span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#rpt_cash_flow" data-step="#step-5" data-step_previous="#step-4" data-toggle="tab">
+                                    <div class="alert alert-default">
+                                        <span class="tab-name">Cash Flow </span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#rpt_balance_sheet" data-step="#step-5" data-step_previous="#step-4" data-toggle="tab">
+                                    <div class="alert alert-default">
+                                        <span class="tab-name">Balance Sheet </span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#rpt_dashboard" data-step="#step-5" data-step_previous="#step-4" data-toggle="tab">
+                                    <div class="alert alert-default">
+                                        <span class="tab-name">Dashboard </span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li id="li-save">
+                                <div class="alert-section">
+                                    <div class="alert alert-default">
+                                        <button id="btn_regenerate_page" type="button" class="btn btn-default hidden" style="margin-top: 5px;" data-toggle="confirmation" data-popout="true">
+                                            <i class="fa fa-refresh" aria-hidden="true"></i> Update tables
+                                        </button>
+                                        <button id="btn_save_business_plan" type="button" class="btn btn-primary" style="margin-top: 5px;">
+                                            <i class="fa fa-floppy-o" aria-hidden="true"></i> Save
+                                        </button>
+                                    </div>
+                                </div>
+                            </li>
+{#                            <li id="li-save"><button class="btn btn-success" data-step="#step-5" data-step_previous="#step-4" style="margin-top: 5px;"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save and Continue</button></li>#}
+
                         </ul>
 
                       </div>

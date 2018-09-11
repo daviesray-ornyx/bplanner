@@ -11,101 +11,6 @@ $(document).ready(function () {
     $('#editor-one').height($('#right_col').height() - $('.smart_nav').height() - 230);
     //$('#steps-nav').css('bottom', '0');
 
-    var stepMonitor = {
-        '#step-1': {
-            'passed' : false,
-            'auto_generate': false,
-            'validate_steps': []
-        },
-        '#step-2': {
-            'passed' : false,
-            'auto_generate': false,
-            'validate_steps': ['#page_title', ]
-        },
-        '#step-3': {
-            'passed' : false,
-            'auto_generate': false,
-            'validate_steps': ['#page_title', ]
-        },
-        '#step-4': {
-            'passed' : false,
-            'auto_generate': true,
-            'validate_steps': ['#page_title', '#financial_assumptions']
-        },
-        '#step-5': {
-            'passed' : false,
-            'auto_generate': true,
-            'validate_steps': ['page_title', '#financial_assumptions', '#financial_data_input']
-        }
-    }
-
-    var calendarMonths = {
-        'January': {'name': 'January', 'order': 1, 'code': 'Jan', 'next': 'February','previous': 'December' },
-        'February': {'name': 'February', 'order': 2, 'code': 'Feb', 'next': 'March', 'previous': 'January'},
-        'March': {'name': 'March', 'order': 3, 'code': 'Mar', 'next': 'April', 'previous': 'February'},
-        'April': {'name': 'April', 'order': 4, 'code': 'Apr', 'next': 'May', 'previous': 'March'},
-        'May': {'name': 'May', 'order': 5, 'code': 'May', 'next': 'June', 'previous': 'April'},
-        'June': {'name': 'June', 'order': 6, 'code': 'Jun', 'next': 'July', 'previous': 'May'},
-        'July': {'name': 'July', 'order': 7, 'code': 'Jul', 'next': 'August', 'previous': 'June'},
-        'August': {'name': 'August', 'order': 8, 'code': 'Aug', 'next': 'September', 'previous': 'July'},
-        'September': {'name': 'September', 'order': 9, 'code': 'Sep', 'next': 'October', 'previous': 'August'},
-        'October': {'name': 'October', 'order': 10, 'code': 'Oct', 'next': 'November', 'previous': 'September'},
-        'November': {'name': 'November', 'order': 11, 'code': 'Nov', 'next': 'December', 'previous': 'October'},
-        'December': {'name': 'December', 'order': 12, 'code': 'Dec', 'next': 'January', 'previous': 'November'}
-    }
-    var projectionMonthsList = {}
-    var projectionYears = 0;
-    var firstFinancialYear = 0;
-    var lastFinancialYear = 0;
-    var countOfMonthsInFinancialYear = 12;
-    var projectionYearsList = []
-    var productCount = 1;
-    var products = {}
-
-    var theme = {}
-
-
-    var costAppropriationMethods = ['Per Month', 'Per Annum', '% of Revenue', '% of Employee Salary']
-
-    var operatingCostList = [
-        'Rent and Rates', 'Heat and Light', 'Insurances', 'Marketing/Advertisement', 'Printing & Stationary',
-        'Misc. Expenses'
-    ]
-
-    var employeesList = [
-        'Director', 'Account Manager', 'Additional Account Manager', 'Coordinator', 'Additional Coordinator',
-        'Quality Control Manager', 'Marketing Officer', 'Receptionist', 'Human Resource Manager', 'Secretary'
-    ]
-
-    var capitalSourcesList = ['Share Capital', 'Debt', 'Annual Interest Rate', 'Loan Period (In months)']
-
-    var tangibleAssetsList = ['Computers', 'Printers', 'Furniture and Fixtures', 'Office Equipment', 'Fit Outs']
-
-    var intangibleAssetsList = ['Website Development', 'Patents & Trademarks']
-
-    var depositItemList = ['Rental Deposits', 'Other Deposits']
-
-    var startupCostItemList = [
-        'Legal Expenses', 'Formation Expenses', 'Marketing Costs', 'Utility',
-        'Stationery', 'Business Name Registration Cost'
-    ]
-
-    var totalAssets = {}
-    var totalLiabilities = {}
-    var tangibleAssetsBalanceTotal = {}
-    var intangibleAssetsBalanceTotal = {}
-    var cashFlowChangesDuringTheYearPerMonth = {}   // netCashFlowFromOperatingActivities - netCashFlowsFromInvestingActivities + netCashFlowFromFinancingActivities
-    var closingCashBalancePerMonth = {}
-    var revenueTotalsPerYear = {}       // Revenue totals per year
-    var directCostTotalsPerYear = {}    // directCostTotals Aggregated per year
-    var grossProfit = {}            // Revenue - Direct Cost // Per month
-    var operatingCostTotalsPeryear = {}  // operatingCostPerMonthTotals aggregated per yearv
-    var EAT = {}                    //Earnings after Tax // Per month
-    var netMarginPerMonth = {}      // Monthly net margin
-
-
-
-
     function getCookie(name) {
         var cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -122,19 +27,14 @@ $(document).ready(function () {
         return cookieValue;
     }
 
-    $('#assumptions_first_financial_year').change(function(event){
+    $('#id_first_financial_year').change(function(event){
         // First financial year altered
         firstFinancialYear = parseInt($(this).val(), 0)
         $(this).attr('value', $(this).val());
     })
 
-    $('#assumptions_period_of_projections_in_years').change(function(event){
-        // Number of projection years changed
-        projectionYears = parseInt($(this).val(), 0)
-        $(this).attr('value', $(this).val());
-    })
 
-    $('#assumptions_number_of_products_or_services').change(function(e){
+    $('#id_number_of_products_or_services').change(function(e){
         productCount = $(this).val(); // Product count updated
         // Creating table with these number of rows
         // Get count of tr in table
@@ -153,9 +53,9 @@ $(document).ready(function () {
                 var productOrServiceGrowthRate = productOrServiceId + '_growth_rate'
                 str +=
                     '<tr id="' + productOrServiceId + '">'
-                    + '<td id="' + productOrServiceName + '" class="td-input"><input name="' + productOrServiceName +'" type="text" data-product_id="' + productOrServiceId +'" data-prop_affected="name"  class="form-control input-md product-change text-left" placeholder="" required="required"></td>'
-                    + '<td id="' + productOrServiceUnits + '" class="td-input"><input name="' + productOrServiceUnits +'" type="text" data-product_id="' + productOrServiceId +'" data-prop_affected="units"  class="form-control input-md product-change text-left" placeholder="" required="required"></td>'
-                    + '<td id="' + productOrServiceGrowthRate + '" class="td-input"><input name="' + productOrServiceGrowthRate +'" type="number" min="0" data-product_id="' + productOrServiceId +'" data-prop_affected="growth_rate"  class="form-control input-md product-change text-right" placeholder="" required="required"></td>'
+                    + '<td id="' + productOrServiceName + '" class="td-input"><input name="' + productOrServiceName +'" type="text" data-product_id="' + productOrServiceId +'" data-prop_affected="name"  class="form-control input-md product-change text-left render_required" placeholder="" required="required"></td>'
+                    + '<td id="' + productOrServiceUnits + '" class="td-input"><input name="' + productOrServiceUnits +'" type="text" data-product_id="' + productOrServiceId +'" data-prop_affected="units"  class="form-control input-md product-change text-left render_required" placeholder="" required="required"></td>'
+                    + '<td id="' + productOrServiceGrowthRate + '" class="td-input"><input name="' + productOrServiceGrowthRate +'" type="number" min="0" data-product_id="' + productOrServiceId +'" data-prop_affected="growth_rate"  class="form-control input-md product-change text-right render_required" placeholder="" required="required"></td>'
                     + '</tr>'
             }
             $('#tbl_assumptions_number_of_products_or_services').append(str);
@@ -188,8 +88,26 @@ $(document).ready(function () {
         // table 4
     })
 
+    $('#id_first_financial_year').change(function (event) {
+        if($('#id_first_financial_year').val() != null && $('#id_first_financial_year').val() != ''){
+            firstFinancialYear = parseInt($('#id_first_financial_year').val(), 0)
+            generatePrijectionYearsList();
+        }
+        console.log(projectionYearsList);
+    })
+
+    $('#id_projection_years').change(function (event) {
+        if($('#id_projection_years').val() != null && $('#id_projection_years').val() != ''){
+            projectionYears = parseInt($('#id_projection_years').val(), 0)
+            generatePrijectionYearsList();
+        }
+        console.log(projectionYearsList);
+    })
+
     function generatePrijectionYearsList(){
-        lastFinancialYear = firstFinancialYear + projectionYears;
+        lastFinancialYear = parseInt(firstFinancialYear) + parseInt(projectionYears);
+        // first clear everything in array
+        projectionYearsList = [];
         for(var i= firstFinancialYear; i < lastFinancialYear; i++){
             // Getting the list of years
             projectionYearsList.push(i);
@@ -291,20 +209,21 @@ $(document).ready(function () {
         })
     }
 
-    function truncateTable(tableId, truncateHeader,  truncateBody){
-        if(truncateHeader)
-            $(tableId + " thead")
-
-        if(truncateBody)
-            $(tableId + " tbody").html(' ')
+    function truncateTable(tableId){
+        $(tableId).html('')
     }
 
-    function generatePricePerProductTable(){
+    function generatePricePerProductTable(isRegenerating){
         // Get the new list of products
         // For each product, log the details
-        truncateTable('#tbl_assumptions_price_per_product', true, true);
+        if(isRegenerating != null){
+            truncateTable('#tbl_assumptions_price_per_product');
+            console.log("Regenerating && projectionYearsList");
+            console.log(projectionYearsList);
+        }
 
-        var strHead = '<thead>'
+        var strHead =   '<caption style="color: #73879C;"><label class="control-label">Price per Product/Service</label></caption>'
+                        + '<thead>'
                         + '<tr >'
                         +   '<th class="text-left">'
                         +    'Product / Service Name'
@@ -322,7 +241,7 @@ $(document).ready(function () {
         strHead += '</tr>'
                 + '</thead>'
 
-        strBody = '<tbody>';
+        var strBody = '<tbody>';
             $.each(products, function(productIndex, product){
                 strBody += '<tr data-product_id="' + productIndex + '">'
                             + '<td class="td-label td-md" data-product_id="' + productIndex + '">'
@@ -343,7 +262,7 @@ $(document).ready(function () {
                                             + '<input data-product_id="' + productIndex + '" name="' + productIndex + '_price_' + projectionYear +'" '
                                                     + 'type="number" min="0" data-projection_year="' + projectionYear +'" '
                                                     + ' value=""'
-                                                    + ' class="form-control input-md '+ priceChangetext +' text-right" required="required " + ' + readonlyText + '></td>'
+                                                    + ' class="form-control input-md '+ priceChangetext +' text-right render_required" required="required " + ' + readonlyText + '></td>'
                                 firstYear = false;
                             })
                 strBody += '</tr>'
@@ -363,7 +282,8 @@ $(document).ready(function () {
 
     function generateDirectCostPerProductTable(){
         truncateTable('#tbl_assumptions_direct_cost_per_product', true, true);
-        var strHead = '<thead>'
+        var strHead =   '<caption style="color: #73879C;"><label class="control-label">Direct Cost per Product/Service</label></caption>'
+                        + '<thead>'
                         + '<tr >'
                         +   '<th class="text-left">'
                         +    'Product / Service Name'
@@ -392,7 +312,7 @@ $(document).ready(function () {
                                         + '<input data-product_id="' + productIndex + '" name="' + productIndex + '_direct_cost_' + projectionYear +'" '
                                                 + 'type="number" data-projection_year="' + projectionYear +'" '
                                                 + ' value=""'
-                                                + ' class="form-control input-md text-right cost-change" required="required" >'
+                                                + ' class="form-control input-md text-right render_required cost-change" required="required" >'
                                         + '</td>'
                         })
             strBody += '</tr>';
@@ -405,11 +325,15 @@ $(document).ready(function () {
         $('#tbl_assumptions_direct_cost_per_product').append(strBody);
 
         // Bind and unbind change handlers whennever necessary
+        // Unbind and bind change events
+        $('.cost-change').unbind('change');
+        $('.cost-change').change(productCostChangeHandler);
     }
 
     function generateUnitOfRevenueMeasurementTable(){
         truncateTable('#tbl_assumptions_units_of_measurement_per_product', true, true);
-        var strHead = '<thead>'
+        var strHead = '<caption style="color: #73879C;"><label class="control-label">Units of Measurement</label></caption>'
+                        +'<thead>'
                         + '<tr >'
                         +   '<th>Products / Services </th>'
                         +   '<th class="text-left">Units of measurement </th>'
@@ -462,7 +386,7 @@ $(document).ready(function () {
                                                     + ' data-projection_month_id="' + projectionMonthIndex +'" '
                                                     + ' data-projection_year="' + projectionMonthYear['year'] +'" '
                                                     + ' value=""'
-                                                    + ' class="form-control input-md '+ unitChangeText +' text-right" required="required " + ' + readonlyText + '></td>'
+                                                    + ' class="form-control input-md '+ unitChangeText +' text-right render_required" required="required " + ' + readonlyText + '></td>'
 
                             })
                 strBody += '</tr>'
@@ -500,7 +424,7 @@ $(document).ready(function () {
                       +          '<input type="text" class="form-control" name="' + operatingCostId +'" value="' + costName +'" placeholder="" required="required"  >'
                       +      '</td>'
                       +      '<td class="costing_period td-input td-sm">'
-                      +          '<select class="form-control" required="required">'
+                      +          '<select class="form-control render_required" required="required">'
                                     $.each(costAppropriationMethods, function(appMethodIndex, appMethod){
             strRow    +=                '<option value="' + appMethodIndex + '">' + appMethod + '</option>'
                                     })
@@ -516,7 +440,7 @@ $(document).ready(function () {
                                  var operatingCostChange = (colOrder == 0) ? 'operating-cost-change' : '';
              strRow +=       '<td class="cost td-input td-sm ' + readonlyText + ' ' + autoFilledText + '" '
                       +             ' data-projection_year= "'+ projectionYear +'">'
-                      +          '<input type="number" class="form-control input-md text-right ' + operatingCostChange + '" name="' + inputName + '" min="0" value="" required="required" ' + readonlyText + '>'
+                      +          '<input type="number" class="form-control input-md text-right render_required ' + operatingCostChange + '" name="' + inputName + '" min="0" value="" required="required" ' + readonlyText + '>'
                       +      '</td>'
                                  colOrder++;
                              })
@@ -527,7 +451,8 @@ $(document).ready(function () {
 
     function generateOperatingCostsTable(){
         truncateTable('#tbl_assumptions_operating_costs', true, true);
-        var strTableInner ='<thead>'
+        var strTableInner ='<caption style="color: #73879C;"><label class="control-label">Operating Costs</label></caption>'
+                          +'<thead>'
                           + '<tr>'
                           +     '<th> </th>'
                           +     '<th>Cost Item</th>'
@@ -583,11 +508,11 @@ $(document).ready(function () {
             var inputName = employeeRoleId + '_' + projectionYear
           strRowHtml += '<td class="number_of_employees td-input td-sm"'
                      +      'data-projection_year="'+ projectionYear +'">'
-                     +       '<input type="number" name="' + inputName + '" class="form-control text-right" placeholder="" min="0" value="" required="required" >'
+                     +       '<input type="number" name="' + inputName + '" class="form-control text-right render_required" placeholder="" min="0" value="" required="required" >'
                      +   '</td>'
         });
           strRowHtml +=   '<td class="td-input td-sm">'
-                     +       '<select class="form-control text-center" name="cost_type" required="required">'
+                     +       '<select class="form-control text-center render_required" name="cost_type" required="required">'
                      +           '<option value="1">Direct Cost</option>'
                      +           '<option value="2">Indirect Cost</option>'
                      +       '</select>'
@@ -598,12 +523,13 @@ $(document).ready(function () {
 
     function generateEmployeeRolesListTable(){
         truncateTable('#tbl_assumptions_employee_roles_list', true, true);
-        var strTableInner ='<thead>'
+        var strTableInner = '<caption style="color: #73879C;"><label class="control-label">Employee Costs</label></caption>'
+                          + '<thead>'
                           +     '<th></th>'
                           +     '<th>Employees Roles</th>'
                                 // Make adjustment for number of years
         $.each(projectionYearsList, function (index, projectionYear) {
-            strTableInner +=    '<th class="text-right" > Number in ' + projectionYear + '</th>'
+            strTableInner +=    '<th class="text-right" >' + projectionYear + '</th>'
         })
             strTableInner +=    '<th>Direct/Indirect Cost</th>'
                           + '</thead>'
@@ -637,7 +563,7 @@ $(document).ready(function () {
             var inputName = employeeRoleId + '_' + projectionYear
             strRowHtml +=       '<td class="working_hours td-input td-sm '
                        +            'data-projection_year="'+ projectionYear + '">'
-                       +            '<input type="number" name="' + inputName + '" class="form-control text-right" placeholder="" min="0" value="" required="required" >'
+                       +            '<input type="number" name="' + inputName + '" class="form-control text-right render_required" placeholder="" min="0" value="" required="required" >'
                        +        '</td>'
         });
 
@@ -646,7 +572,8 @@ $(document).ready(function () {
 
     function generateEmployeeWorkingHoursTable(){
         truncateTable('#tbl_assumptions_employees_working_hours', true, true);
-        var strTableInner =' <thead>'
+        var strTableInner = '<caption style="color: #73879C;"><label class="control-label">Number of Working Hours per Month</label></caption>'
+                           +' <thead>'
                            +       '<tr>'
                            +             '<th>Employee Role</th>';
                 // Providing for years
@@ -690,7 +617,7 @@ $(document).ready(function () {
              var autoFilledText = (isReadonlyField) ? 'auto-filled' : '';
              var hourlyRateChangeText = (!isReadonlyField) ? 'hourly-rate-change' : '';
             strRowHtml +=       '<td class="hourly_rate td-input td-sm ' + readonlyText + ' ' + autoFilledText + '">'
-                       +            '<input type="number" name="' + inputName + '" class="form-control text-right ' + hourlyRateChangeText +' " placeholder="" min="0" value="" required="required" ' + readonlyText + '>'
+                       +            '<input type="number" name="' + inputName + '" class="form-control text-right render_required ' + hourlyRateChangeText +' " placeholder="" min="0" value="" required="required" ' + readonlyText + '>'
                        +        '</td>'
             colOrder++;
         });
@@ -701,7 +628,8 @@ $(document).ready(function () {
 
     function generateEmployeeHourlyRatesTable(){
         truncateTable('#tbl_assumptions_employees_hourly_rates', true, true);
-        var strTableInner =' <thead>'
+        var strTableInner = '<caption style="color: #73879C;"><label class="control-label">Hourly Rates</label></caption>'
+                           + ' <thead>'
                            +       '<tr>'
                            +             '<th>Employee Role</th>';
                 // Providing for years
@@ -746,7 +674,7 @@ $(document).ready(function () {
             var investmentMonth = inputName + '_investment_month'
             var capitalChangedClassText = ' capital-changed ';
             strRowHtml +=       '<td class="td-input td-sm ' + capitalChangedClassText + ' ' + projectionYear + ' investment ">'
-                       +            '<input type="number" name="' + inputName + '" class="form-control text-right" placeholder="" min="0" value="" required="required">'
+                       +            '<input type="number" name="' + inputName + '" class="form-control text-right render_required" placeholder="" min="0" value="" required="required">'
                        +        '</td>'
                        +        '<td class="td-input td-md ' + projectionYear +' month_of_investment">'
                        +            '<select class="form-control text-center" name="' + investmentMonth + '" required="required">'
@@ -763,7 +691,8 @@ $(document).ready(function () {
 
     function generateCapitalTable(){
         truncateTable('#tbl_assumptions_capital', true, true);
-        var strTableInner =' <thead>'
+        var strTableInner ='<caption style="color: #73879C;"><label class="control-label">Capital Sources</label></caption>'
+                           +' <thead>'
                            +       '<tr>'
                            +             '<th>Capital Source</th>';
                 // Providing for years
@@ -801,7 +730,7 @@ $(document).ready(function () {
                         +           '</button>'
                         +       '</td>'
                         +       '<td class="td-input td-md">'
-                        +            '<input type="text" class="form-control" name="' + assetNameId + '" value="' + assetName + '" placeholder="" required="required" >'
+                        +            '<input type="text" class="form-control " name="' + assetNameId + '" value="' + assetName + '" placeholder="" required="required" >'
                         +        '</td>'
         $.each(projectionYearsList, function (index, projectionYear) {
             var inputName = assetName + '_' + projectionYear;
@@ -820,7 +749,7 @@ $(document).ready(function () {
                        +        '</td>'
         });
             strRowHtml +=       '<td class="td-input td-sm">'
-                       +            '<input type="number" name="' + depreciationRate + '" class="form-control text-right" placeholder="" min="0" required="required">'
+                       +            '<input type="number" name="' + depreciationRate + '" class="form-control text-right render_required" placeholder="" min="0" required="required">'
                        +        '</td>'
                        +    '</tr>'
         return strRowHtml;
@@ -828,7 +757,8 @@ $(document).ready(function () {
 
     function generateUsageTangibleAssetsTable(){
         truncateTable('#tbl_assumptions_usage_tangible_assets', true, true);
-        var strTableInner = ' <thead>'
+        var strTableInner = '<caption style="color: #73879C;"><label class="control-label">Usage: Investment in Tangible Fixed Assets</label></caption>'
+                           + ' <thead>'
                            +       '<tr>'
                            +             '<th></th>'
                            +             '<th>Tangible Assets</th>'
@@ -871,7 +801,7 @@ $(document).ready(function () {
                         +           '</button>'
                         +       '</td>'
                         +       '<td class="td-input td-md">'
-                        +            '<input type="text" class="form-control" name="' + assetNameId + '" value="' + assetName + '" placeholder="" value="" required="required" >'
+                        +            '<input type="text" class="form-control " name="' + assetNameId + '" value="' + assetName + '" placeholder="" value="" required="required" >'
                         +        '</td>'
         $.each(projectionYearsList, function (index, projectionYear) {
             var inputName = assetName + '_' + projectionYear;
@@ -879,7 +809,7 @@ $(document).ready(function () {
 
             var intangibleAssetUsageChangedClassText = ' intangible-assets-changed ';
             strRowHtml +=       '<td class="'+ projectionYear +' amount_added td-input td-sm ' + intangibleAssetUsageChangedClassText +'">'
-                       +            '<input type="number" name="' + inputName + '" class="form-control text-right" placeholder="" min="0" required="required">'
+                       +            '<input type="number" name="' + inputName + '" class="form-control text-right render_required" placeholder="" min="0" required="required">'
                        +        '</td>'
                        +        '<td class="'+ projectionYear + ' month_added td-input td-sm">'
                        +            '<select class="form-control text-center" name="' + investmentMonth + '" required="required">'
@@ -895,7 +825,8 @@ $(document).ready(function () {
 
     function generateUsageInTangibleAssetsTable(){
         truncateTable('#tbl_assumptions_usage_intangible_assets', true, true);
-        var strTableInner = ' <thead>'
+        var strTableInner = '<caption style="color: #73879C;"><label class="control-label">Usage: Investment in Intangible Fixed Assets</label></caption>'
+                           + '<thead>'
                            +       '<tr>'
                            +             '<th></th>'
                            +             '<th>Intangible Assets</th>'
@@ -939,7 +870,7 @@ $(document).ready(function () {
                         +            '<input type="text" class="form-control" name="' + depositItemNameId + '" value="' + depositItemName + '" placeholder="" required="required" >'
                         +        '</td>'
                         +       '<td class="td-input td-md">'
-                        +            '<input type="number" class="form-control text-right" name="' + inputName + '" placeholder="" min="1" value="" required="required" >'
+                        +            '<input type="number" class="form-control text-right render_required" name="' + inputName + '" placeholder="" min="1" value="" required="required" >'
                         +        '</td>'
                         +   '</tr>'
         return strRowHtml;
@@ -947,7 +878,8 @@ $(document).ready(function () {
 
     function generateUsageDepositsTable(){
         truncateTable('#tbl_assumptions_usage_deposits', true, true);
-        var strTableInner = ' <thead>'
+        var strTableInner = '<caption style="color: #73879C;"><label class="control-label">Usage: Deposits</label></caption>'
+                           + ' <thead>'
                            +       '<tr>'
                            +             '<th></th>'
                            +             '<th>Deposits</th>'
@@ -987,7 +919,7 @@ $(document).ready(function () {
                         +            '<input type="text" class="form-control" name="' + costItemNameId + '" value="' + costName + '" placeholder="" required="required" >'
                         +        '</td>'
                         +       '<td class="td-input td-sm">'
-                        +            '<input type="number" class="form-control text-right" name="' + inputName + '" placeholder="" min="1" value="" required="required" >'
+                        +            '<input type="number" class="form-control text-right render_required" name="' + inputName + '" placeholder="" min="1" value="" required="required" >'
                         +        '</td>'
                         +   '</tr>'
         return strRowHtml;
@@ -995,7 +927,8 @@ $(document).ready(function () {
 
     function generateUsageOtherStartupCostsTable(){
         truncateTable('#tbl_assumptions_usage_other_startup_costs', true, true);
-        var strTableInner = ' <thead>'
+        var strTableInner = '<caption style="color: #73879C;"><label class="control-label">Usage: Other Start-up Costs</label></caption>'
+                           + ' <thead>'
                            +       '<tr>'
                            +             '<th></th>'
                            +             '<th>Other Startup Costs</th>'
@@ -1159,6 +1092,7 @@ $(document).ready(function () {
             var newVal = calculateCompoundedGrowth(principalVal, (growthRate / 100), 1, dtYearIndex);
             // Update new value
             $(inputField).val(newVal);
+            $(inputField).attr('value', newVal);
         })
         $(this).attr('value', $(this).val());
     }
@@ -1170,7 +1104,7 @@ $(document).ready(function () {
     function operatingCostChangeHandler(event){
         $(this).attr('value', $(this).val());
         // Operating cost changed
-        var inflationRate = parseFloat($('#assumptions_inflation_rate_pa').val() || 0)/100;
+        var inflationRate = parseFloat($('#id_inflation_rate').val() || 0)/100;
         var principal = parseFloat($(this).val() | 0); // Get's the value or zero
         // get auto filled tds
         var currentTD = $(this).parent();
@@ -1187,7 +1121,7 @@ $(document).ready(function () {
     function employeeHourlyRateChangeHandler(event){
         $(this).attr('value', $(this).val());
         // Operating cost changed
-        var salaryGrowthRate = parseFloat($('#assumptions_salar_growth_rate_pa').val() || 0)/100;
+        var salaryGrowthRate = parseFloat($('#id_salary_growth_rate').val() || 0)/100;
         var principal = parseFloat($(this).val() | 0); // Get's the value or zero
         // get auto filled tds
         var currentTD = $(this).parent();
@@ -1353,7 +1287,6 @@ $(document).ready(function () {
 
 
     $('#btn_pnl_test').click(function (event) {
-
         generatePNL_RevenuesTable();
         generateAmortizationSchedule();
     })
@@ -1406,7 +1339,7 @@ $(document).ready(function () {
     function getReceivablesTotalsPerYear(revenueTotalsPerYear){
         var receivableTotalsPerYearDict = {};
         // Receivables total = revenueTotals x Receivables Period/ Number of months in a year
-        var receivablesPeriod = parseFloat($('#assumptions_trade_receivables_period').val() || 0);
+        var receivablesPeriod = parseFloat($('#id_trade_receivables').val() || 0);
         $.each(revenueTotalsPerYear, function (projectionYear, revenueAmount) {
             receivableTotalsPerYearDict[projectionYear] = Math.round((revenueAmount * receivablesPeriod / countOfMonthsInFinancialYear) * 100)/100;
         })
@@ -1452,7 +1385,7 @@ $(document).ready(function () {
     function getPayableTotalsPerYear(directCostTotalsPerYear){
         var payableTotalsPerYearDict = {}
         // Receivables total = revenueTotals x Receivables Period/ Number of months in a year
-        var payablesPeriod = parseFloat($('#assumptions_trade_payables_period').val() || 0);
+        var payablesPeriod = parseFloat($('#id_trade_payables').val() || 0);
         $.each(directCostTotalsPerYear, function (projectionYear, directCostAmount) {
             payableTotalsPerYearDict[projectionYear] = Math.round((directCostAmount * payablesPeriod / countOfMonthsInFinancialYear) * 100)/100;
         })
@@ -1499,7 +1432,7 @@ $(document).ready(function () {
 
     function getOtherExpensesPayableTotalsPerYear(operatingCostTotalsPerYear){
         var otherExpensesPayableTotalsPerYearDict = {};
-        var otherExpensesPayablesPeriod = parseFloat($('#assumptions_other_expenses_payable_period').val() || 0);
+        var otherExpensesPayablesPeriod = parseFloat($('#id_other_expenses_payables').val() || 0);
         $.each(operatingCostTotalsPerYear, function (projectionYear, operatingCostAmount) {
             otherExpensesPayableTotalsPerYearDict[projectionYear] = Math.round((operatingCostAmount * otherExpensesPayablesPeriod / countOfMonthsInFinancialYear) * 100)/100;
         })
@@ -1818,7 +1751,7 @@ $(document).ready(function () {
     function getBadDebtsPerMonth(revenueTotals){
         var badDebtsPerMonthDict = {}
         // Get bad debt percentage
-        var badDebtPercentage = $('#assumptions_bad_debts').val() || 0; // Return 0 if value is not provided
+        var badDebtPercentage = $('#id_bad_debts').val() || 0; // Return 0 if value is not provided
         $.each(revenueTotals, function (monthIndex, revenueTotal) {
             badDebtsPerMonthDict[monthIndex] = Math.round(revenueTotal * (badDebtPercentage/100));
         })
@@ -2012,13 +1945,13 @@ $(document).ready(function () {
         // Return Tax dict per month;
         // Get taxation system, 0= Slab System, 1= Single Rate
         var taxPerMonthDict = {};
-        var taxationSystem = $('#assumptions_taxation_system').val();
+        var taxationSystem = $('#id_taxation_system').val();
         if(taxationSystem == 0){
             // 0= Slab System
 
         }else{
             // 1= Single Rate
-            var corporateTaxRate = $('#assumptions_corporate_tax_rate').val();
+            var corporateTaxRate = $('#id_corporate_tax_rate').val();
             $.each(EBT, function (monthInex, ebtAmount) {
                 taxPerMonthDict[monthInex] = Math.round(parseFloat(ebtAmount) * (parseFloat(corporateTaxRate || 0)))/100
             })
@@ -2049,7 +1982,6 @@ $(document).ready(function () {
             reservesAndSurplusesDict[projectionYear] = parseFloat(currentReserves) + parseFloat(eatAmount);
             currentReserves = reservesAndSurplusesDict[projectionYear]
         })
-
         return reservesAndSurplusesDict;
     }
 
@@ -3096,7 +3028,7 @@ $(document).ready(function () {
         })
 
         // Get startup Cost amortization years
-        var amortizationYears = parseInt($('#assumptions_startup_cost_amortization_period').val() || $('#assumptions_period_of_projections_in_years').val());
+        var amortizationYears = parseInt($('#id_amortization_period').val() || $('#id_projection_years').val());
         if (amortizationYears == null) // This cannot be null
             return;
 
@@ -3104,7 +3036,7 @@ $(document).ready(function () {
         var amortizationAmountPerYear = Math.round(totalAmount/amortizationYears);
 
         // Get start projection period
-        var startAmortizationYear = parseInt($('#assumptions_first_financial_year').val());
+        var startAmortizationYear = parseInt($('#id_first_financial_year').val());
         var endAmortizationYear = startAmortizationYear + amortizationYears;
         var openingBalance = totalAmount;
         while(startAmortizationYear < endAmortizationYear){
@@ -3153,7 +3085,7 @@ $(document).ready(function () {
         })
 
         // Amortize startup cost
-        var amortizationYears = parseInt($('#assumptions_startup_cost_amortization_period').val() || 0)
+        var amortizationYears = parseInt($('#id_amortization_period').val() || 0)
         if(amortizationYears == 0)
             return
         var amortizationMonthsCount = amortizationYears * countOfMonthsInFinancialYear;
@@ -4398,145 +4330,21 @@ $(document).ready(function () {
         //
     }
 
-
-    /* SMART WIZARD */
-    function init_SmartWizard() {
-
-        if( typeof ($.fn.smartWizard) === 'undefined'){ return; }
-
-        $('#wizard').smartWizard({
-            onLeaveStep:leaveAStepCallback,
-            onFinish:onFinishCallback,
-            toolbarSettings: {
-                    toolbarPosition: 'none', // none, top, bottom, both
-                    showNextButton: true, // show/hide a Next button
-                    showPreviousButton: true // show/hide a Previous button
-                }
-        });
-
-        //$('.buttonNext').addClass('hidden');
-        //$('.buttonPrevious').addClass('hidden');
-        //$('.buttonFinish').addClass('hidden');
-        $('#wizard .actionBar').css('display', 'none');
-
-    };
-    function leaveAStepCallback(obj, context){
-        //alert("Leaving step " + context.fromStep + " to go to step " + context.toStep);
-        //return validateSteps(context.fromStep); // return false to stay on step and true to continue navigation
-
-        // Temporarily allow step-4... i.e exclude it from validation till all table designed and values confirmed
-
-
-        if(validateSteps(context.fromStep)){
-            // Step validated correctly.. Everything okay
-            // Check current step
-            // Decide actions to be executed before moving to next step
-            if(context.fromStep ==  1){
-                // Actions in preparation for step 2
-            }else if(context.fromStep == 2){
-                // Actions in preparation for step 3
-            }else if(context.fromStep == 3){
-                // Actions in preparation for step 4
-                // generate projectionYearsList
-                generatePrijectionYearsList();
-                generateProjectionMonthsList();
-
-                //console.log(projectionYearsList);
-                generatePricePerProductTable();
-                generateDirectCostPerProductTable();
-                generateUnitOfRevenueMeasurementTable();
-
-                // Generate Operational costs table
-                generateOperatingCostsTable();
-                //console.log("Generate pricing tables btn has been clicked");
-
-                // Generating employee tables
-                generateEmployeeRolesListTable();
-                generateEmployeeWorkingHoursTable();
-                generateEmployeeHourlyRatesTable();
-
-                // Generating sources tables
-                generateCapitalTable();
-                generateUsageTangibleAssetsTable();
-                generateUsageInTangibleAssetsTable();
-
-                generateUsageDepositsTable();
-                generateUsageOtherStartupCostsTable();
-            }else if(context.fromStep == 4){
-                // Actions in preparation for step 5
-                generatePNL_RevenuesTable();
-            }else if(context.fromStep == 5){
-                // Actions in preparation for step 6
-            }else{
-                // No additional step ahead. Return false
-                return false;
-            }
-            return true;
-        }else if(context.fromStep == 4){
-            generatePNL_RevenuesTable();
-            return true;
-        }else{
-            return false;
-        }
-
-    }
-    function onFinishCallback(objs, context){
-        if(validateAllSteps()){
-            $('form').submit();
-        }
-    }
-    function validateSteps(stepnumber){
-        var validated = true;
-        var requiredFinance1Inputs = $('#step-' + stepnumber + ' input,textarea,select').filter('[required]:visible');
-            var validated = true;
-            $.each(requiredFinance1Inputs, function(index, val){
-                var itemVal = $(val).val();
-                if(!itemVal || itemVal == '') {
-                    // Change css and give a red border
-                    $(val).css('border', 'red solid 3px');
-                    validated = false;
-                }
-            })
-        return validated;
-    }
-    function validateAllSteps(){
-        var isStepValid = true;
-        // all step validation logic
-        return isStepValid;
-    }
-    $('#step_next').click(function(event){
-        $('#wizard').smartWizard('goForward');
-    });
-    $('#step_previous').click(function(event){
-        $('#wizard').smartWizard('goBackward');
-    });
-    $('#step_finish').click(function(event){
-        // This should always save the form if validated
-    });
-    $('#step_toggle').click(function(event){
-        // This should always save the form if validated
-        if($('.smart_nav').css('display') == 'none'){
-           $('.smart_nav').css('display', 'table');
-            $('#step_toggle').html('Hide Steps')
-        } else {
-           $('.smart_nav').css('display', 'none');
-            $('#step_toggle').html('Show Steps')
-        }
-    });
-
-    init_SmartWizard();
-
     function validateRequired(stepId){
         var validated = true;
+        var returnObject = {};
         // validate for each validate_step
         $.each(stepMonitor[stepId]['validate_steps'], function (index, containerId) {
-           var requiredFinance1Inputs = $(containerId + ' input,textarea,select').filter('[required]:visible');
+           var requiredFinance1Inputs = $(containerId + ' .render_required');
             $.each(requiredFinance1Inputs, function(index, val){
                 var itemVal = $(val).val();
                 if(!itemVal || itemVal == '') {
                     // Change css and give a red border
                     $(val).css('border', '1px solid #E85445');
                     $(val).css('background-color', '#FAEDEC');
+                    if(returnObject[containerId] == null)
+                        returnObject[containerId] = 0
+                    returnObject[containerId] += 1; // Number of errors
                     validated = false;
                 }else{
                     $(val).css('border', '1px solid #ccc');
@@ -4544,10 +4352,9 @@ $(document).ready(function () {
                 }
             })
         })
-        if(!validated){
-            //alert("Missing required fields");
-        }
-        return validated
+        if(!validated)  // Return item if not validated
+            return returnObject;
+        return null
     }
 
     // Ensure everything is update when changed
@@ -4562,51 +4369,55 @@ $(document).ready(function () {
     $('.tabbable .nav-tabs li a').click(function (event) {
         // This is suppose to handle a few things
         var clickedStep = $(this).data('step');
-        var previousStep = $(this).data('step_previous');
+        var previousStep = currentStepId;       // This is important. We note the step we are moving from
         var mode = $('#right_col').data('mode');
         // Check if previous step has been generated
         // work with the step monitor to determine if regeneration is necessary or not
-        if(mode == 'new'){
-            if(previousStep == null || previousStep == ''){
-                // We're in step 1. No validation required
-                // No changes need to be tracked!!
-                stepMonitor[clickedStep]['passed'] = true;
-            }else if(previousStep == '#step-1'){
-                // We're getting into step 2
-                // No changes need to be tracked!!
-                // Check if all required are provided
-                //if(!stepMonitor[clickedStep]['passed'] && !validateRequired(clickedStep)){
-                //    event.preventDefault();
-                //    return false;
-                //}
-                if(!validateRequired(clickedStep)){
-                    event.preventDefault();
-                    return false;
-                }
-                stepMonitor[clickedStep]['passed'] = true;
-            }else if(previousStep == '#step-2'){
-                // We're getting into step 3
-                // No changes need to be tracked!!
-                // No validation required for step 2
-                stepMonitor[clickedStep]['passed'] = true
-            }else if(previousStep == '#step-3'){
-                // We're getting into step 4
-                // Need to track changes from previous page and all required values need to be entered
-                if(!stepMonitor[previousStep]['passed']){
-                    // Tou need to have passed the previous step.
-                    // This could be a message
-                    event.preventDefault();
-                    return false;
-                }
-                if(!stepMonitor[clickedStep]['passed'] && !validateRequired(clickedStep)){
-                    event.preventDefault();
-                    return false;
-                }
-                if(stepMonitor[clickedStep]['auto_generate']){
-                    // Need to auto generate Financial data input views
-                    // Actions in preparation for step 4
-                    // Validate required fields
 
+        var validateResults = validateRequired(clickedStep) // validateRequired returns null if everything is validated, otherwise it returns an object
+        // Show alert if messages exist
+        if(validateResults != null){
+            // Ensure you validate required fields before moving to new tab
+            var clickedFriendlyName = stepMonitor[clickedStep]['friendly_name'];
+            $('#message-dialog .header').text("Validation messages");
+            $('#message-dialog .message').text('Provide missing details in the pages listed below to proceed to the ' + clickedFriendlyName)
+            var listingTable = '<table class="table table-striped"><thead><tr><td class="td-md text-left">Page</td><td class="dt-sm text-right"># Errors</td</tr></thead><tbody>';
+            var listingTableBody = '<tbody>'
+            $.each(validateResults, function (sId, countOfErrors) {
+                var fName = $(sId).data('friendly_name');
+                listingTableBody += '<tr><td class="text-left">' + fName + '</td><td class="text-right">' + countOfErrors + '</td></tr>'
+            })
+            listingTable += listingTableBody;
+            listingTable += '</body></table>'
+            $('#message-dialog .table-container').html(listingTable)
+            $('#message-dialog').modal("show")
+            event.preventDefault();
+            return false;
+        }
+        // Do any necessary auto-generations
+        stepMonitor[clickedStep]['passed'] = true;
+        if(currentStepId != clickedStep){
+            if(currentStepId == '#step-1'){
+                saveTitlePage();
+            }else if(currentStepId == '#step-2'){
+                saveMainContent()
+            }else if(currentStepId == '#step-3'){
+                saveFinancialAssumptions()
+            }else if(currentStepId == '#step-4'){
+                saveFinancialDataInput()
+                stepMonitor['#step-4']['auto_generate'] = false
+                stepMonitor['#step-4']['passed'] = true
+            }else if(currentStepId == '#step-5'){
+                // Nothing needs to be save for step 5
+            }
+
+
+            // Check if clicked step requires generation
+
+            if(clickedStep == '#step-4'){
+                $('#btn_regenerate_page').removeClass('hidden')
+                if(stepMonitor[clickedStep]['auto_generate'] == true) {
+                    // Autogenerate if necessary
                     // generate projectionYearsList
                     generatePrijectionYearsList();
                     generateProjectionMonthsList();
@@ -4632,58 +4443,34 @@ $(document).ready(function () {
 
                     generateUsageDepositsTable();
                     generateUsageOtherStartupCostsTable();
-                    // set passed and autogenerate to false
+                }
+            }else if(clickedStep == '#step-5' ){
+                $('#btn_regenerate_page').removeClass('hidden')
+                if(stepMonitor[clickedStep]['auto_generate'] == true) {
+                    generatePNL_RevenuesTable();
+
+                    // Generate graphs
+                    prepareAndRenderTotalAssetsBar();
+                    prepareAndRenderTotalLiabilitiesBar();
+                    prepareAndRenderFixedAssetClassificationBar();
+                    prepareAndRenderCashFlowAnalysisBar();
+                    prepareAndRenderTotalRevenueBar();
+                    prepareAndRenderTotalDirectCostBar();
+                    prepareAndRenderGrossProfitBar();
+                    prepareAndRenderTotalOperatingCostBar();
+                    prepareAndRenderEarningsAfterTaxtBar();
+                    prepareAndRenderNetMarginBar();
                     stepMonitor[clickedStep]['auto_generate'] = false
                     stepMonitor[clickedStep]['passed'] = true
-
                 }
-            }else if(previousStep == '#step-4'){
-                // We're into step 5:-
-                    // You need to check if generation has been done or not, or if regeneration is required
-
-                // Checkc if previous step has been passed
-                if(!stepMonitor[previousStep]['passed']){
-                    // Tou need to have passed the previous step.
-                    // This could be a message
-                    event.preventDefault();
-                    return false;
-                }
-                if(!stepMonitor[clickedStep]['passed'] && !validateRequired(clickedStep)){
-                    event.preventDefault();
-                    return false;
-                }
-                if(stepMonitor[clickedStep]['auto_generate']){
-                    // You need to autogeneerate reporting tables
-                    if(stepMonitor[clickedStep]['auto_generate']){
-                        generatePNL_RevenuesTable();
-                        stepMonitor[clickedStep]['auto_generate'] = false
-                        stepMonitor[clickedStep]['passed'] = true
-                        // Unbind and bind change events
-                        $('.step-5 input,textarea,select').unbind('change');
-                        $('.step-5 input,textarea,select').change(function(event){
-                            $(this).attr('value', $(this).val());
-                        })
-
-                        // Generate graphs
-                        prepareAndRenderTotalAssetsBar();
-                        prepareAndRenderTotalLiabilitiesBar();
-                        prepareAndRenderFixedAssetClassificationBar();
-                        prepareAndRenderCashFlowAnalysisBar();
-                        prepareAndRenderTotalRevenueBar();
-                        prepareAndRenderTotalDirectCostBar();
-                        prepareAndRenderGrossProfitBar();
-                        prepareAndRenderTotalOperatingCostBar();
-                        prepareAndRenderEarningsAfterTaxtBar();
-                        prepareAndRenderNetMarginBar();
-
-                        // Enable save button
-                        $('#li-save').css('display', 'block');
-                    }
-                }
+            }else{
+                $('#btn_regenerate_page').addClass('hidden')
             }
+        }else{
+            // Nothing to be done here.....
         }
-
-
+        // Update currentStepId after moving to the new tab
+        currentStepId = clickedStep;
     })
 
     $('#frm_bplanner').submit(function(event){
@@ -4733,6 +4520,276 @@ $(document).ready(function () {
 
 
     })
+
+    $('#btn_save_business_plan').click(function(event){
+        // Overall saving of a business plan
+
+    })
+
+    function updateFormIdField(formId, val){
+        if(val == null || val){
+            // try parse then update
+            var idParsed =  parseInt(val);
+            if(!isNaN(idParsed)){
+                $(formId + ' .id').val(idParsed);
+                $(formId + ' .id').attr('value', idParsed)
+            }
+        }
+    }
+
+    function alertUser(status, showStatus, message, showMessage){
+        var statusList = ['alert-success', 'alert-info', 'alert-warning', 'alert-danger'];
+        var alertClass = 'alert-default';
+        var alertStatusText = 'alert-info'
+        if(status == 200 || status == 'SUCCESS'){
+            alertClass = 'alert-success';
+            alertStatusText = 'Success!';
+        }
+        else if(status in [500, 400, 300,] || status == 'ERROR'){
+            // Everything in list is danger
+            alertClass = 'alert-danger';
+            alertStatusText = 'Error!';
+        }else if(status == 201 || status == 'WARING'){
+            // 201 has been used as a warning
+            alertClass = 'alert-warning';
+            alertStatusText = 'Warning!';
+        }else if(status == 'INFO'){
+            // This is a case of info
+            alertClass = 'alert-info';
+            alertStatusText = 'Info!';
+        }
+
+        // Remove all other classes
+        $.each(statusList, function (index, currStatus) {
+            $('#alert_main').removeClass(currStatus);
+        })
+
+        // Set new class
+        $('#alert_main').addClass(alertClass);
+
+        // Set status and message
+        if(showStatus)
+            $('#alert_main .status').text(alertStatusText)
+        if(showMessage)
+            $('#alert_main .message').text(message)
+
+        // Make alert visible
+        $('#alert_main').removeClass('hidden');
+        // Add hidden class after 5 seconds
+
+        // You should trigger change in content size
+        setTimeout(function () {
+            $('#alert_main').addClass('hidden');
+        }, 3000);
+
+    }
+
+    function syncValAttributes(sectionId){
+        // Get all input fields
+        var inputItems = $(sectionId + ' input,textarea,select');
+        $.each(inputItems, function(index, inputItem){
+            $(inputItem).attr('value', $(inputItem).val())
+        })
+    }
+
+    function showSavingIndicator(tabId){
+        $(tabId + ' .tab-name').text('Saving');
+        $(tabId + ' .loading-gif').removeClass('hidden');
+    }
+
+    function hideSavingIndicator(tabId, tabName){
+        $(tabId + ' .tab-name').text(tabName + ' saved.');
+        $(tabId + ' .loading-gif').addClass('hidden');
+
+        $(tabId + ' .alert').removeClass('text-default');
+        $(tabId + ' .alert').addClass('text-success');
+
+        setTimeout(function () {
+            $(tabId + ' .tab-name').text(tabName);
+
+            $(tabId + ' .alert').removeClass('text-success');
+            $(tabId + ' .alert').addClass('text-default');
+        }, 1000);
+    }
+
+    function saveTitlePage(){
+        // Saves Title page... No validation is required at this phase
+        var idInput = $('#frm_bplanner_title_page .id')[0];
+        $('#frm_bplanner_title_page').val($(idInput).val())
+        var data = $('#frm_bplanner_title_page').serializeArray();
+        showSavingIndicator('#a_bplanner_title_page');
+        $.ajax({
+          type: "POST",
+          url: '/dashboard/new/business-plan/title_page',
+          data: data,
+          success: function(response){
+              updateFormIdField('#frm_bplanner_title_page', response.id);
+              // alert what has happened
+              hideSavingIndicator('#a_bplanner_title_page', 'Title Page');
+          },
+          error: function(response){
+              hideSavingIndicator('#a_bplanner_title_page', 'Title Page');
+              //alertUser(response.status, true, response.message, true);
+          },
+          dataType: 'json'
+        });
+
+    }
+
+    function saveMainContent(){
+        // Update main content input value
+        var mainContentHTML = $('#editor-one').html();
+
+        $('#id_main_content').val(mainContentHTML)
+
+        var data = $('#frm_bplanner_main_content_page').serializeArray();
+        // get titlePageId
+        var titlePageId = $('#frm_bplanner_title_page .id').val()
+        // add titlePageId to serialized data
+        data.push({name: "title_page_id", value: titlePageId});
+        showSavingIndicator('#a_bplanner_main_content_page');
+        // Show saving indicator
+        $.ajax({
+          type: "POST",
+          url: '/dashboard/new/business-plan/main_content_page',
+          data: data,
+          success: function(response){
+              //window.location.href = 'dashboard';
+              updateFormIdField('#frm_bplanner_main_content_page', response.id);
+              // Hide saving indicator
+              hideSavingIndicator('#a_bplanner_main_content_page', 'Main Content');
+          },
+          error: function(response){
+              // Hide saving indicator
+              hideSavingIndicator('#a_bplanner_main_content_page', 'Main Content');
+              // Alert user with error message
+              //alertUser(response.status, true, response.message, true);
+          },
+          dataType: 'json'
+        });
+
+    }
+
+    function saveFinancialAssumptions(){
+        var data = $('#frm_bplanner_financial_assumptions_page').serializeArray();
+        var titlePageId = $('#frm_bplanner_title_page .id').val()
+        // add titlePageId to serialized data
+        data.push({name: "title_page_id", value: titlePageId});
+        // add tbl_assumptions_number_of_products_or_services // product_services_table
+        var productServicesTableHTML = $('#tbl_assumptions_number_of_products_or_services').html()
+        data.push({name: "product_services_table", value: productServicesTableHTML});
+        // add tbl_assumptions_tax_slabs // tax_slabs_table
+         var taxSlabsTableHTML = $('#tbl_assumptions_tax_slabs').html()
+        data.push({name: "tax_slabs_table", value: taxSlabsTableHTML});
+
+        showSavingIndicator('#a_bplanner_financial_assumptions_page');
+        $.ajax({
+          type: "POST",
+          url: '/dashboard/new/business-plan/financial_assumptions_page',
+          data: data,
+          success: function(response){
+              updateFormIdField('#frm_bplanner_financial_assumptions_page', response.id);
+              // alert what has happened
+              //alertUser('INFO', false, response.message, true);
+              hideSavingIndicator('#a_bplanner_financial_assumptions_page', 'Financial Assumptions');
+          },
+          error: function(response){
+              //alertUser(response.status, true, response.message, true);
+              hideSavingIndicator('#a_bplanner_financial_assumptions_page', 'Financial Assumptions');
+          },
+          dataType: 'json'
+        });
+
+        saveBusinessPlanSettingsModel();
+    }
+
+    function saveFinancialDataInput(){
+        // For saving BusinessPlanSettingsModel
+        // Ensure all input//select//values and attributes are set
+        syncValAttributes('#frm_bplanner_financial_data_input_page')
+        var data = $('#frm_bplanner_financial_data_input_page').serializeArray();
+        var titlePageId = $('#frm_bplanner_title_page .id').val()
+        // add titlePageId to serialized data
+        data.push({name: "title_page_id", value: titlePageId});
+        // add frm_bplanner_financial_data_input_page // financial_input
+        var financialInputHTML = $('#frm_bplanner_financial_data_input_page').html()
+        data.push({name: "financial_input", value: financialInputHTML});
+
+        showSavingIndicator('#a_bplanner_financial_data_input_page');
+        $.ajax({
+          type: "POST",
+          url: '/dashboard/new/business-plan/financial_data_input_page',
+          data: data,
+          success: function(response){
+              updateFormIdField('#frm_bplanner_financial_data_input_page', response.id);
+              hideSavingIndicator('#a_bplanner_financial_data_input_page', 'Financial Data Input');
+          },
+          error: function(response){
+              //alertUser(response.status, true, response.message, true);
+              hideSavingIndicator('#a_bplanner_financial_data_input_page', 'Financial Data Input');
+          },
+          dataType: 'json'
+        });
+
+        saveBusinessPlanSettingsModel()
+    }
+
+    function saveBusinessPlanSettingsModel(){
+        var data = $('#frm_bplanner_settings').serializeArray();
+        var titlePageId = $('#frm_bplanner_title_page .id').val()
+        data.push({name: "title_page_id", value: titlePageId});
+        // add titlePageId to serialized data
+
+
+        data.push({name: "step_monitor", value: JSON.stringify(stepMonitor)});
+        data.push({name: "id", value: settingsId});
+        data.push({name: "calendar_months", value: JSON.stringify(calendarMonths)});
+        data.push({name: "projection_months_list", value: JSON.stringify(projectionMonthsList)});
+        data.push({name: "projection_years", value: projectionYears});
+        data.push({name: "first_financial_year", value: firstFinancialYear}) // int
+        data.push({name: "last_financial_year", value: lastFinancialYear}) // int
+        data.push({name: "count_of_months_in_financial_year", value: countOfMonthsInFinancialYear})// int
+        data.push({name: "projection_years_list", value: JSON.stringify(projectionYearsList)});
+        data.push({name: "product_count", value: productCount}) // int
+        data.push({name: "products", value: JSON.stringify(products)});
+
+        data.push({name: "theme", value: JSON.stringify(theme)});
+        data.push({name: "cost_appropriation_methods", value: JSON.stringify(costAppropriationMethods)});
+        data.push({name: "operating_cost_list", value: JSON.stringify(operatingCostList)});
+        data.push({name: "employees_list", value: JSON.stringify(employeesList)});
+        data.push({name: "capital_sources_list", value: JSON.stringify(capitalSourcesList)});
+        data.push({name: "tangible_assets_list", value: JSON.stringify(tangibleAssetsList)});
+        data.push({name: "intangible_assets_list", value: JSON.stringify(intangibleAssetsList)});
+        data.push({name: "deposit_item_list", value: JSON.stringify(depositItemList)});
+        data.push({name: "startup_cost_item_list", value: JSON.stringify(startupCostItemList)});
+
+        data.push({name: "total_assets", value: JSON.stringify(totalAssets)});
+        data.push({name: "total_liabilities", value: JSON.stringify(totalLiabilities)});
+        data.push({name: "tangible_assets_balance_total", value: JSON.stringify(tangibleAssetsBalanceTotal)});
+        data.push({name: "intangible_assets_balance_total", value: JSON.stringify(intangibleAssetsBalanceTotal)});
+        data.push({name: "cashFlow_changes_during_the_year_per_month", value: JSON.stringify(cashFlowChangesDuringTheYearPerMonth)});
+        data.push({name: "closing_cash_balance_per_month", value: JSON.stringify(closingCashBalancePerMonth)});
+        data.push({name: "revenue_totals_per_year", value: JSON.stringify(revenueTotalsPerYear)});
+        data.push({name: "direct_cost_totals_per_year", value: JSON.stringify(directCostTotalsPerYear)});
+        data.push({name: "gross_profit", value: JSON.stringify(grossProfit)});
+        data.push({name: "operating_cost_totals_per_year", value: JSON.stringify(operatingCostTotalsPeryear)});
+        data.push({name: "eat", value: JSON.stringify(EAT)});
+        data.push({name: "net_margin_per_month", value: JSON.stringify(netMarginPerMonth)})
+
+
+        $.ajax({
+          type: "POST",
+          url: '/dashboard/save/business-plan/settings',
+          data: data,
+          success: function(response){
+              settingsId = response.id;
+          },
+          error: function(response){
+              conole.log("some error has occurred saving business plan settings!!");
+          },
+          dataType: 'json'
+        });
+    }
 
 
     /* ECHRTS */
@@ -5219,14 +5276,103 @@ $(document).ready(function () {
         renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData);
     }
 
+    function regenerateCurentPate(){
+        // Check if page validates
+        var mode= $('#right_col').data('mode');
+        var validateResults = validateRequired(currentStepId)
+        // Show alert if messages exist
+        if(validateResults != null){
+            // Ensure you validate required fields before moving to new tab
+            var clickedFriendlyName = stepMonitor[clickedStep]['friendly_name'];
+            $('#message-dialog .header').text("Validation messages");
+            $('#message-dialog .message').text('Provide missing details in the pages listed below to proceed to the ' + clickedFriendlyName)
+            var listingTable = '<table class="table table-striped"><thead><tr><td class="td-md text-left">Page</td><td class="dt-sm text-right"># Errors</td</tr></thead><tbody>';
+            var listingTableBody = '<tbody>'
+            $.each(validateResults, function (sId, countOfErrors) {
+                var fName = $(sId).data('friendly_name');
+                listingTableBody += '<tr><td class="text-left">' + fName + '</td><td class="text-right">' + countOfErrors + '</td></tr>'
+            })
+            listingTable += listingTableBody;
+            listingTable += '</body></table>'
+            $('#message-dialog .table-container').html(listingTable)
+            $('#message-dialog').modal("show")
+            return false;
+        }
 
-    // operatingCostChart
+        if(currentStepId == '#step-4'){
+            generatePrijectionYearsList();
+            generateProjectionMonthsList();
 
-    // revenueBreakdownBar
+            //console.log(projectionYearsList);
+            generatePricePerProductTable(true);
+            generateDirectCostPerProductTable(true);
+            generateUnitOfRevenueMeasurementTable(true);
 
+            // Generate Operational costs table
+            generateOperatingCostsTable(true);
+            //console.log("Generate pricing tables btn has been clicked");
 
+            // Generating employee tables
+            generateEmployeeRolesListTable(true);
+            generateEmployeeWorkingHoursTable(true);
+            generateEmployeeHourlyRatesTable(true);
 
+            // Generating sources tables
+            generateCapitalTable();
+            generateUsageTangibleAssetsTable(true);
+            generateUsageInTangibleAssetsTable(true);
 
+            generateUsageDepositsTable(true);
+            generateUsageOtherStartupCostsTable(true);
+        }else if(currentStepId == '#step5'){
+            // Generate graphs
+            prepareAndRenderTotalAssetsBar(true);
+            prepareAndRenderTotalLiabilitiesBar(true);
+            prepareAndRenderFixedAssetClassificationBar(true);
+            prepareAndRenderCashFlowAnalysisBar(true);
+            prepareAndRenderTotalRevenueBar(true);
+            prepareAndRenderTotalDirectCostBar(true);
+            prepareAndRenderGrossProfitBar(true);
+            prepareAndRenderTotalOperatingCostBar(true);
+            prepareAndRenderEarningsAfterTaxtBar(true);
+            prepareAndRenderNetMarginBar(true);
+        }else{
+            // Do nothing. No other step needs regeneration
+        }
+    }
+    // Enable contirmation
+    $('[data-toggle=confirmation]').confirmation({
+      rootSelector: '[data-toggle=confirmation]',
+      onConfirm: function(value) {
+        // Proceed to regenerate page...
+        regenerateCurentPate();
+      },
+      onCancel: function() {
+        // page not regenerated... Don't do anything
+      },
+      title: 'Sure to regenerate page?',
+      content: 'Note: This action will clear all initial table data/content and require data entry.'
+    });
+    
+    $('#btn_save_business_plan').click(function (event) {
+        // Saving all passed business plan sections
+        $.each(stepsMonitor, function(stepId, stepObject){
+            if(stepObject['passed']){
+                // save step
+                if(stepId == '#step-1'){
+                    saveTitlePage();
+                }else if(stepId == '#step-2'){
+                    saveMainContent();
+                }else if(stepId == '#step-3'){
+                    saveFinancialAssumptions();
+                }else if(stepId == '#step-4'){
+                    saveFinancialDataInput()
+                }else if(stepId == '#step-5'){
+                        // do nothing
+                }
 
+            }
+        })
+    })
 })
 
