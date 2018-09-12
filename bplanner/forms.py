@@ -28,6 +28,7 @@ class BusinessPlanFinancialDataInputForm(ModelForm):
         model = BusinessPlanFinancialDataInput
         fields = ('financial_input',)
 
+
 class BusinessPlanSettingsForm(ModelForm):
     class Meta:
         model = BusinessPlanSettings

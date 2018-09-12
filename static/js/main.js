@@ -1111,7 +1111,7 @@ $(document).ready(function () {
         var autoFillTDs = $(currentTD).siblings('.auto-filled');
         $.each(autoFillTDs, function (tdIndex, autofillTD) {
             // compute compounded growth
-            var compoundedGrowth = Math.round(calculateCompoundedGrowth(principal, inflationRate, 1, (tdIndex + 1)) * 100)/100;
+            var compoundedGrowth = calculateCompoundedGrowth(principal, inflationRate, 1, (tdIndex + 1));
             // Update dt value
             var currentInput = $(autofillTD).children('input')[0];
             $(currentInput).val(compoundedGrowth)
@@ -1128,7 +1128,7 @@ $(document).ready(function () {
         var autoFillTDs = $(currentTD).siblings('.auto-filled');
         $.each(autoFillTDs, function (tdIndex, autofillTD) {
             // compute compounded growth
-            var compoundedGrowth = Math.round(calculateCompoundedGrowth(principal, salaryGrowthRate, 1, (tdIndex + 1)) * 100)/100;
+            var compoundedGrowth = calculateCompoundedGrowth(principal, salaryGrowthRate, 1, (tdIndex + 1));
             // Update dt value
             var currentInput = $(autofillTD).children('input')[0];
             $(currentInput).val(compoundedGrowth)
@@ -1157,8 +1157,7 @@ $(document).ready(function () {
         // rate is given in decimal and not percentage
         var nt = numberOfTimesCompoundedPerYear * timeInYears;
         var innerBracket = 1 + (rate/numberOfTimesCompoundedPerYear)
-        var resultBeforeRounding = principal * Math.pow(innerBracket, nt);
-        return Math.round(resultBeforeRounding * 100)/100;
+        return Math.round(principal * Math.pow(innerBracket, nt)); //  Whole numbers always returned
     }
 
     $('#btn-generate_pricing_tables').click(function(event){
@@ -1341,7 +1340,7 @@ $(document).ready(function () {
         // Receivables total = revenueTotals x Receivables Period/ Number of months in a year
         var receivablesPeriod = parseFloat($('#id_trade_receivables').val() || 0);
         $.each(revenueTotalsPerYear, function (projectionYear, revenueAmount) {
-            receivableTotalsPerYearDict[projectionYear] = Math.round((revenueAmount * receivablesPeriod / countOfMonthsInFinancialYear) * 100)/100;
+            receivableTotalsPerYearDict[projectionYear] = Math.round(revenueAmount * receivablesPeriod / countOfMonthsInFinancialYear);
         })
 
         return receivableTotalsPerYearDict;
@@ -1359,7 +1358,7 @@ $(document).ready(function () {
                     receivablePerMonthDict[monthIndex] = receivableTotalAmount;
                 }else{
                     // Handle individual month sections
-                    receivablePerMonthDict[monthIndex] = Math.round((parseFloat(receivableTotalAmount || 0) / countOfMonthsInFinancialYear) * 100)/100;
+                    receivablePerMonthDict[monthIndex] = Math.round(parseFloat(receivableTotalAmount || 0) / countOfMonthsInFinancialYear);
                 }
             })
         })
@@ -1387,7 +1386,7 @@ $(document).ready(function () {
         // Receivables total = revenueTotals x Receivables Period/ Number of months in a year
         var payablesPeriod = parseFloat($('#id_trade_payables').val() || 0);
         $.each(directCostTotalsPerYear, function (projectionYear, directCostAmount) {
-            payableTotalsPerYearDict[projectionYear] = Math.round((directCostAmount * payablesPeriod / countOfMonthsInFinancialYear) * 100)/100;
+            payableTotalsPerYearDict[projectionYear] = Math.round(directCostAmount * payablesPeriod / countOfMonthsInFinancialYear);
         })
 
         return payableTotalsPerYearDict;
@@ -1406,7 +1405,7 @@ $(document).ready(function () {
                     payablesPerMonthDict[monthIndex] = payableTotalAmount;
                 }else{
                     // Handle individual month sections
-                    payablesPerMonthDict[monthIndex] = Math.round((parseFloat(payableTotalAmount || 0) / countOfMonthsInFinancialYear) * 100)/100;
+                    payablesPerMonthDict[monthIndex] = Math.round(parseFloat(payableTotalAmount || 0) / countOfMonthsInFinancialYear);
                 }
             })
         })
@@ -1434,7 +1433,7 @@ $(document).ready(function () {
         var otherExpensesPayableTotalsPerYearDict = {};
         var otherExpensesPayablesPeriod = parseFloat($('#id_other_expenses_payables').val() || 0);
         $.each(operatingCostTotalsPerYear, function (projectionYear, operatingCostAmount) {
-            otherExpensesPayableTotalsPerYearDict[projectionYear] = Math.round((operatingCostAmount * otherExpensesPayablesPeriod / countOfMonthsInFinancialYear) * 100)/100;
+            otherExpensesPayableTotalsPerYearDict[projectionYear] = Math.round(operatingCostAmount * otherExpensesPayablesPeriod / countOfMonthsInFinancialYear);
         })
         return otherExpensesPayableTotalsPerYearDict;
     }
@@ -1451,7 +1450,7 @@ $(document).ready(function () {
                     otherExpensesPayablePerMonthDict[monthIndex] = otherExpensesPayableTotalAmount;
                 }else{
                     // Handle individual month sections
-                    otherExpensesPayablePerMonthDict[monthIndex] = Math.round((parseFloat(otherExpensesPayableTotalAmount || 0) / countOfMonthsInFinancialYear) * 100)/100;
+                    otherExpensesPayablePerMonthDict[monthIndex] = Math.round(parseFloat(otherExpensesPayableTotalAmount || 0) / countOfMonthsInFinancialYear);
                 }
             })
         })
@@ -1893,7 +1892,7 @@ $(document).ready(function () {
                                 totalDepreciation < depreciationSetting['amount_added']
                         ){
                             // Condition satisfied for adding depreciation. Go ahead
-                            var depreciationAmount =  Math.round(depreciationSetting['amount_added'] * ((depreciationRate/100)/12) * 100 )/100;
+                            var depreciationAmount =  Math.round(depreciationSetting['amount_added'] * ((depreciationRate/100)/12));
                             depreciationPerAssetPerMonth[assetId][projectionMontIndex] = parseFloat(depreciationPerAssetPerMonth[assetId][projectionMontIndex] || 0) + depreciationAmount;
                             totalDepreciation += depreciationAmount;
                             // Increment financial year totals
@@ -1953,7 +1952,7 @@ $(document).ready(function () {
             // 1= Single Rate
             var corporateTaxRate = $('#id_corporate_tax_rate').val();
             $.each(EBT, function (monthInex, ebtAmount) {
-                taxPerMonthDict[monthInex] = Math.round(parseFloat(ebtAmount) * (parseFloat(corporateTaxRate || 0)))/100
+                taxPerMonthDict[monthInex] = Math.round(parseFloat(ebtAmount) * (parseFloat(corporateTaxRate || 0)/100))
             })
         }
 
@@ -2104,7 +2103,7 @@ $(document).ready(function () {
                                             + ' width="200">'
                                             + '<input name="" '
                                             + ' type="number" min="0"'
-                                            + ' value="'+ Math.round(revenue * 100)/100 +'"'
+                                            + ' value="'+ revenue +'"'
                                             + ' class="form-control input-md text-right" readonly></td>'
                                     })
 
@@ -2125,7 +2124,7 @@ $(document).ready(function () {
                                         + ' width="200">'
                                         +   '<input name="" '
                                         +       ' type="number" min="0"'
-                                        +       ' value="' + Math.round(monthlyRevenueTotal*1000)/100 + '"'
+                                        +       ' value="' + monthlyRevenueTotal + '"'
                                         +       ' class="form-control input-md text-right" readonly></td>'
         })
         strHtml          +='</tr>'
@@ -2171,7 +2170,7 @@ $(document).ready(function () {
                                             + ' width="200">'
                                             + '<input name="" '
                                             + ' type="number" min="0"'
-                                            + ' value="'+ Math.round(productMonthlyDireCost*100)/100 +'"'
+                                            + ' value="'+ productMonthlyDireCost +'"'
                                             + ' class="form-control input-md text-right" readonly></td>'
             })
             strHtml += '</tr>'
@@ -2211,7 +2210,7 @@ $(document).ready(function () {
                             + ' width="200">'
                             + '<input name="" '
                             + ' type="number" min="0"'
-                            + ' value="'+ Math.round(employmentCost*100)/100 +'"'
+                            + ' value="'+ employmentCost +'"'
                             + ' class="form-control input-md text-right" readonly></td>'
             })
             $('#tbl_pnl tbody').append(strHtml);
@@ -2232,7 +2231,7 @@ $(document).ready(function () {
                                         + ' width="200">'
                                         +   '<input name="" '
                                         +       ' type="number" min="0"'
-                                        +       ' value="' + Math.round(monthlyDirectCostTotal*100)/100 + '"'
+                                        +       ' value="' + monthlyDirectCostTotal + '"'
                                         +       ' class="form-control input-md text-right" readonly></td>'
             })
             strHtml          +='</tr>'
@@ -2258,7 +2257,7 @@ $(document).ready(function () {
                                         + ' width="200">'
                                         +   '<input name="" '
                                         +       ' type="number" min="0"'
-                                        +       ' value="' + Math.round(grossProfit[monthIndex]*100)/100 + '"'
+                                        +       ' value="' + grossProfit[monthIndex] + '"'
                                         +       ' class="form-control input-md text-right" readonly></td>'
             })
             strHtml          +='</tr>'
@@ -2309,7 +2308,7 @@ $(document).ready(function () {
                                         + ' width="200">'
                                         +   '<input name="" '
                                         +       ' type="number" min="0"'
-                                        +       ' value="' + Math.round(costValue*100)/100 + '"'
+                                        +       ' value="' + costValue + '"'
                                         +       ' class="form-control input-md text-right" readonly></td>'
 
             })
@@ -2333,7 +2332,7 @@ $(document).ready(function () {
                     +   ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           'value="' + Math.round(badDebtAmount*100)/100 + '"'
+                    +           'value="' + badDebtAmount + '"'
                     +           ' class="form-control input-md text-right" readonly></td>'
 
         })
@@ -2351,7 +2350,7 @@ $(document).ready(function () {
                     +   ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           'value="' + Math.round(operatingCostTotal*100)/100 + '"'
+                    +           'value="' + operatingCostTotal + '"'
                     +           ' class="form-control input-md text-right" ' +
         'readonly></td>'
 
@@ -2380,7 +2379,7 @@ $(document).ready(function () {
                     +   ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           'value="' + Math.round(monthEbitda*100)/100 + '"'
+                    +           'value="' + monthEbitda + '"'
                     +           ' class="form-control input-md text-right" required="required " readonly></td>'
 
         })
@@ -2421,7 +2420,7 @@ $(document).ready(function () {
                     +   ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           'value="' + Math.round(interestAmount*100)/100 + '"'
+                    +           'value="' + interestAmount + '"'
                     +           ' class="form-control input-md text-right" readonly></td>'
 
         })
@@ -2444,7 +2443,7 @@ $(document).ready(function () {
                     +   ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           'value="' + Math.round(depreciationAmount*100)/100 + '"'
+                    +           'value="' + depreciationAmount + '"'
                     +           ' class="form-control input-md text-right" readonly></td>'
 
         })
@@ -2467,7 +2466,7 @@ $(document).ready(function () {
                     +   ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           'value="' + Math.round(startupCostAmount * 100)/100 + '"'
+                    +           'value="' + startupCostAmount + '"'
                     +           ' class="form-control input-md text-right" readonly></td>'
 
         })
@@ -2487,7 +2486,7 @@ $(document).ready(function () {
                     +   ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           'value="' + Math.round(ebtAmount * 100)/100 + '"'
+                    +           'value="' + ebtAmount + '"'
                     +           ' class="form-control input-md text-right" readonly></td>'
 
         })
@@ -2507,7 +2506,7 @@ $(document).ready(function () {
                     +   ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           'value="' + Math.round((taxAmount || 0)*100)/100 + '"'
+                    +           'value="' + taxAmount + '"'
                     +           ' class="form-control input-md text-right" readonly></td>'
 
         })
@@ -2532,7 +2531,7 @@ $(document).ready(function () {
                     +   ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           'value="' + Math.round(eatAmount * 100)/100 + '"'
+                    +           'value="' + eatAmount + '"'
                     +           ' class="form-control input-md text-right" readonly></td>'
 
         })
@@ -2544,7 +2543,7 @@ $(document).ready(function () {
 
         // NET MARGIN
         $.each(EAT, function (monthIndex, eatAmount) {
-            netMarginPerMonth[monthIndex] = Math.round((eatAmount/revenueTotals[monthIndex]) * 100)/100;
+            netMarginPerMonth[monthIndex] = Math.round(eatAmount/revenueTotals[monthIndex]);
         })
         strHtml = '<tr class="">'
                 +   '<td class="td-label">Net Margin (%)</td>'
@@ -2556,7 +2555,7 @@ $(document).ready(function () {
                     +   ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           'value="' + Math.round(netMarginPerMonthAmount*100)/100 + '"'
+                    +           'value="' + netMarginPerMonthAmount + '"'
                     +           ' class="form-control input-md text-right" readonly></td>'
 
         })
@@ -2599,7 +2598,7 @@ $(document).ready(function () {
         var innerBracket = Math.pow(1 + convertedRate, paymentPeriod);
         var upper  = convertedRate * innerBracket;
         var lower = innerBracket - 1;
-        return Math.round(principal * (upper/lower) * 100)/100; // To 2 decimal places
+        return Math.round(principal * (upper/lower)); // To 2 decimal places
     }
 
     function getMonthOfInvestmentFromCode(monthCode){
@@ -2668,7 +2667,7 @@ $(document).ready(function () {
                                 + ' width="200">'
                                 +   '<input name="" '
                                 +       ' type="number" min="0"'
-                                +       ' value="' + Math.round(monthScheduleItem['opening_balance'] * 100)/100 + '"'
+                                +       ' value="' + monthScheduleItem['opening_balance'] + '"'
                                 +       ' class="form-control text-right" readonly></td>'
 
         })
@@ -2686,7 +2685,7 @@ $(document).ready(function () {
                                 + ' width="200">'
                                 +   '<input name="" '
                                 +       ' type="number" min="0"'
-                                +       ' value="' + Math.round(monthScheduleItem['installment_number'] * 100)/100 + '"'
+                                +       ' value="' + monthScheduleItem['installment_number'] + '"'
                                 +       ' class="form-control text-right" readonly></td>'
 
         })
@@ -2704,7 +2703,7 @@ $(document).ready(function () {
                                 + ' width="200">'
                                 +   '<input name="" '
                                 +       ' type="number" min="0"'
-                                +       ' value="' + Math.round(monthScheduleItem['installment_amount'] * 100)/100 + '"'
+                                +       ' value="' + monthScheduleItem['installment_amount'] + '"'
                                 +       ' class="form-control text-right" readonly></td>'
 
         })
@@ -2722,7 +2721,7 @@ $(document).ready(function () {
                                 + ' width="200">'
                                 +   '<input name="" '
                                 +       ' type="number" min="0"'
-                                +       ' value="' + Math.round(monthScheduleItem['interest_paid'] * 100)/100 + '"'
+                                +       ' value="' + monthScheduleItem['interest_paid'] + '"'
                                 +       ' class="form-control text-right" readonly></td>'
 
         })
@@ -2740,7 +2739,7 @@ $(document).ready(function () {
                                 + ' width="200">'
                                 +   '<input name="" '
                                 +       ' type="number" min="0"'
-                                +       ' value="' + Math.round(monthScheduleItem['capital_repaid'] * 100)/100 + '"'
+                                +       ' value="' + monthScheduleItem['capital_repaid'] + '"'
                                 +       ' class="form-control text-right" readonly></td>'
 
         })
@@ -2758,7 +2757,7 @@ $(document).ready(function () {
                                 + ' width="200">'
                                 +   '<input name="" '
                                 +       ' type="number" min="0"'
-                                +       ' value="' + Math.round(monthScheduleItem['closing_balance']* 100)/100 + '"'
+                                +       ' value="' + monthScheduleItem['closing_balance'] + '"'
                                 +       ' class="form-control text-right" readonly></td>'
 
         })
@@ -2844,15 +2843,15 @@ $(document).ready(function () {
             $.each(amortizationMonths, function (monthIndex, amortizationMonth) {
                 // Create a list of amortization schedule items.
                 amortizationSchedule[amortizationScheduleId]['monthly'][monthIndex] = {}
-                amortizationSchedule[amortizationScheduleId]['monthly'][monthIndex]['opening_balance'] = Math.round(openingBalance * 100)/100;
+                amortizationSchedule[amortizationScheduleId]['monthly'][monthIndex]['opening_balance'] = Math.round(openingBalance );
                 amortizationSchedule[amortizationScheduleId]['monthly'][monthIndex]['installment_number'] = installmentNumber;
-                amortizationSchedule[amortizationScheduleId]['monthly'][monthIndex]['installment_amount'] = Math.round(installment * 100)/100;
+                amortizationSchedule[amortizationScheduleId]['monthly'][monthIndex]['installment_amount'] = Math.round(installment );
                 var interestPaid = openingBalance * ((amortizationScheduleItem['rate']/12)/100 || 0)
-                amortizationSchedule[amortizationScheduleId]['monthly'][monthIndex]['interest_paid'] = Math.round(interestPaid * 100)/100;
+                amortizationSchedule[amortizationScheduleId]['monthly'][monthIndex]['interest_paid'] = Math.round(interestPaid );
                 var capitalRepaid = installment - interestPaid;
-                amortizationSchedule[amortizationScheduleId]['monthly'][monthIndex]['capital_repaid'] = Math.round(capitalRepaid * 100)/100
+                amortizationSchedule[amortizationScheduleId]['monthly'][monthIndex]['capital_repaid'] = Math.round(capitalRepaid )
                 var closingBalance = openingBalance - capitalRepaid;
-                amortizationSchedule[amortizationScheduleId]['monthly'][monthIndex]['closing_balance'] = Math.round(closingBalance * 100)/100;
+                amortizationSchedule[amortizationScheduleId]['monthly'][monthIndex]['closing_balance'] = Math.round(closingBalance );
                 // Adjust new opening balance
                 openingBalance = closingBalance;
                 installmentNumber++;
@@ -3080,7 +3079,7 @@ $(document).ready(function () {
         //startUpCostItemsPerMonthDict[startUpItemId]['monthly'][projectionMonthIndex] = val
         $.each(otherStartUpCostsPerMonthList, function (startUpItemId, otherStartUpCostsPerItem ) {
             $.each(otherStartUpCostsPerItem['monthly'], function (projectionMonthIndex,  amount) {
-                startupCostTotal += Math.round(parseFloat(amount || 0 ) * 100)/100;
+                startupCostTotal += Math.round(parseFloat(amount || 0 ))/100;
             })
         })
 
@@ -3189,7 +3188,7 @@ $(document).ready(function () {
                                             + ' width="200">'
                                             + '<input name="" '
                                             + ' type="number" min="0"'
-                                            + ' value="'+ Math.round(monthlyRevenue['revenue'] * 100)/100 +'"'
+                                            + ' value="'+ monthlyRevenue['revenue'] +'"'
                                             + ' class="form-control text-right" readonly></td>'
                                     })
             $('#tbl_cash_flow tbody').append(strHtml);
@@ -3207,7 +3206,7 @@ $(document).ready(function () {
                                         + ' width="200">'
                                         +   '<input name="" '
                                         +       ' type="number" min="0"'
-                                        +       ' value="' + Math.round(monthlyRevenueTotal * 100)/100 + '"'
+                                        +       ' value="' + monthlyRevenueTotal + '"'
                                         +       ' class="form-control text-right" readonly></td>'
         })
         strHtml +='</tr>'
@@ -3230,7 +3229,7 @@ $(document).ready(function () {
                                         + ' width="200">'
                                         +   '<input name="" '
                                         +       ' type="number" min="0"'
-                                        +       ' value="' + Math.round((monthlyDirectCostTotal || 0) * 100)/ 100 + '"'
+                                        +       ' value="' + monthlyDirectCostTotal + '"'
                                         +       ' class="form-control text-right" readonly></td>'
             })
             strHtml          +='</tr>'
@@ -3273,7 +3272,7 @@ $(document).ready(function () {
                                         + ' width="200">'
                                         +   '<input name="" '
                                         +       ' type="number" min="0"'
-                                        +       ' value="' + Math.round(costValue * 100)/ 100 + '"'
+                                        +       ' value="' + costValue + '"'
                                         +       ' class="form-control text-right" readonly></td>'
 
             })
@@ -3298,7 +3297,7 @@ $(document).ready(function () {
                                         + ' width="200">'
                                         +   '<input name="" '
                                         +       ' type="number" min="0"'
-                                        +       ' value="' + Math.round((startUpCost || 0) * 100)/100 + '"'
+                                        +       ' value="' + startUpCost + '"'
                                         +       ' class="form-control text-right" readonly></td>'
 
             })
@@ -3324,7 +3323,7 @@ $(document).ready(function () {
                                         + ' width="200">'
                                         +   '<input name="" '
                                         +       ' type="number" min="0"'
-                                        +       ' value="' + Math.round(depositCost * 100)/100  + '"'
+                                        +       ' value="' + depositCost + '"'
                                         +       ' class="form-control text-right" readonly></td>'
 
             })
@@ -3348,7 +3347,7 @@ $(document).ready(function () {
                     +   ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           'value="' + Math.round(taxAmount * 100)/ 100 + '"'
+                    +           'value="' + taxAmount + '"'
                     +           ' class="form-control text-right" readonly></td>'
 
         })
@@ -3371,7 +3370,7 @@ $(document).ready(function () {
                     +   ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           'value="' + Math.round(badDebtAmount * 100)/ 100 + '"'
+                    +           'value="' + badDebtAmount + '"'
                     +           ' class="form-control text-right" readonly></td>'
 
         })
@@ -3395,7 +3394,7 @@ $(document).ready(function () {
                     +   ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           'value="' + Math.round(receivableAmount * 100)/100 + '"'
+                    +           'value="' + receivableAmount + '"'
                     +           ' class="form-control text-right" readonly></td>'
 
         })
@@ -3418,7 +3417,7 @@ $(document).ready(function () {
                     +   ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           'value="' + Math.round(payablesAmount * 100)/100 + '"'
+                    +           'value="' + payablesAmount + '"'
                     +           ' class="form-control text-right" readonly></td>'
 
         })
@@ -3442,7 +3441,7 @@ $(document).ready(function () {
                     +   ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           'value="' + Math.round(otherExpensesPayablesAmount * 100)/100 + '"'
+                    +           'value="' + otherExpensesPayablesAmount + '"'
                     +           ' class="form-control text-right" readonly></td>'
 
         })
@@ -3460,7 +3459,7 @@ $(document).ready(function () {
                     +   ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           'value="' + Math.round(totalOutflowAmount * 100)/100 + '"'
+                    +           'value="' + totalOutflowAmount + '"'
                     +           ' class="form-control text-right"readonly></td>'
 
         })
@@ -3482,7 +3481,7 @@ $(document).ready(function () {
                     +   ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           'value="' + Math.round(netCahsFlowAmount* 100)/100 + '"'
+                    +           'value="' + netCahsFlowAmount + '"'
                     +           ' class="form-control text-right" readonly></td>'
 
         })
@@ -3506,7 +3505,7 @@ $(document).ready(function () {
                     +       ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           'value="' + Math.round(investmentAmount * 100)/100 + '"'
+                    +           'value="' + investmentAmount + '"'
                     +           ' class="form-control text-right" readonly></td>'
 
             })
@@ -3530,7 +3529,7 @@ $(document).ready(function () {
                     +       ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           'value="' + Math.round(investmentAmount * 100)/ 100 + '"'
+                    +           'value="' + investmentAmount + '"'
                     +           ' class="form-control text-right" readonly></td>'
 
             })
@@ -3549,7 +3548,7 @@ $(document).ready(function () {
                 +       ' width="200">'
                 +       '<input name="" '
                 +           ' type="number" min="0"'
-                +           'value="' + Math.round(investmentAmount * 100)/100 + '"'
+                +           'value="' + investmentAmount + '"'
                 +           ' class="form-control text-right" readonly></td>'
 
         })
@@ -3573,7 +3572,7 @@ $(document).ready(function () {
                 +       ' width="200">'
                 +       '<input name="" '
                 +           ' type="number" min="0"'
-                +           'value="' + Math.round(investmentAmount * 100)/100 + '"'
+                +           'value="' + investmentAmount + '"'
                 +           ' class="form-control text-right" readonly></td>'
 
         })
@@ -3595,7 +3594,7 @@ $(document).ready(function () {
                 +       ' width="200">'
                 +       '<input name="" '
                 +           ' type="number" min="0"'
-                +           'value="' + Math.round(investmentAmount * 100)/ 100 + '"'
+                +           'value="' + investmentAmount + '"'
                 +           ' class="form-control text-right" readonly></td>'
 
         })
@@ -3618,7 +3617,7 @@ $(document).ready(function () {
                 +       ' width="200">'
                 +       '<input name="" '
                 +           ' type="number" min="0"'
-                +           'value="' + Math.round(repaymentAmount * 100)/100 + '"'
+                +           'value="' + repaymentAmount + '"'
                 +           ' class="form-control text-right" readonly></td>'
 
         })
@@ -3636,7 +3635,7 @@ $(document).ready(function () {
                 +       ' width="200">'
                 +       '<input name="" '
                 +           ' type="number" min="0"'
-                +           'value="' + Math.round(netAmount * 100)/100 + '"'
+                +           'value="' + netAmount + '"'
                 +           ' class="form-control text-right" readonly></td>'
 
         })
@@ -3662,7 +3661,7 @@ $(document).ready(function () {
                 +       ' width="200">'
                 +       '<input name="" '
                 +           ' type="number" min="0"'
-                +           'value="' + Math.round(changeAmount * 100)/100 + '"'
+                +           'value="' + changeAmount + '"'
                 +           ' class="form-control text-right" readonly></td>'
 
         })
@@ -3692,7 +3691,7 @@ $(document).ready(function () {
                 +       ' width="200">'
                 +       '<input name="" '
                 +           ' type="number" min="0"'
-                +           'value="' + Math.round(balanceAmount*100)/100 + '"'
+                +           'value="' + balanceAmount + '"'
                 +           ' class="form-control text-right" readonly></td>'
 
         })
@@ -3710,7 +3709,7 @@ $(document).ready(function () {
                 +       ' width="200">'
                 +       '<input name="" '
                 +           ' type="number" min="0"'
-                +           'value="' + Math.round(balanceAmount*100)/100 + '"'
+                +           'value="' + balanceAmount + '"'
                 +           ' class="form-control text-right" readonly></td>'
 
         })
@@ -3740,7 +3739,7 @@ $(document).ready(function () {
                     +       ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           'value="' + Math.round(depreciationAmountPerMonth * 100)/100 + '"'
+                    +           'value="' + depreciationAmountPerMonth + '"'
                     +           ' class="form-control text-right" readonly></td>'
 
             })
@@ -3812,7 +3811,7 @@ $(document).ready(function () {
                     +       ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           ' value="' + Math.round((investmentAmount || 0) * 100)/100 + '"'
+                    +           ' value="' + investmentAmount + '"'
                     +           ' class="form-control text-right" readonly></td>'
             })
             strHtml += '</tr>'
@@ -3833,7 +3832,7 @@ $(document).ready(function () {
                                 +       ' width="200">'
                                 +       '<input name="" '
                                 +           ' type="number" min="0"'
-                                +           ' value="' + Math.round((depreciationAmount || 0)*100)/100 + '"'
+                                +           ' value="' + depreciationAmount  + '"'
                                 +           ' class="form-control text-right" readonly></td>'
                         })
                         strHtml += '</tr>'
@@ -3859,7 +3858,7 @@ $(document).ready(function () {
                                 +       ' width="200">'
                                 +       '<input name="" '
                                 +           ' type="number" min="0"'
-                                +           ' value="' + Math.round((balanceAmount || 0) * 100)/100 + '"'
+                                +           ' value="' + balanceAmount + '"'
                                 +           ' class="form-control text-right" readonly></td>'
                         })
                         strHtml += '</tr>'
@@ -3883,7 +3882,7 @@ $(document).ready(function () {
                                 +       ' width="200">'
                                 +       '<input name="" '
                                 +           ' type="number" min="0"'
-                                +           ' value="' + Math.round((totalBalanceAmount || 0) * 100)/100 + '"'
+                                +           ' value="' + totalBalanceAmount + '"'
                                 +           ' class="form-control text-right" readonly></td>'
         })
         strHtml += '</tr>'
@@ -3906,7 +3905,7 @@ $(document).ready(function () {
                     +       ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           ' value="' + Math.round((investmentAmount || 0) * 100)/100 + '"'
+                    +           ' value="' + investmentAmount + '"'
                     +           ' class="form-control text-right" readonly></td>'
             })
             strHtml += '</tr>'
@@ -3928,7 +3927,7 @@ $(document).ready(function () {
                                 +       ' width="200">'
                                 +       '<input name="" '
                                 +           ' type="number" min="0"'
-                                +           ' value="' + Math.round((totalBalanceAmount || 0) * 100)/100 + '"'
+                                +           ' value="' + totalBalanceAmount + '"'
                                 +           ' class="form-control text-right" readonly></td>'
         })
         strHtml += '</tr>'
@@ -3946,7 +3945,7 @@ $(document).ready(function () {
                                 +       ' width="200">'
                                 +       '<input name="" '
                                 +           ' type="number" min="0"'
-                                +           ' value="' + Math.round((totalBalanceAmount || 0) * 100)/100 + '"'
+                                +           ' value="' + totalBalanceAmount + '"'
                                 +           ' class="form-control text-right" readonly></td>'
         })
         strHtml += '</tr>'
@@ -3972,7 +3971,7 @@ $(document).ready(function () {
                         +       ' width="200">'
                         +       '<input name="" '
                         +           ' type="number" min="0"'
-                        +           ' value="' + Math.round((depositAmount || 0) * 100)/100 + '"'
+                        +           ' value="' + depositAmount + '"'
                         +           ' class="form-control text-right" readonly></td>'
             })
             strHtml += '</tr>'
@@ -3989,7 +3988,7 @@ $(document).ready(function () {
                     +       ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           ' value="' + Math.round((receivablesAmount || 0) * 100)/100 + '"'
+                    +           ' value="' + receivablesAmount + '"'
                     +           ' class="form-control text-right" readonly></td>'
         })
         strHtml += '</tr>'
@@ -4004,7 +4003,7 @@ $(document).ready(function () {
                     +       ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           ' value="' + Math.round((cashBalance || 0) * 100)/100 + '"'
+                    +           ' value="' + cashBalance + '"'
                     +           ' class="form-control text-right" readonly></td>'
         })
         strHtml += '</tr>'
@@ -4019,7 +4018,7 @@ $(document).ready(function () {
                     +       ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           ' value="' + Math.round((currentAssetsAmount || 0) * 100)/100 + '"'
+                    +           ' value="' + currentAssetsAmount + '"'
                     +           ' class="form-control text-right" readonly></td>'
         })
         strHtml += '</tr>'
@@ -4043,7 +4042,7 @@ $(document).ready(function () {
                 +       ' width="200">'
                 +       '<input name="" '
                 +           ' type="number" min="0"'
-                +           ' value="' + Math.round((startUpCostDict['cost'] || 0) * 100)/100 + '"'
+                +           ' value="' + startUpCostDict['cost'] + '"'
                 +           ' class="form-control text-right" readonly></td>'
         })
         strHtml += '</tr>'
@@ -4058,7 +4057,7 @@ $(document).ready(function () {
                     +       ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           ' value="' + Math.round((startUpCostDict['amortization'] || 0) * 100)/100 + '"'
+                    +           ' value="' + startUpCostDict['amortization'] + '"'
                     +           ' class="form-control text-right" readonly></td>'
         })
         strHtml += '</tr>'
@@ -4074,7 +4073,7 @@ $(document).ready(function () {
                     +       ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           ' value="' + Math.round((startUpCostDict['balance'] || 0) * 100)/100 + '"'
+                    +           ' value="' + startUpCostDict['balance'] + '"'
                     +           ' class="form-control text-right" readonly></td>'
         })
         strHtml += '</tr>'
@@ -4090,7 +4089,7 @@ $(document).ready(function () {
                     +       ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           ' value="' + Math.round((totalAmount || 0) * 100)/100 + '"'
+                    +           ' value="' + totalAmount + '"'
                     +           ' class="form-control text-right" readonly></td>'
         })
         strHtml += '</tr>'
@@ -4114,7 +4113,7 @@ $(document).ready(function () {
                     +       ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           ' value="' + Math.round((investmentDict['investment'] || 0) * 100)/100 + '"'
+                    +           ' value="' + investmentDict['investment'] + '"'
                     +           ' class="form-control text-right" readonly></td>'
         })
         strHtml += '</tr>'
@@ -4131,7 +4130,7 @@ $(document).ready(function () {
                     +       ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           ' value="' + Math.round((amount || 0) * 100)/100 + '"'
+                    +           ' value="' + amount + '"'
                     +           ' class="form-control text-right" readonly></td>'
         })
         strHtml += '</tr>'
@@ -4146,7 +4145,7 @@ $(document).ready(function () {
                     +       ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           ' value="' + Math.round((amount || 0) * 100)/100 + '"'
+                    +           ' value="' + amount + '"'
                     +           ' class="form-control text-right" readonly></td>'
         })
         strHtml += '</tr>'
@@ -4165,7 +4164,7 @@ $(document).ready(function () {
                     +       ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           ' value="' + Math.round((amount || 0) * 100)/100 + '"'
+                    +           ' value="' + amount + '"'
                     +           ' class="form-control text-right" readonly></td>'
         })
         strHtml += '</tr>'
@@ -4210,7 +4209,7 @@ $(document).ready(function () {
                     +       ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           ' value="' + Math.round((amount || 0) * 100)/100 + '"'
+                    +           ' value="' + amount + '"'
                     +           ' class="form-control text-right" readonly></td>'
         })
         strHtml += '</tr>'
@@ -4224,7 +4223,7 @@ $(document).ready(function () {
                     +       ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           ' value="' + Math.round((amount || 0) * 100)/100 + '"'
+                    +           ' value="' + amount + '"'
                     +           ' class="form-control text-right" readonly></td>'
         })
         strHtml += '</tr>'
@@ -4238,7 +4237,7 @@ $(document).ready(function () {
                     +       ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           ' value="' + Math.round((amount || 0) * 100)/100 + '"'
+                    +           ' value="' + amount + '"'
                     +           ' class="form-control text-right" readonly></td>'
         })
         strHtml += '</tr>'
@@ -4267,7 +4266,7 @@ $(document).ready(function () {
                     +       ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           ' value="' + Math.round((payablesAmount || 0) * 100)/100 + '"'
+                    +           ' value="' + payablesAmount + '"'
                     +           ' class="form-control text-right" readonly></td>'
         })
         strHtml += '</tr>'
@@ -4285,7 +4284,7 @@ $(document).ready(function () {
                     +       ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           ' value="' + Math.round((payablesAmount || 0) * 100)/100 + '"'
+                    +           ' value="' + payablesAmount + '"'
                     +           ' class="form-control text-right" readonly></td>'
         })
         strHtml += '</tr>'
@@ -4303,7 +4302,7 @@ $(document).ready(function () {
                     +       ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           ' value="' + Math.round((liabilityAmount || 0) * 100)/100 + '"'
+                    +           ' value="' + liabilityAmount + '"'
                     +           ' class="form-control text-right" readonly></td>'
         })
         strHtml += '</tr>'
@@ -4319,7 +4318,7 @@ $(document).ready(function () {
                     +       ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           ' value="' + Math.round((liabilityAmount || 0) * 100)/100 + '"'
+                    +           ' value="' + liabilityAmount + '"'
                     +           ' class="form-control text-right" readonly></td>'
         })
         strHtml += '</tr>'
@@ -4419,6 +4418,7 @@ $(document).ready(function () {
                 if(stepMonitor[clickedStep]['auto_generate'] == true) {
                     // Autogenerate if necessary
                     // generate projectionYearsList
+                    toggleSpinner(true, 'Generating financial data input tables/fields!')
                     generatePrijectionYearsList();
                     generateProjectionMonthsList();
 
@@ -4443,10 +4443,12 @@ $(document).ready(function () {
 
                     generateUsageDepositsTable();
                     generateUsageOtherStartupCostsTable();
+                    toggleSpinner(false, 'Done!')
                 }
             }else if(clickedStep == '#step-5' ){
                 $('#btn_regenerate_page').removeClass('hidden')
-                if(stepMonitor[clickedStep]['auto_generate'] == true) {
+                if(!reportsGenerated) {
+                    toggleSpinner(true, 'Generating reports!')
                     generatePNL_RevenuesTable();
 
                     // Generate graphs
@@ -4462,6 +4464,8 @@ $(document).ready(function () {
                     prepareAndRenderNetMarginBar();
                     stepMonitor[clickedStep]['auto_generate'] = false
                     stepMonitor[clickedStep]['passed'] = true
+                    reportsGenerated = true
+                    toggleSpinner(false, 'Done!')
                 }
             }else{
                 $('#btn_regenerate_page').addClass('hidden')
@@ -4512,17 +4516,12 @@ $(document).ready(function () {
               window.location.href = 'dashboard';
           },
           error: function(response){
-              alert('Error posting data')
+              alert('Error saving business plan.')
               console.log(response)
           },
           dataType: 'json'
         });
 
-
-    })
-
-    $('#btn_save_business_plan').click(function(event){
-        // Overall saving of a business plan
 
     })
 
@@ -4534,6 +4533,28 @@ $(document).ready(function () {
                 $(formId + ' .id').val(idParsed);
                 $(formId + ' .id').attr('value', idParsed)
             }
+        }
+    }
+
+    function toggleSpinner(show, message){
+        if(show){
+            // update image
+            $('#spinner_modal .loading-gif').removeClass('hidden');
+            $('#spinner_modal .message').text(message);
+            $('#spinner_modal').modal('show');
+        }else{
+            // set message// done above
+            // update image
+            //$('#spinner_modal .loading-gif').attr('src','/static/imgs/loading-complete-gif.gif');
+            // wait 1 second
+            // hide spinner
+            setTimeout(function () {
+                $('#spinner_modal .loading-gif').addClass('hidden');
+                $('#spinner_modal .message').text(message);
+                setTimeout(function () {
+                    $('#spinner_modal').modal('hide');
+                }, 500);
+            }, 1000);
         }
     }
 
@@ -4617,19 +4638,14 @@ $(document).ready(function () {
         var idInput = $('#frm_bplanner_title_page .id')[0];
         $('#frm_bplanner_title_page').val($(idInput).val())
         var data = $('#frm_bplanner_title_page').serializeArray();
-        showSavingIndicator('#a_bplanner_title_page');
         $.ajax({
           type: "POST",
           url: '/dashboard/new/business-plan/title_page',
           data: data,
           success: function(response){
               updateFormIdField('#frm_bplanner_title_page', response.id);
-              // alert what has happened
-              hideSavingIndicator('#a_bplanner_title_page', 'Title Page');
           },
           error: function(response){
-              hideSavingIndicator('#a_bplanner_title_page', 'Title Page');
-              //alertUser(response.status, true, response.message, true);
           },
           dataType: 'json'
         });
@@ -4647,7 +4663,6 @@ $(document).ready(function () {
         var titlePageId = $('#frm_bplanner_title_page .id').val()
         // add titlePageId to serialized data
         data.push({name: "title_page_id", value: titlePageId});
-        showSavingIndicator('#a_bplanner_main_content_page');
         // Show saving indicator
         $.ajax({
           type: "POST",
@@ -4656,14 +4671,9 @@ $(document).ready(function () {
           success: function(response){
               //window.location.href = 'dashboard';
               updateFormIdField('#frm_bplanner_main_content_page', response.id);
-              // Hide saving indicator
-              hideSavingIndicator('#a_bplanner_main_content_page', 'Main Content');
           },
           error: function(response){
-              // Hide saving indicator
-              hideSavingIndicator('#a_bplanner_main_content_page', 'Main Content');
-              // Alert user with error message
-              //alertUser(response.status, true, response.message, true);
+
           },
           dataType: 'json'
         });
@@ -4682,7 +4692,6 @@ $(document).ready(function () {
          var taxSlabsTableHTML = $('#tbl_assumptions_tax_slabs').html()
         data.push({name: "tax_slabs_table", value: taxSlabsTableHTML});
 
-        showSavingIndicator('#a_bplanner_financial_assumptions_page');
         $.ajax({
           type: "POST",
           url: '/dashboard/new/business-plan/financial_assumptions_page',
@@ -4690,12 +4699,9 @@ $(document).ready(function () {
           success: function(response){
               updateFormIdField('#frm_bplanner_financial_assumptions_page', response.id);
               // alert what has happened
-              //alertUser('INFO', false, response.message, true);
-              hideSavingIndicator('#a_bplanner_financial_assumptions_page', 'Financial Assumptions');
           },
           error: function(response){
               //alertUser(response.status, true, response.message, true);
-              hideSavingIndicator('#a_bplanner_financial_assumptions_page', 'Financial Assumptions');
           },
           dataType: 'json'
         });
@@ -4715,18 +4721,15 @@ $(document).ready(function () {
         var financialInputHTML = $('#frm_bplanner_financial_data_input_page').html()
         data.push({name: "financial_input", value: financialInputHTML});
 
-        showSavingIndicator('#a_bplanner_financial_data_input_page');
         $.ajax({
           type: "POST",
           url: '/dashboard/new/business-plan/financial_data_input_page',
           data: data,
           success: function(response){
               updateFormIdField('#frm_bplanner_financial_data_input_page', response.id);
-              hideSavingIndicator('#a_bplanner_financial_data_input_page', 'Financial Data Input');
           },
           error: function(response){
               //alertUser(response.status, true, response.message, true);
-              hideSavingIndicator('#a_bplanner_financial_data_input_page', 'Financial Data Input');
           },
           dataType: 'json'
         });
@@ -5299,6 +5302,7 @@ $(document).ready(function () {
             return false;
         }
 
+        toggleSpinner(true, 'Regenerating page...')
         if(currentStepId == '#step-4'){
             generatePrijectionYearsList();
             generateProjectionMonthsList();
@@ -5339,16 +5343,24 @@ $(document).ready(function () {
         }else{
             // Do nothing. No other step needs regeneration
         }
+
+        toggleSpinner(false, 'Done!')
     }
+
     // Enable contirmation
     $('[data-toggle=confirmation]').confirmation({
       rootSelector: '[data-toggle=confirmation]',
       onConfirm: function(value) {
         // Proceed to regenerate page...
-        regenerateCurentPate();
+          // disable regenerate button
+          $('#btn_regenerate_page').addClass('disabled')
+          regenerateCurentPate();
+          // enable regenerate buttond
+          $('#btn_regenerate_page').removeClass('disabled')
       },
       onCancel: function() {
         // page not regenerated... Don't do anything
+
       },
       title: 'Sure to regenerate page?',
       content: 'Note: This action will clear all initial table data/content and require data entry.'
@@ -5356,23 +5368,30 @@ $(document).ready(function () {
     
     $('#btn_save_business_plan').click(function (event) {
         // Saving all passed business plan sections
-        $.each(stepsMonitor, function(stepId, stepObject){
-            if(stepObject['passed']){
-                // save step
-                if(stepId == '#step-1'){
-                    saveTitlePage();
-                }else if(stepId == '#step-2'){
-                    saveMainContent();
-                }else if(stepId == '#step-3'){
-                    saveFinancialAssumptions();
-                }else if(stepId == '#step-4'){
-                    saveFinancialDataInput()
-                }else if(stepId == '#step-5'){
-                        // do nothing
-                }
-
-            }
-        })
+        // disable save button
+        $('#btn_save_business_plan').addClass('disabled')
+        toggleSpinner(true, 'Saving business plan...')
+        saveTitlePage();
+        saveMainContent();
+        saveFinancialDataInput()
+        saveFinancialAssumptions();
+        //$.each(stepsMonitor, function(stepId, stepObject){
+        //    if(stepObject['passed']){
+        //        // save step
+        //        if(stepId == '#step-1'){
+        //            saveTitlePage();
+        //        }else if(stepId == '#step-2'){
+        //            saveMainContent();
+        //        }else if(stepId == '#step-3'){
+        //            saveFinancialAssumptions();
+        //        }else if(stepId == '#step-4'){
+        //            saveFinancialDataInput()
+        //        }
+        //
+        //    }
+        //})
+        toggleSpinner(false, 'Done!')
+        $('#btn_save_business_plan').removeClass('disabled')
     })
 })
 

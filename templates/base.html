@@ -80,6 +80,7 @@
         var netMarginPerMonth = {{bplan_settings.net_margin_per_month | safe }}
 
         var currentStepId = '#step-1'; // By default this is the current step
+        var reportsGenerated = false;
     </script>
 {#    <script type="text/javascript">#}
 {#        // Add javascript queries#}
@@ -312,6 +313,18 @@
                         <div class="ln_solid"></div>
                         <div class="table-container"></div>
                         <button class="btn btn-primary btn-sm" style="float: left;" data-toggle="modal" data-target="#message-dialog">Close</button>
+                        <br/>
+                    </div>
+                </div>
+              </div>
+          </div>
+
+          <div class="modal fade" id="spinner_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <img class="loading-gif" src="{% static 'imgs/loading-3.gif' %}" style="height: 100px;"/>
+                        <p class="message text-center">Saving...</p>
                         <br/>
                     </div>
                 </div>

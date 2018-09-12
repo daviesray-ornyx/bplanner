@@ -144,6 +144,7 @@ class BusinessPlanFinancialDataInput(models.Model):
         verbose_name_plural = "Business Plans Financial Data Input"
         ordering = ['-date_modified', '-date_created']
 
+
 class BusinessPlanSettings(models.Model):
     title_page = models.ForeignKey(BusinessPlanTitlePage, verbose_name="Business Plan Title Page", null=True, on_delete=models.CASCADE)
     step_monitor = models.TextField(verbose_name='Step Monitor', null=True, blank=True, default='')
