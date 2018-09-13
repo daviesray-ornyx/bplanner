@@ -216,10 +216,10 @@ $(document).ready(function () {
     function generatePricePerProductTable(isRegenerating){
         // Get the new list of products
         // For each product, log the details
-        if(isRegenerating != null){
+        if(!$('#tbl_assumptions_price_per_product').length){
+            $('#frm_bplanner_financial_data_input_page').append('<table id="tbl_assumptions_price_per_product" class="table table-bordered table-hover table-dynamic margin-15"></table>')
+        }else{
             truncateTable('#tbl_assumptions_price_per_product');
-            console.log("Regenerating && projectionYearsList");
-            console.log(projectionYearsList);
         }
 
         var strHead =   '<caption style="color: #73879C;"><label class="control-label">Price per Product/Service</label></caption>'
@@ -281,7 +281,11 @@ $(document).ready(function () {
     }
 
     function generateDirectCostPerProductTable(){
-        truncateTable('#tbl_assumptions_direct_cost_per_product', true, true);
+        if(!$('#tbl_assumptions_direct_cost_per_product').length){
+            $('#frm_bplanner_financial_data_input_page').append('<table id="tbl_assumptions_direct_cost_per_product" class="table table-bordered table-hover table-dynamic margin-15"></table>')
+        }else{
+            truncateTable('#tbl_assumptions_direct_cost_per_product');
+        }
         var strHead =   '<caption style="color: #73879C;"><label class="control-label">Direct Cost per Product/Service</label></caption>'
                         + '<thead>'
                         + '<tr >'
@@ -331,7 +335,11 @@ $(document).ready(function () {
     }
 
     function generateUnitOfRevenueMeasurementTable(){
-        truncateTable('#tbl_assumptions_units_of_measurement_per_product', true, true);
+        if(!$('#tbl_assumptions_units_of_measurement_per_product').length){
+            $('#frm_bplanner_financial_data_input_page').append('<table id="tbl_assumptions_units_of_measurement_per_product" class="table table-bordered table-hover table-dynamic margin-15"></table>')
+        }else{
+            truncateTable('#tbl_assumptions_units_of_measurement_per_product');
+        }
         var strHead = '<caption style="color: #73879C;"><label class="control-label">Units of Measurement</label></caption>'
                         +'<thead>'
                         + '<tr >'
@@ -450,7 +458,11 @@ $(document).ready(function () {
     }
 
     function generateOperatingCostsTable(){
-        truncateTable('#tbl_assumptions_operating_costs', true, true);
+        if(!$('#tbl_assumptions_operating_costs').length){
+            $('#frm_bplanner_financial_data_input_page').append('<table id="tbl_assumptions_operating_costs" class="table table-bordered table-hover table-dynamic margin-15"></table>')
+        }else{
+            truncateTable('#tbl_assumptions_operating_costs');
+        }
         var strTableInner ='<caption style="color: #73879C;"><label class="control-label">Operating Costs</label></caption>'
                           +'<thead>'
                           + '<tr>'
@@ -522,7 +534,12 @@ $(document).ready(function () {
     }
 
     function generateEmployeeRolesListTable(){
-        truncateTable('#tbl_assumptions_employee_roles_list', true, true);
+        if(!$('#tbl_assumptions_employee_roles_list').length){
+            $('#frm_bplanner_financial_data_input_page').append('<table id="tbl_assumptions_employee_roles_list" class="table table-bordered table-hover table-dynamic margin-15"></table>')
+        }else{
+            truncateTable('#tbl_assumptions_employee_roles_list');
+        }
+
         var strTableInner = '<caption style="color: #73879C;"><label class="control-label">Employee Costs</label></caption>'
                           + '<thead>'
                           +     '<th></th>'
@@ -571,7 +588,11 @@ $(document).ready(function () {
     }
 
     function generateEmployeeWorkingHoursTable(){
-        truncateTable('#tbl_assumptions_employees_working_hours', true, true);
+        if(!$('#tbl_assumptions_employees_working_hours').length){
+            $('#frm_bplanner_financial_data_input_page').append('<table id="tbl_assumptions_employees_working_hours" class="table table-bordered table-hover table-dynamic margin-15"></table>')
+        }else{
+            truncateTable('#tbl_assumptions_employees_working_hours');
+        }
         var strTableInner = '<caption style="color: #73879C;"><label class="control-label">Number of Working Hours per Month</label></caption>'
                            +' <thead>'
                            +       '<tr>'
@@ -627,7 +648,11 @@ $(document).ready(function () {
     }
 
     function generateEmployeeHourlyRatesTable(){
-        truncateTable('#tbl_assumptions_employees_hourly_rates', true, true);
+        if(!$('#tbl_assumptions_employees_hourly_rates').length){
+            $('#frm_bplanner_financial_data_input_page').append('<table id="tbl_assumptions_employees_hourly_rates" class="table table-bordered table-hover table-dynamic margin-15"></table>')
+        }else{
+            truncateTable('#tbl_assumptions_employees_hourly_rates');
+        }
         var strTableInner = '<caption style="color: #73879C;"><label class="control-label">Hourly Rates</label></caption>'
                            + ' <thead>'
                            +       '<tr>'
@@ -690,7 +715,11 @@ $(document).ready(function () {
     }
 
     function generateCapitalTable(){
-        truncateTable('#tbl_assumptions_capital', true, true);
+        if(!$('#tbl_assumptions_capital').length){
+            $('#frm_bplanner_financial_data_input_page').append('<table id="tbl_assumptions_capital" class="table table-bordered table-hover table-dynamic margin-15"></table>')
+        }else{
+            truncateTable('#tbl_assumptions_capital');
+        }
         var strTableInner ='<caption style="color: #73879C;"><label class="control-label">Capital Sources</label></caption>'
                            +' <thead>'
                            +       '<tr>'
@@ -756,7 +785,11 @@ $(document).ready(function () {
     }
 
     function generateUsageTangibleAssetsTable(){
-        truncateTable('#tbl_assumptions_usage_tangible_assets', true, true);
+        if(!$('#tbl_assumptions_usage_tangible_assets').length){
+            $('#frm_bplanner_financial_data_input_page').append('<table id="tbl_assumptions_usage_tangible_assets" class="table table-bordered table-hover table-dynamic margin-15"></table>')
+        }else{
+            truncateTable('#tbl_assumptions_usage_tangible_assets');
+        }
         var strTableInner = '<caption style="color: #73879C;"><label class="control-label">Usage: Investment in Tangible Fixed Assets</label></caption>'
                            + ' <thead>'
                            +       '<tr>'
@@ -824,7 +857,11 @@ $(document).ready(function () {
     }
 
     function generateUsageInTangibleAssetsTable(){
-        truncateTable('#tbl_assumptions_usage_intangible_assets', true, true);
+        if(!$('#tbl_assumptions_usage_intangible_assets').length){
+            $('#frm_bplanner_financial_data_input_page').append('<table id="tbl_assumptions_usage_intangible_assets" class="table table-bordered table-hover table-dynamic margin-15"></table>')
+        }else{
+            truncateTable('#tbl_assumptions_usage_intangible_assets');
+        }
         var strTableInner = '<caption style="color: #73879C;"><label class="control-label">Usage: Investment in Intangible Fixed Assets</label></caption>'
                            + '<thead>'
                            +       '<tr>'
@@ -877,7 +914,11 @@ $(document).ready(function () {
     }
 
     function generateUsageDepositsTable(){
-        truncateTable('#tbl_assumptions_usage_deposits', true, true);
+        if(!$('#tbl_assumptions_usage_deposits').length){
+            $('#frm_bplanner_financial_data_input_page').append('<table id="tbl_assumptions_usage_deposits" class="table table-bordered table-hover table-dynamic margin-15"></table>')
+        }else{
+            truncateTable('#tbl_assumptions_usage_deposits');
+        }
         var strTableInner = '<caption style="color: #73879C;"><label class="control-label">Usage: Deposits</label></caption>'
                            + ' <thead>'
                            +       '<tr>'
@@ -926,7 +967,11 @@ $(document).ready(function () {
     }
 
     function generateUsageOtherStartupCostsTable(){
-        truncateTable('#tbl_assumptions_usage_other_startup_costs', true, true);
+        if(!$('#tbl_assumptions_usage_other_startup_costs').length){
+            $('#frm_bplanner_financial_data_input_page').append('<table id="tbl_assumptions_usage_other_startup_costs" class="table table-bordered table-hover table-dynamic margin-15"></table>')
+        }else{
+            truncateTable('#tbl_assumptions_usage_other_startup_costs');
+        }
         var strTableInner = '<caption style="color: #73879C;"><label class="control-label">Usage: Other Start-up Costs</label></caption>'
                            + ' <thead>'
                            +       '<tr>'
