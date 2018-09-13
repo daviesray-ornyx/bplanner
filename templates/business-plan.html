@@ -457,7 +457,7 @@
                                 </form>
                                     <form id="frm_bplanner_financial_data_input_page" method="post" action="/dashboard/new/business-plan/financial_data_input_page" class="form-horizontal form-label-left" autocomplete="off" data-parsley-validate>
                                         {% csrf_token %}
-                                        {% if mode == 'new' or bplan_financial_data_input_page_form.financial_input.value == '' %}
+                                        {% if mode == 'new' or bplan_financial_data_input_page_form.financial_input_force_new %}
                                             <input name="id" value="{{ frm_bplanner_financial_data_input_page.id }}" class="hidden id">
                                             <h2>Financial data input</h2>
                                             <div class="ln_solid"></div>
@@ -578,6 +578,7 @@
                                         {% else %}
                                             {{ bplan_financial_data_input_page_form.financial_input.value | safe }}
                                         {% endif %}
+
                                     </form>
                             </div>
                             <div class="tab-pane step-5" id="rpt_pnl"  data-friendly_name="#" >

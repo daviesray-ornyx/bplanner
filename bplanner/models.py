@@ -129,6 +129,12 @@ class BusinessPlanFinancialDataInput(models.Model):
     date_modified = models.DateTimeField(verbose_name='Date Modified', blank=True, null=True)
     owner = models.ForeignKey(User, verbose_name="Business Plan Owner", null=True, on_delete=models.DO_NOTHING) # Ensure this is changed to False on deployment!!
 
+    def financial_input_force_new(self):
+        input_fields_count = self.financial_input.count('<input')
+        print('Number of input fields: {}'.format(input_fields_count))
+        return True if input_fields_count < 10 else False
+
+
     def save(self, *args, **kwargs):
         ''' On save, update timestamps '''
         if not self.id:
