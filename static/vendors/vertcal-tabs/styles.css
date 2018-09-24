@@ -1,0 +1,160 @@
+/** Let tabls-left class be available in bootstrap 3.3.7 - I **/
+.tabs-left > .nav-tabs {
+  border-bottom: 0;
+}
+
+.tab-content > .tab-pane {
+  display: none;
+}
+
+.tab-content > .active {
+  display: block;
+}
+
+.tabs-left > .nav-tabs > li {
+  float: none;
+}
+
+.tabs-left > .nav-tabs > li > a,
+.tabs-left > .nav-tabs > li > div {
+  margin-right: 0;
+  margin-bottom: 3px;
+}
+
+.tabs-left > .nav-tabs {
+  float: left;
+  margin-right: 19px;
+  border-right: 0px solid #ddd;
+}
+
+.tabs-left > .nav-tabs > li > a,
+.tabs-left > .nav-tabs > li > div {
+  margin-right: -1px;
+  -webkit-border-radius: 4px 0 0 4px;
+     -moz-border-radius: 4px 0 0 4px;
+          border-radius: 4px 0 0 4px;
+}
+
+.tabs-left > .nav-tabs > li > a:hover,
+.tabs-left > .nav-tabs > li > a:focus,
+.tabs-left > .nav-tabs > li > div:hover,
+.tabs-left > .nav-tabs > li > div:focus{
+  border-color: #eeeeee #dddddd #eeeeee #eeeeee;
+  background-color: #eeeeee;
+}
+
+.tabs-left > .nav-tabs .active > a,
+.tabs-left > .nav-tabs .active > a:hover,
+.tabs-left > .nav-tabs .active > a:focus,
+.tabs-left > .nav-tabs .active > div,
+.tabs-left > .nav-tabs .active > div:hover,
+.tabs-left > .nav-tabs .active > div:focus{
+  border-color: #ddd transparent #ddd #ddd;
+  *border-right-color: #ffffff;
+}
+/** Let tabls-left class be available in bootstrap 3.3.7 - F **/
+
+
+/* TABS */
+.tabs-left > .nav-tabs{
+    margin-right:0px;
+    padding: 0;
+    height: 700px; /* Debe ser el mismo height que el que tenga .tab-content */
+}
+
+/* CONTENIDO DE LOS TABS */
+.tab-content {
+    background-color: #FFFFFF;
+    border: none;
+    /*border:solid 1px #DCE1E5;*/
+    border-left-style: none;
+    /*height: 700px; *//* Debe ser el mismo height que el que tenga .tabs-left > .nav-tabs */
+    padding-left: 0px;
+
+    border-radius: 0px 4px 4px 4px;
+    -moz-border-radius: 0px 4px 4px 4px;
+    -webkit-border-radius: 0px 4px 4px 4px;
+
+    -webkit-box-shadow: 0px 0px 8px 2px rgba(0,0,0,0.05);
+    -moz-box-shadow: 0px 0px 8px 8px rgba(0,0,0,0.05);
+    box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.05);
+}
+
+.tab-content > div {
+    margin-top: 10px;
+}
+
+/* Formato del tab activo */
+.tabs-left > .nav-tabs .active > a,
+.tabs-left > .nav-tabs .active > a:hover,
+.tabs-left > .nav-tabs .active > a:focus,
+
+.tabs-left > .nav-tabs .active div,
+.tabs-left > .nav-tabs .active div:hover,
+.tabs-left > .nav-tabs .active div:focus
+{
+    background-color: #FFFFFF;
+
+    border: none;
+
+    margin-right: -1px;
+
+    -webkit-box-shadow: -4px 0px 18px -1px rgba(0,0,0,0.05);
+    -moz-box-shadow: -4px 0px 18px -1px rgba(0,0,0,0.05);
+    box-shadow: -4px 0px 18px -1px rgba(0,0,0,0.05);
+}
+
+/* Formato de los tabs en general */
+#MyAccountsTab > .nav-tabs > li:nth-child(1) > a,
+#MyAccountsTab  > .nav-tabs > li:nth-child(1) > a:hover,
+#MyAccountsTab > .nav-tabs > li:nth-child(1) > a:focus,
+
+#MyAccountsTab > .nav-tabs > li:nth-child(1) > div,
+#MyAccountsTab > .nav-tabs > li:nth-child(1) > div:hover,
+#MyAccountsTab > .nav-tabs > li:nth-child(1) > div:focus
+{
+    cursor: pointer;
+    border-top-left-radius: 4px;
+}
+
+#MyAccountsTab > .nav-tabs > li.active:nth-child(1) > a,
+#MyAccountsTab > .nav-tabs > li.active:nth-child(1) > a:hover,
+#MyAccountsTab > .nav-tabs > li.active:nth-child(1) > a:focus,
+
+#MyAccountsTab > .nav-tabs > li.active:nth-child(1) > div,
+#MyAccountsTab > .nav-tabs > li.active:nth-child(1) > div:hover,
+#MyAccountsTab > .nav-tabs > li.active:nth-child(1) > div:focus
+{
+    border-top-left-radius: 4px;
+    border-bottom-style: none;
+    border-left: 1px solid #DCE1E5;
+}
+
+.tabs-left > .nav-tabs > li > a,
+.tabs-left > .nav-tabs > li > div {
+    display: table;
+    /*border: solid 1px transparent;*/
+    margin-right: -1px;
+
+    margin-bottom: 0;
+    padding-bottom: 0;
+
+    height: 42px;
+    width: 100%;
+
+    border:solid 1px #DCE1E5;
+    border-radius: 0px;
+}
+
+/* Style of the div element acting as tab content */
+.tabbable.tabs-left > .nav-tabs > li > div > div {
+    display: table-cell;
+    vertical-align: middle;
+    padding: 0px 12px 0px 12px;
+    width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  	overflow: visible;
+}
+
+

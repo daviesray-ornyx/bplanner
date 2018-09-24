@@ -12,7 +12,12 @@ class BusinessPlanTitlePageForm(ModelForm):
 class BusinessPlanMainContentForm(ModelForm):
     class Meta:
         model = BusinessPlanMainContent
-        fields = ('main_content',)
+        fields = ('mission_vision','executive_summary','company_description','key_success_factors','objectives','industry_analysis',
+                  'tam_sam_som_analysis','swot_analysis','insights','marketing_plan','ownership_and_management_plan','milestones')
+
+
+
+
 
 
 class BusinessPlanFinancialAssumptionsForm(ModelForm):

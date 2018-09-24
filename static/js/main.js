@@ -11,6 +11,8 @@ $(document).ready(function () {
     $('#editor-one').height($('#right_col').height() - $('.smart_nav').height() - 230);
     //$('#steps-nav').css('bottom', '0');
 
+    var totalTaxSlabTableCumulativeTax = 0;
+
     function getCookie(name) {
         var cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -25,6 +27,33 @@ $(document).ready(function () {
             }
         }
         return cookieValue;
+    }
+
+    $('#id_currency').change(function(event){
+        // get currency.
+        updateCurrency(getCurrency());
+    })
+
+    function getCurrency(){
+        var currencyId =  $('#id_currency').val()
+        if(currencyId=='None'){
+            return '$';
+        }
+
+        if(currencyId == 0){
+            return '$';
+        }else if(currencyId == 1){
+            return '£';
+        }else if (currencyId == 2){
+            return '€';
+        }else{
+            return '$'; // dollar is returned for any missing case
+        }
+    }
+
+    function updateCurrency(symbol){
+        var text = ' ('+ symbol +')'
+        $('.span-currency').text(text);
     }
 
     $('#id_first_financial_year').change(function(event){
@@ -234,7 +263,7 @@ $(document).ready(function () {
 
         $.each(projectionYearsList, function(index, projectionYear){
             strHead += '<th class="text-right">'
-                        +    projectionYear
+                        +    projectionYear + '<span class="span-currency"></span>'
                     +   '</th>'
         })
         // Complete hthead
@@ -470,7 +499,7 @@ $(document).ready(function () {
                           +     '<th>Cost Item</th>'
                           +     '<th>Period Charged</th>'
                                 $.each(projectionYearsList, function(projectionYearIndex, projectionYear){
-        strTableInner     +=    '<th class="text-right">' + projectionYear + '</th>'
+        strTableInner     +=    '<th class="text-right">' + projectionYear + '<span class="span-currency"></span>' + '</th>'
                                 });
         strTableInner     += '</tr>'
                           +'</thead>'
@@ -540,7 +569,7 @@ $(document).ready(function () {
             truncateTable('#tbl_assumptions_employee_roles_list');
         }
 
-        var strTableInner = '<caption style="color: #73879C;"><label class="control-label">Employee Costs</label></caption>'
+        var strTableInner = '<caption style="color: #73879C;"><label class="control-label">Number of Employees </label></caption>'
                           + '<thead>'
                           +     '<th></th>'
                           +     '<th>Employees Roles</th>'
@@ -659,7 +688,7 @@ $(document).ready(function () {
                            +             '<th>Employee Role</th>';
                 // Providing for years
         $.each(projectionYearsList, function (index, projectionYear) {
-            strTableInner  +=            '<th class="text-right">' + projectionYear + '</th>'
+            strTableInner  +=            '<th class="text-right">' + projectionYear + '<span class="span-currency"></span>' + '</th>'
         })
             strTableInner  +=       '</tr>'
                            +'</thead>'
@@ -726,7 +755,7 @@ $(document).ready(function () {
                            +             '<th>Capital Source</th>';
                 // Providing for years
         $.each(projectionYearsList, function (index, projectionYear) {
-            strTableInner  +=            '<th class="text-right" >' + projectionYear + '</th>'
+            strTableInner  +=            '<th class="text-right" >' + projectionYear + '<span class="span-currency"></span>' + '</th>'
                            +             '<th class="text-center"> Month of Investment</th>'
         })
             strTableInner  +=       '</tr>'
@@ -797,7 +826,7 @@ $(document).ready(function () {
                            +             '<th>Tangible Assets</th>'
                 // Providing for years
         $.each(projectionYearsList, function (index, projectionYear) {
-            strTableInner  +=            '<th class="text-right">' + projectionYear + '</th>'
+            strTableInner  +=            '<th class="text-right">' + projectionYear + '<span class="span-currency"></span>' + '</th>'
                            +             '<th class="text-center"> Month of Addition</th>'
         })
             strTableInner  +=            '<th class="text-right">Depreciation Rate (%)</th>'
@@ -869,7 +898,7 @@ $(document).ready(function () {
                            +             '<th>Intangible Assets</th>'
                 // Providing for years
         $.each(projectionYearsList, function (index, projectionYear) {
-            strTableInner  +=            '<th class="text-right" >' + projectionYear + '</th>'
+            strTableInner  +=            '<th class="text-right" >' + projectionYear + '<span class="span-currency"></span>' + '</th>'
                            +             '<th class="text-center"> Month of Addition</th>'
         })
             strTableInner  +=       '</tr>'
@@ -924,7 +953,7 @@ $(document).ready(function () {
                            +       '<tr>'
                            +             '<th></th>'
                            +             '<th>Deposits</th>'
-                           +             '<th class="text-right" >' + firstFinancialYear + '</th>'
+                           +             '<th class="text-right" >' + firstFinancialYear + '<span class="span-currency"></span>' + '</th>'
                            +        '</tr>'
                            +'</thead>'
                            +'<tbody>'
@@ -977,7 +1006,7 @@ $(document).ready(function () {
                            +       '<tr>'
                            +             '<th></th>'
                            +             '<th>Other Startup Costs</th>'
-                           +             '<th class="text-right">' + firstFinancialYear + '</th>'
+                           +             '<th class="text-right">' + firstFinancialYear + '<span class="span-currency"></span>' + '</th>'
                            +        '</tr>'
                            +'</thead>'
                            +'<tbody>'
@@ -995,9 +1024,184 @@ $(document).ready(function () {
 
     }
 
+    function inputTaxUpperLimitChangeHandler(event){
+        // Check if upper limit is greater than lower limit
+        var upperLimitTD = $(this).parent();
+        var upperLimitInput =$(upperLimitTD).children('input').first();
+        var upperLimit = parseInt($(upperLimitInput).val(), 0);
+
+        var lowerLimitTD = $($(upperLimitTD).siblings('.lower-limit'))[0];
+        var lowerLimitInput =$(lowerLimitTD).children('input').first();
+        var lowerLimit =  parseInt($(lowerLimitInput).val(), 0);
+
+        var taxRateTD = $($(upperLimitTD).siblings('.tax-rate'))[0];
+        var taxRateInput =$(taxRateTD).children('input').first();
+        var taxRate = parseInt($(taxRateInput).val(),0)
+
+        var differenceTD = $($(upperLimitTD).siblings('.difference'))[0];
+        var differenceInput =$(differenceTD).children('input').first();
+
+
+        var taxTD = $($(upperLimitTD).siblings('.tax'))[0];
+        var taxInput =$(taxTD).children('input').first();
+        var oldTaxValue = 0;
+        if($(taxInput).val() != null  && $(taxInput).val() != ''){
+            oldTaxValue = parseInt($(taxInput).val(), 0);
+        }
+
+
+        var cumulativeTaxTD = $($(upperLimitTD).siblings('.cumulative_tax'))[0];
+        var cumulativeTaxInput =$(cumulativeTaxTD).children('input').first();
+        var currentCumulativeTaxVal = $(cumulativeTaxInput).val() != '' ? parseInt($(cumulativeTaxInput).val()) : 0
+        // reset all the computed values
+            //1. difference
+            $(differenceInput).val('')
+            //2. tax
+            $(taxInput).val('')
+            //3. cumulativeTax
+            $(cumulativeTaxInput).val('')
+        // validate upper and lower limits
+        if(lowerLimit == null ){
+            markAsInvalid(lowerLimitInput)
+            alert('Invalid upper limit value.: ' + upperLimit)
+            return false;
+        }else{
+            // mark lower limit as valid
+            markAsValid(lowerLimitInput)
+        }
+
+
+        if(upperLimit == null){
+            markAsInvalid(upperLimitInput)
+            alert('Invalid upper limit value.: ' + upperLimit)
+        }else{
+            markAsValid(upperLimitInput)
+        }
+
+        if (upperLimit <= lowerLimit){
+            // show error and let them know that upper limit cannot be less than lower limit
+            alert('Upper limit must be greater than lower limit.')
+            $(upperLimitInput).val('')
+            markAsInvalid(upperLimitInput)
+            // return
+            return false
+        }else{
+            markAsValid(upperLimitInput)
+        }
+
+        // Else upper limit and lower limits are all in order
+        // compute difference
+        var difference = upperLimit - lowerLimit;
+        $(differenceInput).val(difference);
+        // check if tax rate is set
+        if(taxRate == null || isNaN(taxRate) || taxRate == ''){
+            // set focus to taxrate input
+            return;
+        }
+        // new tax
+        var newTax = Math.round(differenceInput * taxRate/100); // Tax rate is in percentage
+        $(taxInput).val(newTax);
+
+        // Update cumulative tax val
+        var taxDifference = newTax - oldTaxValue;
+        totalTaxSlabTableCumulativeTax += taxDifference;
+        $(cumulativeTaxInput).val(totalTaxSlabTableCumulativeTax)
+    }
+    // Handling change in upper liumit
+    $('.input-tax-upper-limit').change(inputTaxUpperLimitChangeHandler)
+
+    function inputTaxRateChangeHandler(event){
+        // Tax rate has chaged.
+        var taxRateTD = $(this).parent();
+        var taxRateInput =  $(taxRateTD).children('input').first();
+        var taxRate = parseInt($(taxRateInput).val(),0)
+
+        if (taxRate == null){
+            markAsInvalid(taxRateInput);
+            alert('Please provide tax rate for the current tax slab.')
+            return false;
+        }else{
+            markAsValid(taxRateInput)
+        }
+
+        var upperLimitTD = $($(taxRateTD).siblings('.upper-limit'))[0];
+        var upperLimitInput =$(upperLimitTD).children('input').first();
+        var upperLimit = parseInt($(upperLimitInput).val(), 0);
+
+
+
+
+        var lowerLimitTD = $($(taxRateTD).siblings('.lower-limit'))[0];
+        var lowerLimitInput =$(lowerLimitTD).children('input').first();
+        var lowerLimit =  parseInt($(lowerLimitInput).val(), 0);
+
+
+        var differenceTD = $($(taxRateTD).siblings('.difference'))[0];
+        var differenceInput =$(differenceTD).children('input').first();
+
+
+        var taxTD = $($(taxRateTD).siblings('.tax'))[0];
+        var taxInput =$(taxTD).children('input').first();
+        var oldTaxValue = $(taxInput).val() != '' ? parseInt($(taxInput).val(), 0) : 0;
+
+
+        var cumulativeTaxTD = $($(upperLimitTD).siblings('.cumulative_tax'))[0];
+        var cumulativeTaxInput =$(cumulativeTaxTD).children('input').first();
+        var currentCumulativeTaxVal = $(cumulativeTaxInput).val() != '' ? parseInt($(cumulativeTaxInput).val()) : 0
+        // reset all the computed values
+        //2. tax
+        $(taxInput).val('')
+        //3. cumulativeTax
+        $(cumulativeTaxInput).val('')
+        // validate upper and lower limits
+        if(lowerLimit == null ){
+            return false;
+        }
+
+        if(upperLimit == null){
+            return false;
+        }
+
+
+        if (upperLimit <= lowerLimit){
+            // show error and let them know that upper limit cannot be less than lower limit
+            alert('Upper limit must be greater than lower limit.')
+            $(upperLimitInput).val('')
+            markAsInvalid(upperLimitInput)
+            return false
+        }
+
+        // Else upper limit and lower limits are all in order
+        // compute difference
+        var difference = upperLimit - lowerLimit;
+        var newTax = Math.round(difference * taxRate/100); // Tax rate is in percentage
+        $(taxInput).val(newTax);
+
+        // Update cumulative tax val
+        var taxDifference = newTax - oldTaxValue;
+        totalTaxSlabTableCumulativeTax += taxDifference;
+        $(cumulativeTaxInput).val(totalTaxSlabTableCumulativeTax)
+
+
+    }
+
+    $('.input-tax-rate').change(inputTaxRateChangeHandler)
+
     function generateTaxSlabTableRow(){
-        //
         var rowCount = $('#tbl_assumptions_tax_slabs tbody').children('tr').length;
+
+        // Before generating a new row, disable the previous row input fields...
+        var currentUpperLimitTD = $($('#tbl_assumptions_tax_slabs_' + rowCount).children('.upper-limit'))[0];
+        $(currentUpperLimitTD).addClass('readonly')
+        var currentUpperLimitInput = $($(currentUpperLimitTD).children('input'))[0]
+        $(currentUpperLimitInput).attr('readonly', 'true')
+
+        var currentTaxRateTD = $($('#tbl_assumptions_tax_slabs_' + rowCount).children('.tax-rate'))[0];
+        $(currentTaxRateTD).addClass('readonly')
+        var currentTaxRateInput = $($(currentTaxRateTD).children('input'))[0]
+        $(currentTaxRateInput).attr('readonly', 'true')
+        // End of disabling input in previous row field
+
         var currentUpperLimit = $($($('#tbl_assumptions_tax_slabs_' + rowCount).children('td')[2]).children('input')[0]).val()
         if(currentUpperLimit == null || currentUpperLimit == ''){
             console.log("Current upper limit: " + currentUpperLimit);
@@ -1015,34 +1219,37 @@ $(document).ready(function () {
         var taxTD = taxSlabTRId + '_tax';
         var taxCumulativeTD = taxSlabTRId + '_cumulative_tax'
         var strRowHtml = '<tr id="'+ taxSlabTRId +'">'
-                       +     '<td class="td-action">'
+                       +     '<td class="td-action td-input">'
                        +           '<button type="button" class="btn btn-transparent action-danger action-delete-row" title="Delete row" data-toggle="confirmation"'
                        +               'data-btn-ok-label="Continue" data-btn-ok-class="btn-success"'
                        +               'data-btn-cancel-label="Cancel!" data-btn-cancel-class="btn-danger"'
                        +               'data-title="Delete Operation Cost Row?" data-content="This action cannot be reversed and can lead to data loss.">'
-                       +               '<i class="fas fa-times fa-2x" style="font-size:18px" aria-hidden="true"></i>'
+                       +               '<i class="fa fa-times fa-2x" style="font-size:16px;" aria-hidden="true"></i>'
                        +           '</button>'
                        +       '</td>'
-                       +     '<td class="readonly lower-limit">'
-                       +         '<input type="number" class="form-control text-center" name="'+ taxSlabLowerTD +'" placeholder="" min="0" value="'+ newLowerLimit +'" readonly>'
+                       +     '<td class="td-input readonly lower-limit">'
+                       +         '<input type="number" class="form-control text-right input-tax-lower-limit"  placeholder="" min="0" value="'+ newLowerLimit +'" readonly>'
                        +     '</td>'
-                       +     '<td class"upper-limit">'
-                       +         '<input type="number" class="form-control text-right" name="'+ taxSlabUpperTD +'" placeholder="" min="'+ newLowerLimit +'">'
+                       +     '<td class="td-input upper-limit">'
+                       +         '<input type="number" class="form-control text-right input-tax-upper-limit" placeholder="" min="'+ newLowerLimit +'">'
                        +     '</td>'
-                       +     '<td class="rate">'
-                       +         '<input type="number" class="form-control text-right" name="'+ taxRateTD +'" placeholder="" min="'+ minUpperLimit +'">'
+                       +     '<td class="td-input tax-rate">'
+                       +         '<input type="number" class="form-control text-right input-tax-rate" placeholder="" min="0">'
                        +     '</td>'
                        +     '<td class="td-input readonly difference">'
-                       +         '<input type="number" class="form-control input-md text-right" name="'+ differenceTD +'" min="0" readonly>'
+                       +         '<input type="number" class="form-control input-md text-right" min="0" readonly>'
                        +     '</td>'
                        +     '<td class="td-input readonly tax">'
-                       +         '<input type="number" class="form-control input-md text-right" name="'+ taxTD +'" min="0" readonly>'
+                       +         '<input type="number" class="form-control input-md text-right" min="0" readonly>'
                        +     '</td>'
                        +     '<td class="td-input readonly cumulative_tax">'
                        +         '<input type="number" class="form-control input-md text-right" name="'+ taxCumulativeTD +'" min="0" readonly>'
                        +     '</td>'
                        + '</tr>'
         return strRowHtml;
+
+
+
     }
 
     function measurementUnitChangeHandler(event){
@@ -1192,10 +1399,31 @@ $(document).ready(function () {
             var roleId = $(row).attr('id');
             $('#tbl_assumptions_employees_working_hours tr.' + roleId).remove();
             $('#tbl_assumptions_employees_hourly_rates tr.' + roleId).remove();
+        }else if(tableId == 'tbl_assumptions_tax_slabs'){
+            // adjust totalCumulativeTaxValue by the amount of tax
+            var rowCount = $('#tbl_assumptions_tax_slabs tbody').children('tr').length;
+            var taxTD = $($('#tbl_assumptions_tax_slabs_' + rowCount).children('.tax'))[0];
+            var taxInput = $($(taxTD).children('input'))[0]
+            var currentTax = $(taxInput).val() != '' ? parseInt($(taxInput).val(), 0) : 0
+            totalTaxSlabTableCumulativeTax -= currentTax;
         }
 
         $(row).remove();
+
         //Look for any other necessary action after that!!
+        if(tableId == 'tbl_assumptions_tax_slabs'){
+            // Need to enable what was disabled after removing
+            var rowCount = $('#tbl_assumptions_tax_slabs tbody').children('tr').length;
+            var currentUpperLimitTD = $($('#tbl_assumptions_tax_slabs_' + rowCount).children('.upper-limit'))[0];
+            $(currentUpperLimitTD).removeClass('readonly')
+            var currentUpperLimitInput = $($(currentUpperLimitTD).children('input'))[0]
+            $(currentUpperLimitInput).attr('readonly', false)
+
+            var currentTaxRateTD = $($('#tbl_assumptions_tax_slabs_' + rowCount).children('.tax-rate'))[0];
+            $(currentTaxRateTD).removeClass('readonly')
+            var currentTaxRateInput = $($(currentTaxRateTD).children('input'))[0]
+            $(currentTaxRateInput).attr('readonly', false)
+        }
     }
 
     function  calculateCompoundedGrowth(principal, rate, numberOfTimesCompoundedPerYear, timeInYears){
@@ -1321,8 +1549,17 @@ $(document).ready(function () {
             if(rowHtml == -1)
                 return;
             $('#tbl_assumptions_tax_slabs tbody').append($(rowHtml));
+
+            // Unbind and bind click event
             $('#tbl_assumptions_tax_slabs .action-delete-row').unbind('click');
             $('#tbl_assumptions_tax_slabs .action-delete-row').click(deleteRowEventHandler);
+
+            // Unbind and bind change event
+            $('#tbl_assumptions_tax_slabs .input-tax-upper-limit').unbind('change');
+            $('#tbl_assumptions_tax_slabs .input-tax-upper-limit').change(inputTaxUpperLimitChangeHandler);
+
+            $('#tbl_assumptions_tax_slabs .input-tax-rate').unbind('change');
+            $('#tbl_assumptions_tax_slabs .input-tax-rate').change(inputTaxRateChangeHandler);
         }
 
 
@@ -2096,7 +2333,7 @@ $(document).ready(function () {
         $.each(projectionMonthsList, function(index, projectionMonthYear){
             var yearTotalClass = projectionMonthYear['is_total'] ? 'unit_year-total' : ''
             strHtml += '<th class="text-right td-sm ' + yearTotalClass + '" >'
-                        +    projectionMonthYear['display'];
+                        +    projectionMonthYear['display'] + '<span class="span-currency"></span>'
                     +   '</th>'
         })
         strHtml += '</tr></thead><tbody></tbody>'
@@ -2688,14 +2925,14 @@ $(document).ready(function () {
         var strHtml = '<tr class="tr-totals">'
                     +   '<td class="td-md"></td>'
         $.each(amortizationScheduleItem['monthly'], function (monthIndex, monthScheduleItem) {
-            strHtml    += '<td class="td-input td-xs readonly"'
+            strHtml    += '<td class="td-input td-xs readonly text-right"'
                                 + ' data-projection_month_id="' + 'Addmonth' + '" '
                                 + ' data-projection_year="' + 'Addyear' + '" '
                                 + ' width="200">'
                                 +   '<input name="" '
                                 +       ' type="text" min="0"'
-                                +       ' value="' + monthIndex + '"'
-                                +       ' class="form-control text-right" readonly></td>'
+                                +       ' value="' + monthIndex  + '"'
+                                +       ' class="form-control text-right" readonly> <span class="span-currency"></span></td>'
 
         })
         strHtml          +='</tr>'
@@ -3200,7 +3437,7 @@ $(document).ready(function () {
         $.each(projectionMonthsList, function(index, projectionMonthYear){
             var yearTotalClass = projectionMonthYear['is_total'] ? 'unit_year-total' : ''
             strHtml += '<th class="td-xs text-right ' + yearTotalClass + '" >'
-                    +       projectionMonthYear['display'];
+                    +       projectionMonthYear['display'] + '<span class="span-currency"></span>';
                     +   '</th>'
         })
         strHtml += '</tr></thead><tbody></tbody>'
@@ -3829,7 +4066,7 @@ $(document).ready(function () {
         var strHtml = '<thead><tr ><th class="td-md">Particulars </th>'
         $.each(projectionYearsList, function(index, projectionYear){
             strHtml += '<th class="td-xs text-right" >'
-                    +       projectionYear;
+                    +       projectionYear + '<span class="span-currency"></span>';
                     +   '</th>'
         })
         strHtml += '</tr></thead><tbody></tbody>'
@@ -4374,6 +4611,16 @@ $(document).ready(function () {
         //
     }
 
+    function markAsInvalid(val){
+        $(val).css('border', '1px solid #E85445');
+        $(val).css('background-color', '#FAEDEC');
+    }
+
+    function markAsValid(val){
+        $(val).css('border', '1px solid #ccc');
+        $(val).css('background-color', '#fff');
+    }
+
     function validateRequired(stepId){
         var validated = true;
         var returnObject = {};
@@ -4384,15 +4631,13 @@ $(document).ready(function () {
                 var itemVal = $(val).val();
                 if(!itemVal || itemVal == '') {
                     // Change css and give a red border
-                    $(val).css('border', '1px solid #E85445');
-                    $(val).css('background-color', '#FAEDEC');
+                    markAsInvalid(val)
                     if(returnObject[containerId] == null)
                         returnObject[containerId] = 0
                     returnObject[containerId] += 1; // Number of errors
                     validated = false;
                 }else{
-                    $(val).css('border', '1px solid #ccc');
-                    $(val).css('background-color', '#fff');
+                    markAsValid(val)
                 }
             })
         })
@@ -4488,6 +4733,10 @@ $(document).ready(function () {
 
                     generateUsageDepositsTable();
                     generateUsageOtherStartupCostsTable();
+
+                    // Update currency symbols after every regeneration
+                    updateCurrency(getCurrency());
+
                     toggleSpinner(false, 'Done!')
                 }
             }else if(clickedStep == '#step-5' ){
@@ -4507,6 +4756,10 @@ $(document).ready(function () {
                     prepareAndRenderTotalOperatingCostBar();
                     prepareAndRenderEarningsAfterTaxtBar();
                     prepareAndRenderNetMarginBar();
+
+                    // update currencies after every generation
+                    updateCurrency(getCurrency());
+
                     stepMonitor[clickedStep]['auto_generate'] = false
                     stepMonitor[clickedStep]['passed'] = true
                     reportsGenerated = true
@@ -4699,9 +4952,32 @@ $(document).ready(function () {
 
     function saveMainContent(){
         // Update main content input value
-        var mainContentHTML = $('#editor-one').html();
+        var mission_visionContentHTML = $('#editor-mission_vision').html();
+        $('#id_mission_vision').val(mission_visionContentHTML)
+        var company_descriptionContentHTML = $('#editor-company_description').html();
+        $('#id_company_description').val(company_descriptionContentHTML)
 
-        $('#id_main_content').val(mainContentHTML)
+        var executive_summaryContentHTML = $('#editor-executive_summary').html();
+        $('#id_executive_summary').val(executive_summaryContentHTML)
+
+        var key_success_factorsContentHTML = $('#editor-key_success_factors').html();
+        $('#id_key_success_factors').val(key_success_factorsContentHTML)
+        var objectivesContentHTML = $('#editor-objectives').html();
+        $('#id_objectives').val(objectivesContentHTML)
+        var industry_analysisContentHTML = $('#editor-industry_analysis').html();
+        $('#id_industry_analysis').val(industry_analysisContentHTML)
+        var tam_sam_som_analysisContentHTML = $('#editor-tam_sam_som_analysis').html();
+        $('#id_tam_sam_som_analysis').val(tam_sam_som_analysisContentHTML)
+        var swot_analysisContentHTML = $('#editor-swot_analysis').html();
+        $('#id_swot_analysis').val(swot_analysisContentHTML)
+        var insightsContentHTML = $('#editor-insights').html();
+        $('#id_insights').val(insightsContentHTML)
+        var marketing_planContentHTML = $('#editor-marketing_plan').html();
+        $('#id_marketing_plan').val(marketing_planContentHTML)
+        var ownership_and_management_planContentHTML = $('#editor-ownership_and_management_plan').html();
+        $('#id_ownership_and_management_plan').val(ownership_and_management_planContentHTML)
+        var milestonesContentHTML = $('#editor-milestones').html();
+        $('#id_milestones').val(milestonesContentHTML)
 
         var data = $('#frm_bplanner_main_content_page').serializeArray();
         // get titlePageId
@@ -5438,5 +5714,13 @@ $(document).ready(function () {
         toggleSpinner(false, 'Done!')
         $('#btn_save_business_plan').removeClass('disabled')
     })
+
+    // update all currency spans at start.
+    updateCurrency(getCurrency());
+
+    // update respective currency spans on regeneration
+
+    // update all curreny spans on change:-- this has been handled
+
 })
 

@@ -1,7 +1,7 @@
-html::-webkit-scrollbar {
-    display: none;
-    overflow: visible;
-}
+/*html::-webkit-scrollbar {*/
+    /*display: none;*/
+    /*overflow: visible;*/
+/*}*/
 
 .right_col{
     bottom: 0;
@@ -143,7 +143,7 @@ html::-webkit-scrollbar {
     Styling editor
 */
 
-#editor-one{
+.editor-wrapper{
     min-height: 250px;
     height: 100%;
     background-color: white;
@@ -160,7 +160,7 @@ html::-webkit-scrollbar {
     outline: none;
 }
 
-#editor-one::-webkit-scrollbar {
+.editor-wrapper::-webkit-scrollbar {
  display: none;
 }
 
@@ -593,3 +593,10 @@ nav li {
     text-align: center;
     vertical-align: middle;
 }
+
+#btn_save_business_plan{
+    position:absolute;
+    top:0px;
+    right:0px;
+}
+

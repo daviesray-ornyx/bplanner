@@ -52,8 +52,19 @@ class BusinessPlanTitlePage(models.Model):
         ordering = ['-date_modified', '-date_created']
 
 class BusinessPlanMainContent(models.Model):
-    title_page = models.ForeignKey(BusinessPlanTitlePage, verbose_name="Business Plan Title Page", null=True, blank=True, on_delete=models.CASCADE)
-    main_content = models.TextField(verbose_name='Main Content', null=True, blank=True, default='')
+    title_page = models.ForeignKey(BusinessPlanTitlePage, verbose_name="Business Plan Title Page", null=True, on_delete=models.CASCADE)
+    mission_vision = models.TextField(verbose_name='Mission and Vision', null=True, blank=True, default='')
+    executive_summary = models.TextField(verbose_name='Executive Summary', null=True, blank=True, default='')
+    company_description = models.TextField(verbose_name='Company Description', null=True, blank=True, default='')
+    key_success_factors = models.TextField(verbose_name='Key Success Factors', null=True, blank=True, default='')
+    objectives = models.TextField(verbose_name='Objectives', null=True, blank=True, default='')
+    industry_analysis = models.TextField(verbose_name='Industry Analysis', null=True, blank=True, default='')
+    tam_sam_som_analysis = models.TextField(verbose_name='TAM-SAM-SOM Analysis', null=True, blank=True, default='')
+    swot_analysis = models.TextField(verbose_name='SWOT Analysis', null=True, blank=True, default='')
+    insights = models.TextField(verbose_name='Insights', null=True, blank=True, default='')
+    marketing_plan = models.TextField(verbose_name='Marketing Plan', null=True, blank=True, default='')
+    ownership_and_management_plan = models.TextField(verbose_name='Ownership and Management Plan', null=True, blank=True, default='')
+    milestones = models.TextField(verbose_name='Milestones', null=True, blank=True, default='')
 
     size = models.FloatField(verbose_name='Size', null=True, blank=True, default=0) # Store size of page
 
