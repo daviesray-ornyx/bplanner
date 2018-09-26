@@ -12,6 +12,6 @@ OFFERING_CHOICES = (
 )
 
 TAXATION_SYSTEM_CHOICES = (
-    (0, "Slab System"),
+    (0, "Tiered System"),
     (1, "Single System")
 )

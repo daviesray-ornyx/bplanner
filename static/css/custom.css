@@ -217,13 +217,13 @@ Reporting tabs
 }
 
 .form-horizontal .control-label.text-left{
-    text-align: left;
+    text-align: right;
 }
 
 .form-horizontal .control-label {
     padding-top: 7px;
     margin-bottom: 0;
-    text-align: left;
+    text-align: right;
 }
 
 .sticky-top{
@@ -600,3 +600,11 @@ nav li {
     right:0px;
 }
 
+.span-optional{
+    font-style: italic;
+}
+
+.span-help{
+    color: #99979c;
+    /*padding-left: 6px;*/
+}

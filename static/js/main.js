@@ -251,7 +251,7 @@ $(document).ready(function () {
             truncateTable('#tbl_assumptions_price_per_product');
         }
 
-        var strHead =   '<caption style="color: #73879C;"><label class="control-label">Price per Product/Service</label></caption>'
+        var strHead =   '<caption style="color: #73879C;"><label class="control-label">Price per <span class="span-item_offered"> ' + getItemOffered(false) + ' </span></label></caption>'
                         + '<thead>'
                         + '<tr >'
                         +   '<th class="text-left">'
@@ -315,7 +315,7 @@ $(document).ready(function () {
         }else{
             truncateTable('#tbl_assumptions_direct_cost_per_product');
         }
-        var strHead =   '<caption style="color: #73879C;"><label class="control-label">Direct Cost per Product/Service</label></caption>'
+        var strHead =   '<caption style="color: #73879C;"><label class="control-label">Direct Cost per <span class="span-item_offered"> ' + getItemOffered(false) + ' </span></label></caption>'
                         + '<thead>'
                         + '<tr >'
                         +   '<th class="text-left">'
@@ -372,8 +372,8 @@ $(document).ready(function () {
         var strHead = '<caption style="color: #73879C;"><label class="control-label">Units of Measurement</label></caption>'
                         +'<thead>'
                         + '<tr >'
-                        +   '<th>Products / Services </th>'
-                        +   '<th class="text-left">Units of measurement </th>'
+                        +   '<th><span class="span-item_offered"> ' + getItemOffered(true) + ' </span> </th>'
+                        +   '<th class="text-left">Units of Measuring Revenue  </th>'
                         +   '<th class="text-right"> Growth Rate (%) </th>'
         // Add tdata fro each month and year total... This should apply for the 1st year
         $.each(projectionMonthsList, function(index, projectionMonthYear){
@@ -521,6 +521,8 @@ $(document).ready(function () {
         // Unbind bind change events
         $('.operating-cost-change').unbind('change');
         $('.operating-cost-change').change(operatingCostChangeHandler);
+
+
 
         // Show div section
         $('#div_assumptions_operating_costs').css('display','block');
@@ -1025,6 +1027,8 @@ $(document).ready(function () {
     }
 
     function inputTaxUpperLimitChangeHandler(event){
+        $('#btn-add_tax_slab').addClass('disabled');
+        $('#span-add_tax_slab_help').text('(You can only add a tax slab when current slab is completed.)')
         // Check if upper limit is greater than lower limit
         var upperLimitTD = $(this).parent();
         var upperLimitInput =$(upperLimitTD).children('input').first();
@@ -1106,11 +1110,17 @@ $(document).ready(function () {
         var taxDifference = newTax - oldTaxValue;
         totalTaxSlabTableCumulativeTax += taxDifference;
         $(cumulativeTaxInput).val(totalTaxSlabTableCumulativeTax)
+
+        $('#btn-add_tax_slab').removeClass('disabled');
+        $('#span-add_tax_slab_help').text('(You can now add a tax slab.)')
     }
+
     // Handling change in upper liumit
     $('.input-tax-upper-limit').change(inputTaxUpperLimitChangeHandler)
 
     function inputTaxRateChangeHandler(event){
+        $('#btn-add_tax_slab').addClass('disabled');
+        $('#span-add_tax_slab_help').text('(You can only add a tax slab when current slab is completed.)')
         // Tax rate has chaged.
         var taxRateTD = $(this).parent();
         var taxRateInput =  $(taxRateTD).children('input').first();
@@ -1182,6 +1192,8 @@ $(document).ready(function () {
         totalTaxSlabTableCumulativeTax += taxDifference;
         $(cumulativeTaxInput).val(totalTaxSlabTableCumulativeTax)
 
+        $('#btn-add_tax_slab').removeClass('disabled');
+        $('#span-add_tax_slab_help').text('(You can now add a tax slab.)')
 
     }
 
@@ -1246,6 +1258,10 @@ $(document).ready(function () {
                        +         '<input type="number" class="form-control input-md text-right" name="'+ taxCumulativeTD +'" min="0" readonly>'
                        +     '</td>'
                        + '</tr>'
+
+        $('#btn-add_tax_slab').addClass('disabled');
+        $('#span-add_tax_slab_help').text('(You can only add a tax slab when current slab is completed.)')
+
         return strRowHtml;
 
 
@@ -1496,6 +1512,11 @@ $(document).ready(function () {
             $('#tbl_assumptions_operating_costs tbody').append('<tr>' + rowHtml + '</tr>');
             $('#tbl_assumptions_operating_costs .action-delete-row').unbind('click');
             $('#tbl_assumptions_operating_costs .action-delete-row').click(deleteRowEventHandler);
+
+            // Unbind bind change events
+            $('.operating-cost-change').unbind('change');
+            $('.operating-cost-change').change(operatingCostChangeHandler);
+
         }else if(targetTableId == '#tbl_assumptions_employees_list'){
             // Employee details table row addition
 
@@ -1697,6 +1718,48 @@ $(document).ready(function () {
     /*
     Other Payables per month section
      */
+
+    function getOperatingCostPerMonth(){
+        //var operatingCostPerYearDict = {}
+        var operatingCostPerMonthDict = {};
+        var operatingCostTableRows = $('#tbl_assumptions_operating_costs tbody tr');
+        $.each(operatingCostTableRows, function (operatingCostTRIndex, operatingCostTR) {
+            var operatingCostId = $(operatingCostTR).data('row_id');
+            operatingCostPerMonthDict[operatingCostId] = {}
+            // Getting operating cost details
+            // 1. Opearing cost name
+            var opearingCostNameTD = $(operatingCostTR).children('td.operating_cost_name')[0]
+            var opearingCostNameInput = $(opearingCostNameTD).children('input')[0]
+            var opearingCostName = $(opearingCostNameInput).val();
+            operatingCostPerMonthDict[operatingCostId]['name'] = opearingCostName;
+            operatingCostPerMonthDict[operatingCostId]['monthly'] = {}
+            // 2. Costing period
+            var costingPeriodTD = $(operatingCostTR).children('td.costing_period')[0]
+            var opearingCostNameInput = $(costingPeriodTD).children('select')[0]
+            var costingPeriod = $(opearingCostNameInput).val();
+
+            // 3. Cost values
+            var costTds = $(operatingCostTR).children('td.cost');
+            $.each(costTds, function (costTDIndex, costTD) {
+                // For each of the cost items
+                // Get year and value
+                var year = $(costTD).data('projection_year');
+                var costInput = $(costTD).children('input')[0];
+                var cost = $(costInput).val() || 0; // This should be replicated everywhere.. Return 0 if value is non or undefined
+                // Get all months belonging to this year
+                var months = getMonthsListForYear(year+"", true);
+                $.each(months, function (monthIndex, month) {
+                    operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex] = {}
+                    operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['year'] = year;
+                    operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['costing_period'] = costingPeriod
+                    operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['cost'] = cost;
+                })
+
+            })
+        })
+
+        return operatingCostPerMonthDict;
+    }
 
     function getOperatingCostTotalsPeryear(operatingCostPerMonthTotals){
         var operatingCostTotalsPerYearDict = {};
@@ -2039,47 +2102,6 @@ $(document).ready(function () {
         return badDebtsPerMonthDict;
     }
 
-    function getOperatingCostPerMonth(){
-        //var operatingCostPerYearDict = {}
-        var operatingCostPerMonthDict = {};
-        var operatingCostTableRows = $('#tbl_assumptions_operating_costs tbody tr');
-        $.each(operatingCostTableRows, function (operatingCostTRIndex, operatingCostTR) {
-            var operatingCostId = $(operatingCostTR).data('row_id');
-            operatingCostPerMonthDict[operatingCostId] = {}
-            // Getting operating cost details
-            // 1. Opearing cost name
-            var opearingCostNameTD = $(operatingCostTR).children('td.operating_cost_name')[0]
-            var opearingCostNameInput = $(opearingCostNameTD).children('input')[0]
-            var opearingCostName = $(opearingCostNameInput).val();
-            operatingCostPerMonthDict[operatingCostId]['name'] = opearingCostName;
-            operatingCostPerMonthDict[operatingCostId]['monthly'] = {}
-            // 2. Costing period
-            var costingPeriodTD = $(operatingCostTR).children('td.costing_period')[0]
-            var opearingCostNameInput = $(costingPeriodTD).children('select')[0]
-            var costingPeriod = $(opearingCostNameInput).val();
-
-            // 3. Cost values
-            var costTds = $(operatingCostTR).children('td.cost');
-            $.each(costTds, function (costTDIndex, costTD) {
-                // For each of the cost items
-                // Get year and value
-                var year = $(costTD).data('projection_year');
-                var costInput = $(costTD).children('input')[0];
-                var cost = $(costInput).val() || 0; // This should be replicated everywhere.. Return 0 if value is non or undefined
-                // Get all months belonging to this year
-                var months = getMonthsListForYear(year+"", true);
-                $.each(months, function (monthIndex, month) {
-                    operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex] = {}
-                    operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['year'] = year;
-                    operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['costing_period'] = costingPeriod
-                    operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['cost'] = cost;
-                })
-
-            })
-        })
-
-        return operatingCostPerMonthDict;
-    }
 
     function getAssetNameFromId(assetId){
         var assetName = '';
@@ -5718,9 +5740,51 @@ $(document).ready(function () {
     // update all currency spans at start.
     updateCurrency(getCurrency());
 
-    // update respective currency spans on regeneration
+    function getTaxSystemId(){
+        return $('#id_taxation_system').val();
+    }
 
-    // update all curreny spans on change:-- this has been handled
+    $('#id_taxation_system').change(function (event) {
+        // By default it's tiered system
+        // Check value
+        var systemId = $(this).val();
+        if(systemId == 0){
+            // Tiered system... Show tax slab
+            $('#div-tax_slab').removeClass('hidden');
+        }else{
+            // Single system.. Hide tax slab
+            $('#div-tax_slab').addClass('hidden');
+        }
+    })
+
+    function getItemOfferedId(){
+        return $('#id_offerings_products_or_services').val()
+    }
+
+    function getItemOffered(plural){
+        var itemOfferedId =  $('#id_offerings_products_or_services').val()
+        if(itemOfferedId == 0){
+            // products... Change everything to products
+            return plural ? 'Products' : 'Product';
+        }else{
+            // services
+            return plural ? 'Services' : 'Service';
+        }
+    }
+
+    $('#id_offerings_products_or_services').change(function (event) {
+        // get item
+        var itemOfferedId = $(this).val();
+        if(itemOfferedId == 0){
+            // products... Change everything to products
+            $('.span-item_offered').text('Product')
+            $('.span-item_offered_plural').text('Products')
+        }else{
+            // services
+            $('.span-item_offered').text('Service')
+            $('.span-item_offered_plural').text('Services')
+        }
+    })
 
 })
 

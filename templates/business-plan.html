@@ -118,50 +118,51 @@
 {#                                    <h2>Title page</h2>#}
 {#                                    <div class="ln_solid"></div>#}
                                     <div class="form-group">
-                                        <label class="control-label col-md-2 col-sm-2 col-xs-12" for="cover-company_name" >Company Name <span class="required">*</span></label>
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-12" for="cover-company_name" >Company Name</label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                            {% render_field  bplan_title_page_form.company_name class="form-control col-md-7 col-xs-12 render_required" placeholder="Company / Business / Project name"  required='required' %}
+                                            {% render_field  bplan_title_page_form.company_name class="form-control col-md-5 col-xs-12 render_required" placeholder="Company / Business / Project name"  required='required' %}
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="control-label col-md-2 col-sm-2 col-xs-12" for="cover-tagline" >Your Tagline <span class="required">*</span></label>
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-12" for="cover-tagline" >Your Tagline</label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                            {% render_field bplan_title_page_form.tagline class="form-control col-md-7 col-xs-12 render_required" placeholder="Tagline"  required='required' %}
+                                            {% render_field bplan_title_page_form.tagline class="form-control col-md-5 col-xs-12 render_required" placeholder="Tagline"  required='required' %}
+                                            <span class="span-help">(A short phrase closely allied with your company name)</span>
                                         </div>
                                     </div>
                                     <div class="form-group ">
-                                        <label class="control-label col-md-2 col-sm-2 col-xs-12" for="tagline">Contact information </label>
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-12" for="tagline">Contact information <span class="span-optional">(optional)</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                            {% render_field bplan_title_page_form.address class="form-control col-md-7 col-xs-12" placeholder="Business address" %}
+                                            {% render_field bplan_title_page_form.address class="form-control col-md-5 col-xs-12" placeholder="Business address" %}
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label col-md-2 col-sm-2 col-xs-12" for="tagline"> </label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                            {% render_field bplan_title_page_form.phone_number class="form-control col-md-7 col-xs-12" placeholder="Phone number" %}
+                                            {% render_field bplan_title_page_form.phone_number class="form-control col-md-4 col-xs-12" style="width:200px;" placeholder="Phone number" %}
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label col-md-2 col-sm-2 col-xs-12" for=""></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                            {% render_field bplan_title_page_form.email class="form-control col-md-7 col-xs-12" placeholder="Email" %}
+                                            {% render_field bplan_title_page_form.email class="form-control col-md-5 col-xs-12" style="width:400px;" placeholder="Email" %}
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label col-md-2 col-sm-2 col-xs-12" for=""></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                            {% render_field bplan_title_page_form.website class="form-control col-md-7 col-xs-12" placeholder="Website" %}
+                                            {% render_field bplan_title_page_form.website class="form-control col-md-5 col-xs-12" style="width:400px;" placeholder="Website" %}
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="control-label  col-md-2 col-sm-2 col-xs-12" for="cover-presented_to">If addressing to a company or individual include:</label>
+                                        <label class="control-label  col-md-2 col-sm-2 col-xs-12" for="cover-presented_to">If addressing to a company or individual <span class="span-optional">(optional)</span></label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                            {% render_field bplan_title_page_form.presented_to class="form-control col-md-7 col-xs-12" placeholder="Presented to" %}
+                                            {% render_field bplan_title_page_form.presented_to class="form-control col-md-5 col-xs-12" placeholder="Presented to" %}
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="control-label col-md-2 col-sm-2 col-xs-12" for="cover-logo ">Logo input</label>
-                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <label class="control-label col-md-2 col-sm-2 col-xs-12" for="cover-logo ">Logo input <span class="span-optional">(optional)</span></label>
+                                        <div class="col-md-5 col-xs-12">
                                             {% render_field bplan_title_page_form.logo class="form-control-file" %}
                                         </div>
                                     </div>
@@ -174,11 +175,6 @@
                                     <input name="id" value="{{ bplan_main_content_page_form.id }}" class="hidden id">
 {#                                    <h2>Main business plan content</h2>#}
 {#                                    <div class="ln_solid"></div>#}
-
-
-
-
-
                                         <div class="row">
                                             <div id="MyAccountsTab" class="tabbable tabs-left">
                                                 <ul  class="nav nav-tabs col-md-2" style="width: 250px!important;">
@@ -1289,7 +1285,7 @@
                             </div>
                             <div class="tab-pane container-fluid" id="financial_assumptions" data-friendly_name="Financial assumptions page">
                                 <br/><br/>
-                                <form id="frm_bplanner_financial_assumptions_page" method="post" action="/dashboard/new/business-plan/financial_assumptions_page" class="form-horizontal form-label-left" autocomplete="off" data-parsley-validate>
+                                <form id="frm_bplanner_financial_assumptions_page" method="post" action="/dashboard/new/business-plan/financial_assumptions_page" class="form-horizontal" autocomplete="off" data-parsley-validate>
                                     {% csrf_token %}
                                     <input name="id" value="{{ bplan_financial_assumptions_page_form.id }}" class="hidden id">
 {#                                    <h2>Financial assumptions</h2>#}
@@ -1299,54 +1295,55 @@
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Currency</label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.currency class="form-control render_required" required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.currency class="form-control render_required" style="width:400px;" required="required" %}
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Financial Year Starting From <span class="required">*</span></label>
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Starting year</label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.first_financial_year class="form-control render_required" placeholder="Financial Year Starting From e.g 2018" min="2000" max="3000" required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.first_financial_year class="form-control render_required" style="width:400px;" placeholder="Year e.g 2018" min="2000" max="3000" required="required" %}
+                                                    <span class="span-help">(Year of starting operations)</span>
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Month of starting operations <span class="required">*</span></label>
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Starting month</label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    <select class="form-control" id="id_first_financial_year_month" name="first_financial_year_month render_required" required="required">
+                                                    <select class="form-control" id="id_first_financial_year_month" name="first_financial_year_month render_required" style="width:400px;" required="required">
                                                         {% for month in months %}
                                                             <option value="{{ month.id }}">{{ month.code }}</option>
                                                         {% endfor %}
                                                     </select>
+                                                    <span class="span-help">(Month of starting operations)</span>
                                                 </div>
                                             </div>
             {#                                        Period of projections in years#}
                                             <div class="form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Period of Projections in Years <span class="required">*</span></label>
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Projections Years</label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.projection_years class="form-control render_required" placeholder="Period in Years" min="1" max="5" required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.projection_years class="form-control render_required" style="width:400px;" placeholder="Number of Years" min="1" max="5" required="required" %}
                                                 </div>
                                             </div>
             {#                                        Products or Services Offered#}
                                             <div class="form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Products or Services Offered <span class="required">*</span></label>
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Products or Services? </label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.offerings_products_or_services class="form-control render_required" required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.offerings_products_or_services class="form-control render_required" style="width:400px;" required="required" %}
                                                 </div>
                                             </div>
             {#                                        Number of product or services offered#}
                                             <div class="form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Number of Products or Services Offered <span class="required">*</span></label>
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Number of <span class="span-item_offered_plural">Products</span> Offered</label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.number_of_products_or_services class="form-control render_required" placeholder="Number of Products or Services Offered" min="1" max="5" value="1"  required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.number_of_products_or_services class="form-control render_required" style="width:400px;" placeholder="Number of Products or Services Offered" min="1" max="5" value="1"  required="required" %}
                                                 </div>
                                             </div>
             {#                                        Number of Months in a year#}
-                                            <div class="ln_solid"></div>
-                                            <table id="tbl_assumptions_number_of_products_or_services" class="table table-bordered table-hover " style="right: 1px!important;">
+                                            <table id="tbl_assumptions_number_of_products_or_services" class="table table-bordered table-hover " >
                                                 {% if mode == 'new' %}
                                                     <thead>
                                                         <tr >
                                                             <th  class="text-left td-md">
-                                                                Product/Service Name
+                                                                <span class="span-item_offered">Products</span> Name
                                                             </th>
                                                             <th  class="text-left td-md">
                                                                 Units of Measuring Revenue
@@ -1359,7 +1356,7 @@
                                                     <tbody>
                                                         <tr id="tbl_assumptions_number_of_products_or_services_1" class="">
                                                             <td id="tbl_assumptions_number_of_products_or_services_1_name" class="td-input">
-                                                                <input type="text" name='product_or_service_1_name' data-product_id="tbl_assumptions_number_of_products_or_services_1" data-prop_affected="name"  placeholder='Product/Service Name' class="form-control product-change text-left render_required" required="required"/>
+                                                                <input type="text" name='product_or_service_1_name' data-product_id="tbl_assumptions_number_of_products_or_services_1" data-prop_affected="name"  placeholder='Name' class="form-control product-change text-left render_required" required="required"/>
                                                             </td>
                                                             <td id="tbl_assumptions_number_of_products_or_services_1_units" class="td-input">
                                                                 <input type="text" name='product_or_service_1_units' data-product_id="tbl_assumptions_number_of_products_or_services_1" data-prop_affected="units"  placeholder='E.g Numer of hours' class="form-control product-change text-left render_required" required="required"/>
@@ -1373,127 +1370,135 @@
                                                     {{ bplan_financial_assumptions_page_form.product_services_table.value | safe }}
                                                 {% endif %}
                                             </table>
-                                            <div class="ln_solid"></div>
                                             <div class="form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Number of Months in Projection Year <span class="required">*</span></label>
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Number of Months in Projection Year</label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.count_of_months_in_financial_year class="form-control render_required" placeholder="Number of Months in a Year" min="1" value="12" required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.count_of_months_in_financial_year class="form-control render_required" style="width:400px;" placeholder="Number of Months in a Year" min="1" value="12" required="required" %}
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Inflation Rate (Per Annum) <span class="required">*</span></label>
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Inflation Rate (Per Annum)</label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.inflation_rate class="form-control render_required" placeholder="% Growth" min="0" required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.inflation_rate class="form-control render_required" placeholder="% Growth" style="width:400px;" min="0" required="required" %}
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Salary Growth Rate (Per Annum) <span class="required">*</span></label>
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Salary Growth Rate (Per Annum)</label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.salary_growth_rate class="form-control render_required" placeholder="% Growth" min="0" required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.salary_growth_rate class="form-control render_required" placeholder="% Growth" style="width:400px;" min="0" required="required" %}
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Startup Cost Amortization Period (in Years) <span class="required">*</span></label>
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Startup Cost Amortization Period (in Years)</label>
                                                 <div class="col-md-7 col-sm-7 col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.amortization_period class="form-control render_required" placeholder="Amortization Period (in Years)" min="0" required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.amortization_period class="form-control render_required" style="width:400px;" placeholder="Amortization Period (in Years)" min="0" required="required" %}
                                                 </div>
                                             </div>
 
             {#                                     Expenses Settings Tables#}
                                             <div class="form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Trade Receivables <span class="required">*</span></label>
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Trade Receivables</label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.trade_receivables class="form-control render_required" placeholder="Period in Months" min="0" max="24" required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.trade_receivables class="form-control render_required" placeholder="Period in Months" style="width:400px;" min="0" max="24" required="required" %}
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Trade Payables <span class="required">*</span></label>
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Trade Payables</label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.trade_payables class="form-control render_required" placeholder="Period in Months" min="0" max="25" required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.trade_payables class="form-control render_required" placeholder="Period in Months" style="width:400px;" min="0" max="25" required="required" %}
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Other Expenses Payable <span class="required">*</span></label>
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Other Expenses Payable</label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.other_expenses_payables class="form-control render_required" placeholder="Period in Months" min="0" max="24" required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.other_expenses_payables class="form-control render_required" placeholder="Period in Months" style="width:400px;" min="0" max="24" required="required" %}
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Bad Debts <span class="required">*</span></label>
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Bad Debts</label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.bad_debts class="form-control render_required" placeholder="% of Revenue" min="0" max="100" required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.bad_debts class="form-control render_required" placeholder="% of Revenue" style="width:400px;" min="0" max="100" required="required" %}
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Taxation System <span class="required">*</span></label>
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Taxation System</label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.taxation_system class="form-control render_required" placeholder="Period in Years" required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.taxation_system class="form-control render_required tax-system" style="width:400px;" required="required" %}
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Corporate Tax Rate <span class="required">*</span></label>
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Corporate Tax Rate</label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.corporate_tax_rate class="form-control" placeholder="Corporate Tax Rate(%)" min="0" max="100" required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.corporate_tax_rate class="form-control" placeholder="Corporate Tax Rate(%)" style="width:400px;" min="0" max="100" required="required" %}
                                                 </div>
                                             </div>
             {#                                Tax Slabs Table #}
-                                            <div class="ln_solid"></div>
-                                            <table id="tbl_assumptions_tax_slabs" class="table table-bordered table-x2">
-                                                {% if mode == 'new' %}
-                                                    <caption style="color: #73879C;"><label class="control-label">Tax Slabs</label></caption>
-                                                    <thead>
-                                                        <tr>
-                                                            <th></th>
-                                                            <th class="td-sm text-right"><span class="table-heading">Over</span> <span class="table-heading span-currency"></span></th>
-                                                            <th class="td-sm text-right"><span class="table-heading">But not Over</span> <span class="table-heading span-currency"></span></th>
-                                                            <th class="td-sm text-right"><span class="table-heading">Tax Rate (%)</span></th>
-                                                            <th class="td-sm text-right"><span class="table-heading">Difference</span> <span class="table-heading span-currency"></span></th>
-                                                            <th class="td-sm text-right"><span class="table-heading">Tax <span class="table-heading span-currency"></span></span></th>
-                                                            <th class="td-sm text-right"><span class="table-heading">Cumulative Tax</span> <span class="table-heading span-currency"></span></th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr id="tbl_assumptions_tax_slabs_1">
-                                                            <td class="td-action td-input"></td>
-                                                            <td class="td-input readonly lower-limit">
-                                                                <input type="number" class="form-control text-right input-tax-lower-limit" name="tbl_assumptions_tax_slabs_1_lower" placeholder="" min="0" value="0" readonly>
-                                                            </td>
-                                                            <td class="td-input upper-limit">
-                                                                <input type="number" class="form-control text-right input-tax-upper-limit" name="tbl_assumptions_tax_slabs_1_upper" placeholder="" min="0">
-                                                            </td>
-                                                            <td class="td-input tax-rate td-input">
-                                                                <input type="number" class="form-control text-right input-tax-rate" name="tbl_assumptions_tax_slabs_1_tax_rate" placeholder="" min="1">
-                                                            </td>
-                                                            <td class="td-input readonly difference">
-                                                                <input type="number" class="form-control input-md text-right" name="tbl_assumptions_tax_slabs_1_difference" min="0" readonly>
-                                                            </td>
-                                                            <td class="td-input readonly tax">
-                                                                <input type="number" class="form-control input-md text-right" name="tbl_assumptions_tax_slabs_1_tax" min="0" readonly>
-                                                            </td>
-                                                            <td class="td-input readonly cumulative_tax">
-                                                                <input type="number" class="form-control input-md text-right" name="tbl_assumptions_tax_slabs_1_cumulative_tax" min="0" readonly>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                {% else %}
-                                                    {{ bplan_financial_assumptions_page_form.tax_slabs_table.value | safe }}
-                                                {% endif %}
-                                            </table>
-                                            <div class="table-footer" data-table="#tbl_assumptions_tax_slabs">
-                                                <button type="button" class="btn btn-sm btn-info btn-footer"
+                                            <div id="div-tax_slab">
+{#                                                <div class="ln_solid"></div>#}
+                                                <table id="tbl_assumptions_tax_slabs" class="table table-bordered table-x2">
+                                                    {% if mode == 'new' %}
+                                                        <caption style="color: #73879C;"><label class="control-label">Tax Slabs</label></caption>
+                                                        <thead>
+                                                            <tr>
+                                                                <th></th>
+                                                                <th class="td-sm text-right"><span class="table-heading">Over</span> <span class="table-heading span-currency"></span></th>
+                                                                <th class="td-sm text-right"><span class="table-heading">But not Over</span> <span class="table-heading span-currency"></span></th>
+                                                                <th class="td-sm text-right"><span class="table-heading">Tax Rate (%)</span></th>
+                                                                <th class="td-sm text-right"><span class="table-heading">Difference</span> <span class="table-heading span-currency"></span></th>
+                                                                <th class="td-sm text-right"><span class="table-heading">Tax <span class="table-heading span-currency"></span></span></th>
+                                                                <th class="td-sm text-right"><span class="table-heading">Cumulative Tax</span> <span class="table-heading span-currency"></span></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr id="tbl_assumptions_tax_slabs_1">
+                                                                <td class="td-action td-input"></td>
+                                                                <td class="td-input readonly lower-limit">
+                                                                    <input type="number" class="form-control text-right input-tax-lower-limit" name="tbl_assumptions_tax_slabs_1_lower" placeholder="" min="0" value="0" readonly>
+                                                                </td>
+                                                                <td class="td-input upper-limit">
+                                                                    <input type="number" class="form-control text-right input-tax-upper-limit" name="tbl_assumptions_tax_slabs_1_upper" placeholder="" min="0">
+                                                                </td>
+                                                                <td class="td-input tax-rate td-input">
+                                                                    <input type="number" class="form-control text-right input-tax-rate" name="tbl_assumptions_tax_slabs_1_tax_rate" placeholder="" min="1">
+                                                                </td>
+                                                                <td class="td-input readonly difference">
+                                                                    <input type="number" class="form-control input-md text-right" name="tbl_assumptions_tax_slabs_1_difference" min="0" readonly>
+                                                                </td>
+                                                                <td class="td-input readonly tax">
+                                                                    <input type="number" class="form-control input-md text-right" name="tbl_assumptions_tax_slabs_1_tax" min="0" readonly>
+                                                                </td>
+                                                                <td class="td-input readonly cumulative_tax">
+                                                                    <input type="number" class="form-control input-md text-right" name="tbl_assumptions_tax_slabs_1_cumulative_tax" min="0" readonly>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    {% else %}
+                                                        {{ bplan_financial_assumptions_page_form.tax_slabs_table.value | safe }}
+                                                    {% endif %}
+                                                </table>
+                                                <div class="table-footer" data-table="#tbl_assumptions_tax_slabs">
+                                                <button id="btn-add_tax_slab" type="button" class="btn btn-sm btn-info btn-footer disabled"
                                                         data-action="add-row"
-                                                        data-row_html="Some thing that contains row html" title="Add row to table">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                                        data-row_html="Some thing that contains row html" title="Complete current tax slab before adding a new one.">
+                                                    <i class="fa fa-plus" aria-hidden=" true"></i>
                                                     Add Row
                                                 </button>
+                                                <span id="span-add_tax_slab_help" class="span-help ">(You can only add a tax slab when current slab is completed.)</span>
+                                                <div class="clearfix"></div>
+                                            </div>
                                             </div>
             {#                                End -- Tax Slabs Table #}
+
+                                            <div class="clearfix"></div>
+                                            <br/>
+                                            <br/>
+
                                         </div>
                                     </div>
                                 </form>
                             </div>
                             <div class="tab-pane container-fluid" id="financial_data_input" data-friendly_name="Monthly summary P&L page" >
-                                <br/><br/>
+                                <br/>
                                 <form id="frm_bplanner_settings" method="post" action="/dashboard/save/business-plan/settings" class="form-horizontal form-label-left" autocomplete="off" data-parsley-validate>
                                     {% csrf_token %}
                                 </form>
