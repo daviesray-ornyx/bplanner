@@ -10,8 +10,18 @@ $(document).ready(function () {
     $('.tab-content').height($('#right_col').height() - $('.smart_nav').height() - 130);
     $('#editor-one').height($('#right_col').height() - $('.smart_nav').height() - 230);
     //$('#steps-nav').css('bottom', '0');
-
-    var totalTaxSlabTableCumulativeTax = 0;
+    var taxSlabs = {
+        'totalTaxSlabTableCumulativeTax' : 0,
+        'slabCount': 1,
+        1 : {
+            'lowerLimit': 0,
+            'upperLimit' : null,
+            'taxRate' : null,
+            'difference': null,
+            'tax' : null,
+            'cumulativeTax': null
+        },
+    }
 
     function getCookie(name) {
         var cookieValue = null;
@@ -122,7 +132,7 @@ $(document).ready(function () {
             firstFinancialYear = parseInt($('#id_first_financial_year').val(), 0)
             generatePrijectionYearsList();
         }
-        console.log(projectionYearsList);
+        //console.log(projectionYearsList);
     })
 
     $('#id_projection_years').change(function (event) {
@@ -130,7 +140,7 @@ $(document).ready(function () {
             projectionYears = parseInt($('#id_projection_years').val(), 0)
             generatePrijectionYearsList();
         }
-        console.log(projectionYearsList);
+        //console.log(projectionYearsList);
     })
 
     function generatePrijectionYearsList(){
@@ -1027,6 +1037,8 @@ $(document).ready(function () {
     }
 
     function inputTaxUpperLimitChangeHandler(event){
+        var isValidStatus = true;
+        var currentSlabKey = taxSlabs['slabCount'];
         $('#btn-add_tax_slab').addClass('disabled');
         $('#span-add_tax_slab_help').text('(You can only add a tax slab when current slab is completed.)')
         // Check if upper limit is greater than lower limit
@@ -1041,6 +1053,9 @@ $(document).ready(function () {
         var taxRateTD = $($(upperLimitTD).siblings('.tax-rate'))[0];
         var taxRateInput =$(taxRateTD).children('input').first();
         var taxRate = parseInt($(taxRateInput).val(),0)
+        if(taxRate == null || taxRate == 0){
+            isValidStatus = false;
+        }
 
         var differenceTD = $($(upperLimitTD).siblings('.difference'))[0];
         var differenceInput =$(differenceTD).children('input').first();
@@ -1059,16 +1074,17 @@ $(document).ready(function () {
         var currentCumulativeTaxVal = $(cumulativeTaxInput).val() != '' ? parseInt($(cumulativeTaxInput).val()) : 0
         // reset all the computed values
             //1. difference
-            $(differenceInput).val('')
+        $(differenceInput).val('')
             //2. tax
-            $(taxInput).val('')
+        $(taxInput).val('')
+
             //3. cumulativeTax
-            $(cumulativeTaxInput).val('')
+        $(cumulativeTaxInput).val('')
         // validate upper and lower limits
         if(lowerLimit == null ){
             markAsInvalid(lowerLimitInput)
             alert('Invalid upper limit value.: ' + upperLimit)
-            return false;
+            isValidStatus = false;
         }else{
             // mark lower limit as valid
             markAsValid(lowerLimitInput)
@@ -1078,6 +1094,7 @@ $(document).ready(function () {
         if(upperLimit == null){
             markAsInvalid(upperLimitInput)
             alert('Invalid upper limit value.: ' + upperLimit)
+            isValidStatus = false;
         }else{
             markAsValid(upperLimitInput)
         }
@@ -1088,28 +1105,47 @@ $(document).ready(function () {
             $(upperLimitInput).val('')
             markAsInvalid(upperLimitInput)
             // return
-            return false
+            isValidStatus = false;
         }else{
             markAsValid(upperLimitInput)
         }
 
         // Else upper limit and lower limits are all in order
         // compute difference
+
+
+        taxSlabs[currentSlabKey]['upperLimit'] = upperLimit;
+        taxSlabs[currentSlabKey]['lowerLimit'] = lowerLimit
         var difference = upperLimit - lowerLimit;
+        taxSlabs[currentSlabKey]['difference'] = difference
+        taxSlabs[currentSlabKey]['taxRate'] = taxRate
         $(differenceInput).val(difference);
         // check if tax rate is set
-        if(taxRate == null || isNaN(taxRate) || taxRate == ''){
+        console.log('Taxrate: ' + taxRate);
+        if(taxRate == null || isNaN(taxRate) || taxRate == '' || taxRate == 0){
             // set focus to taxrate input
-            return;
+            isValidStatus = false;
+        }
+
+        if(!isValidStatus){
+            return isValidStatus;
         }
         // new tax
         var newTax = Math.round(differenceInput * taxRate/100); // Tax rate is in percentage
         $(taxInput).val(newTax);
+        taxSlabs[currentSlabKey]['tax'] = newTax;
 
         // Update cumulative tax val
         var taxDifference = newTax - oldTaxValue;
-        totalTaxSlabTableCumulativeTax += taxDifference;
-        $(cumulativeTaxInput).val(totalTaxSlabTableCumulativeTax)
+        if(isNaN(taxSlabs['totalTaxSlabTableCumulativeTax'])){
+            taxSlabs['totalTaxSlabTableCumulativeTax'] = 0;
+        }
+        taxSlabs['totalTaxSlabTableCumulativeTax'] += taxDifference;
+        console.log(taxSlabs)
+        console.log("Upper limit change taxSlabs['totalTaxSlabTableCumulativeTax']")
+        console.log(taxSlabs['totalTaxSlabTableCumulativeTax'])
+        $(cumulativeTaxInput).val(taxSlabs['totalTaxSlabTableCumulativeTax'])
+        taxSlabs[currentSlabKey]['cumulativeTax'] = taxSlabs['totalTaxSlabTableCumulativeTax']
 
         $('#btn-add_tax_slab').removeClass('disabled');
         $('#span-add_tax_slab_help').text('(You can now add a tax slab.)')
@@ -1119,6 +1155,10 @@ $(document).ready(function () {
     $('.input-tax-upper-limit').change(inputTaxUpperLimitChangeHandler)
 
     function inputTaxRateChangeHandler(event){
+        var isValidStatus = true;
+        // Get current tax slab key
+        var currentSlabKey = taxSlabs['slabCount'];
+
         $('#btn-add_tax_slab').addClass('disabled');
         $('#span-add_tax_slab_help').text('(You can only add a tax slab when current slab is completed.)')
         // Tax rate has chaged.
@@ -1129,16 +1169,15 @@ $(document).ready(function () {
         if (taxRate == null){
             markAsInvalid(taxRateInput);
             alert('Please provide tax rate for the current tax slab.')
-            return false;
+            isValidStatus = false
         }else{
             markAsValid(taxRateInput)
+            taxSlabs[currentSlabKey]['taxRate'] = taxRate;
         }
 
         var upperLimitTD = $($(taxRateTD).siblings('.upper-limit'))[0];
         var upperLimitInput =$(upperLimitTD).children('input').first();
         var upperLimit = parseInt($(upperLimitInput).val(), 0);
-
-
 
 
         var lowerLimitTD = $($(taxRateTD).siblings('.lower-limit'))[0];
@@ -1158,18 +1197,17 @@ $(document).ready(function () {
         var cumulativeTaxTD = $($(upperLimitTD).siblings('.cumulative_tax'))[0];
         var cumulativeTaxInput =$(cumulativeTaxTD).children('input').first();
         var currentCumulativeTaxVal = $(cumulativeTaxInput).val() != '' ? parseInt($(cumulativeTaxInput).val()) : 0
+
         // reset all the computed values
         //2. tax
-        $(taxInput).val('')
-        //3. cumulativeTax
-        $(cumulativeTaxInput).val('')
+
         // validate upper and lower limits
         if(lowerLimit == null ){
-            return false;
+            isValidStatus = false;
         }
 
         if(upperLimit == null){
-            return false;
+            isValidStatus = false;
         }
 
 
@@ -1178,19 +1216,39 @@ $(document).ready(function () {
             alert('Upper limit must be greater than lower limit.')
             $(upperLimitInput).val('')
             markAsInvalid(upperLimitInput)
-            return false
+            isValidStatus= false;
         }
 
         // Else upper limit and lower limits are all in order
         // compute difference
+        if(!isValidStatus){
+            return isValidStatus;
+        }
+
+        taxSlabs[currentSlabKey]['upperLimit'] = upperLimit;
+        taxSlabs[currentSlabKey]['lowerLimit'] = lowerLimit;
         var difference = upperLimit - lowerLimit;
+        taxSlabs[currentSlabKey]['difference'] = difference
+        taxSlabs[currentSlabKey]
         var newTax = Math.round(difference * taxRate/100); // Tax rate is in percentage
         $(taxInput).val(newTax);
+        taxSlabs[currentSlabKey]['tax'] = newTax;
+
+
 
         // Update cumulative tax val
         var taxDifference = newTax - oldTaxValue;
-        totalTaxSlabTableCumulativeTax += taxDifference;
-        $(cumulativeTaxInput).val(totalTaxSlabTableCumulativeTax)
+        if(isNaN(taxSlabs['totalTaxSlabTableCumulativeTax'])){
+            taxSlabs['totalTaxSlabTableCumulativeTax'] = 0;
+        }
+        taxSlabs['totalTaxSlabTableCumulativeTax'] += taxDifference;
+        taxSlabs[currentSlabKey]['cumulativeTax'] = taxSlabs['totalTaxSlabTableCumulativeTax']
+
+        console.log(taxSlabs)
+        console.log("Cumulative tax: taxSlabs['totalTaxSlabTableCumulativeTax']")
+        console.log(taxSlabs['totalTaxSlabTableCumulativeTax'])
+
+        $(cumulativeTaxInput).val(taxSlabs['totalTaxSlabTableCumulativeTax'])
 
         $('#btn-add_tax_slab').removeClass('disabled');
         $('#span-add_tax_slab_help').text('(You can now add a tax slab.)')
@@ -1262,10 +1320,19 @@ $(document).ready(function () {
         $('#btn-add_tax_slab').addClass('disabled');
         $('#span-add_tax_slab_help').text('(You can only add a tax slab when current slab is completed.)')
 
+        // Update tax slab object
+        var newSlabCount = taxSlabs['slabCount'] + 1;
+        taxSlabs['slabCount'] = newSlabCount;
+        taxSlabs[newSlabCount] = {
+            'lowerLimit': newLowerLimit,
+            'upperLimit' : null,
+            'taxRate' : null,
+            'difference': null,
+            'tax' : null,
+            'cumulativeTax': null
+        }
+
         return strRowHtml;
-
-
-
     }
 
     function measurementUnitChangeHandler(event){
@@ -1421,7 +1488,11 @@ $(document).ready(function () {
             var taxTD = $($('#tbl_assumptions_tax_slabs_' + rowCount).children('.tax'))[0];
             var taxInput = $($(taxTD).children('input'))[0]
             var currentTax = $(taxInput).val() != '' ? parseInt($(taxInput).val(), 0) : 0
-            totalTaxSlabTableCumulativeTax -= currentTax;
+            // get current tax slab and remove
+            var currentTaxSlabKey = taxSlabs['slabCount'];
+            delete taxSlabs[currentTaxSlabKey]; // does the deletion
+            taxSlabs['slabCount'] -= 1;
+            taxSlabs['totalTaxSlabTableCumulativeTax'] -= currentTax;
         }
 
         $(row).remove();
@@ -1439,6 +1510,10 @@ $(document).ready(function () {
             $(currentTaxRateTD).removeClass('readonly')
             var currentTaxRateInput = $($(currentTaxRateTD).children('input'))[0]
             $(currentTaxRateInput).attr('readonly', false)
+
+            // Re-enable addition of row
+            $('#btn-add_tax_slab').removeClass('disabled');
+            $('#span-add_tax_slab_help').text('(You can now add a tax slab.)')
         }
     }
 
@@ -1719,45 +1794,207 @@ $(document).ready(function () {
     Other Payables per month section
      */
 
-    function getOperatingCostPerMonth(){
-        //var operatingCostPerYearDict = {}
-        var operatingCostPerMonthDict = {};
-        var operatingCostTableRows = $('#tbl_assumptions_operating_costs tbody tr');
-        $.each(operatingCostTableRows, function (operatingCostTRIndex, operatingCostTR) {
-            var operatingCostId = $(operatingCostTR).data('row_id');
-            operatingCostPerMonthDict[operatingCostId] = {}
-            // Getting operating cost details
-            // 1. Opearing cost name
-            var opearingCostNameTD = $(operatingCostTR).children('td.operating_cost_name')[0]
-            var opearingCostNameInput = $(opearingCostNameTD).children('input')[0]
-            var opearingCostName = $(opearingCostNameInput).val();
-            operatingCostPerMonthDict[operatingCostId]['name'] = opearingCostName;
-            operatingCostPerMonthDict[operatingCostId]['monthly'] = {}
-            // 2. Costing period
-            var costingPeriodTD = $(operatingCostTR).children('td.costing_period')[0]
-            var opearingCostNameInput = $(costingPeriodTD).children('select')[0]
-            var costingPeriod = $(opearingCostNameInput).val();
+    function computeRevenueTotalsPerMonth(){
+        var unitsPerProductPerMonth = getUnitsPerProductPerMonth()
+        var pricePerProductPerYear = getPricePerProductPerYear();
+        var revenueTotals = {}
+        $.each(unitsPerProductPerMonth, function (productIdIndex, productMonthlyUnits) {
+            // Inside each product
+            $.each(productMonthlyUnits, function (monthIndex, monthlyUnit) {
+                // Inside each monthly context
+                if (revenueTotals[monthIndex] == null) {
+                    revenueTotals[monthIndex] = 0
+                }
 
-            // 3. Cost values
-            var costTds = $(operatingCostTR).children('td.cost');
-            $.each(costTds, function (costTDIndex, costTD) {
-                // For each of the cost items
-                // Get year and value
-                var year = $(costTD).data('projection_year');
-                var costInput = $(costTD).children('input')[0];
-                var cost = $(costInput).val() || 0; // This should be replicated everywhere.. Return 0 if value is non or undefined
-                // Get all months belonging to this year
-                var months = getMonthsListForYear(year+"", true);
-                $.each(months, function (monthIndex, month) {
-                    operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex] = {}
-                    operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['year'] = year;
-                    operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['costing_period'] = costingPeriod
-                    operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['cost'] = cost;
-                })
-
+                var year = monthlyUnit['year']
+                var yearlyPrice = parseInt(pricePerProductPerYear[productIdIndex][year], 0);
+                var units = parseInt(monthlyUnit['units'], 0);
+                var revenue = yearlyPrice * units;
+                revenueTotals[monthIndex] += revenue;
             })
         })
+        return revenueTotals;
+    }
 
+    function computeEmployeeCostTotalsPerMonth(){
+        var employeeCostTotals = {};
+        var employeeCostPerMonth = getEmployeeCostPerMonth();
+        $.each(employeeCostPerMonth, function (employeeRoleIndex, employeeRoleCost) {
+            $.each(employeeRoleCost['projection_months'], function (monthIndex, employmentCost) {
+                if(employeeCostTotals[monthIndex] == null){
+                    employeeCostTotals[monthIndex] = 0;
+                }
+                employeeCostTotals[monthIndex] += employmentCost;
+            })
+        })
+        return employeeCostTotals;
+    }
+
+
+    function getOperatingCostPerMonth(){
+        //var operatingCostPerYearDict = {}
+        try {
+
+            // pre- computed values
+            //1. Revenue totals per year
+            var revenueTotalsPerMonth = computeRevenueTotalsPerMonth();
+            //2. Employee totals per month
+            var employeeCostTotalsPerMonth = computeEmployeeCostTotalsPerMonth();
+
+            var operatingCostPerMonthDict = {};
+            var operatingCostTableRows = $('#tbl_assumptions_operating_costs tbody tr');
+            $.each(operatingCostTableRows, function (operatingCostTRIndex, operatingCostTR) {
+                var operatingCostId = $(operatingCostTR).data('row_id');
+                operatingCostPerMonthDict[operatingCostId] = {}
+                // Getting operating cost details
+                // 1. Opearing cost name
+                var opearingCostNameTD = $(operatingCostTR).children('td.operating_cost_name')[0]
+                var opearingCostNameInput = $(opearingCostNameTD).children('input')[0]
+                var opearingCostName = $(opearingCostNameInput).val();
+                operatingCostPerMonthDict[operatingCostId]['name'] = opearingCostName;
+                operatingCostPerMonthDict[operatingCostId]['monthly'] = {}
+                // 2. Costing period
+                var costingPeriodTD = $(operatingCostTR).children('td.costing_period')[0]
+                var opearingCostNameInput = $(costingPeriodTD).children('select')[0]
+                var costingPeriod = parseInt($(opearingCostNameInput).val(), 0);
+                // 3. Cost values
+
+                if (costingPeriod == 0)
+                {
+                    var costTds = $(operatingCostTR).children('td.cost');
+                    $.each(costTds, function (costTDIndex, costTD) {
+                        // For each of the cost items
+                        // Get year and value
+                        var year = $(costTD).data('projection_year');
+                        var costInput = $(costTD).children('input')[0];
+                        var cost = parseInt($(costInput).val(), 0);
+                        var months = getMonthsListForYear(year + "", true);
+                        var total = 0;
+                        $.each(months, function (monthIndex, month) {
+                            if (month['is_total']) {
+                                // Total item
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex] = {}
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['year'] = year;
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['costing_period'] = costingPeriod
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['cost'] = total;
+                                total = 0;
+                            } else {
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex] = {}
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['year'] = year;
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['costing_period'] = costingPeriod
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['cost'] = cost;
+                                total += cost;
+                            }
+
+                        })
+
+                    })
+                }
+                else if (costingPeriod == 1)
+                {
+                    // Per year
+                    var costTds = $(operatingCostTR).children('td.cost');
+                    $.each(costTds, function (costTDIndex, costTD) {
+                        // For each of the cost items
+                        // Get year and value
+                        var year = $(costTD).data('projection_year');
+                        var costInput = $(costTD).children('input')[0];
+                        var cost = parseInt($(costInput).val(), 0); // This should be replicated everywhere.. Return 0 if value is non or undefined
+                        var costPerMonth = Math.round(cost / 12); // We assume that 12 is the # of moths by defaul
+                        // Get all months belonging to this year
+                        var months = getMonthsListForYear(year + "", true);
+                        var total = 0;
+                        $.each(months, function (monthIndex, month) {
+                            if (month['is_total']) {
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex] = {}
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['year'] = year;
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['costing_period'] = costingPeriod
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['cost'] = total;
+                                total = 0
+                            } else {
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex] = {}
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['year'] = year;
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['costing_period'] = costingPeriod
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['cost'] = costPerMonth;
+                                total += costPerMonth
+                            }
+
+                        })
+
+                    })
+                }
+                else if (costingPeriod == 2)
+                {
+                    // % of revenue
+                    var costTds = $(operatingCostTR).children('td.cost');
+                    $.each(costTds, function (costTDIndex, costTD) {
+                        // For each of the cost items
+                        // Get year and value
+                        var year = $(costTD).data('projection_year');
+                        var costInput = $(costTD).children('input')[0];
+                        var percentage = parseInt($(costInput).val(), 0); // This should be replicated everywhere.. Return 0 if value is non or undefined
+
+                        // Get all months belonging to this year
+                        var months = getMonthsListForYear(year + "", true);
+                        var total = 0;
+                        $.each(months, function (monthIndex, month) {
+                            if (month['is_total']) {
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex] = {}
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['year'] = year;
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['costing_period'] = costingPeriod
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['cost'] = total;
+                                total = 0
+                            } else {
+                                var amount = Math.round(revenueTotalsPerMonth[monthIndex] * parseInt(percentage) / 100);
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex] = {}
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['year'] = year;
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['costing_period'] = costingPeriod
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['cost'] = amount;
+                                total += amount;
+                            }
+
+                        })
+                    })
+                }
+                else
+                { //if(costingPeriod == 3){
+                    // % of employee salary
+                    var costTds = $(operatingCostTR).children('td.cost');
+                    $.each(costTds, function (costTDIndex, costTD) {
+                        // For each of the cost items
+                        // Get year and value
+                        var year = $(costTD).data('projection_year');
+                        var costInput = $(costTD).children('input')[0];
+                        var percentage = parseInt($(costInput).val(), 0)
+                        var months = getMonthsListForYear(year + "", true);
+                        var total = 0;
+                        $.each(months, function (monthIndex, month) {
+                            if (month['is_total']) {
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex] = {}
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['year'] = year;
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['costing_period'] = costingPeriod
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['cost'] = total;
+                                total = 0;
+                            } else {
+                                var amount = Math.round(employeeCostTotalsPerMonth[monthIndex] * parseInt(percentage) / 100);
+                                ;
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex] = {}
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['year'] = year;
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['costing_period'] = costingPeriod
+                                operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['cost'] = amount;
+                                total += amount;
+                            }
+
+                        })
+
+                    })
+                }
+            })
+        }
+        catch (error){
+            console.log("Error ocurring")
+            console.log(error)
+        }
         return operatingCostPerMonthDict;
     }
 
@@ -1773,6 +2010,7 @@ $(document).ready(function () {
 
         return operatingCostTotalsPerYearDict;
     }
+
 
     function getOtherExpensesPayableTotalsPerYear(operatingCostTotalsPerYear){
         var otherExpensesPayableTotalsPerYearDict = {};
@@ -2024,14 +2262,14 @@ $(document).ready(function () {
             // Get number_of_employees td for each year
             var numberTDs = $(employeeRoleTR).children('.number_of_employees')
             // For each numberTD, pick year and val
+            employeeCostPerMonthDict[employeeRoleId]['yearly'] = {};
             $.each(numberTDs, function (tdIndex, numberTD) {
                 var year = $(numberTD).data('projection_year');
                 var numberInput = $(numberTD).children('input')[0];
                 var number = $(numberInput).val();
                 // Store values
                 employeeCostPerMonthDict[employeeRoleId]['name'] = roleName;
-                employeeCostPerMonthDict[employeeRoleId]['year'] = year;
-                employeeCostPerMonthDict[employeeRoleId]['number'] = number;
+                employeeCostPerMonthDict[employeeRoleId]['yearly'][year] = number;
             })
         })
 
@@ -2065,29 +2303,30 @@ $(document).ready(function () {
         $.each(employeeCostPerMonthDict, function (employeeRoleId, employeeRoleDetails) {
             employeeCostPerMonthDict_Final[employeeRoleId] = {}
             var name = employeeRoleDetails['name'];
-            var year = employeeRoleDetails['year'];
-            var rate = parseFloat(employeeRoleDetails['rate'], 0);
-            var hours = parseFloat(employeeRoleDetails['hours'], 0);
-            var number = parseFloat(employeeRoleDetails['number'], 0)
-            var monthCost = hours * rate * number;
-            employeeCostPerMonthDict_Final[employeeRoleId]['name'] = name
-            employeeCostPerMonthDict_Final[employeeRoleId]['year'] = year
-            employeeCostPerMonthDict_Final[employeeRoleId]['projection_months'] = {}
-            // Get the list of month projections for the year
-            var yearTotal = 0;
-            var projectionMonthsInYear = getMonthsListForYear(year, true);
-            // Set values for each month
-            $.each(projectionMonthsInYear, function (projectionMonthIndex, projectionMonth) {
-                if(!projectionMonth['is_total']){
-                    // Not total month
-                    employeeCostPerMonthDict_Final[employeeRoleId]['projection_months'][projectionMonthIndex] = monthCost
-                    yearTotal += monthCost;
-                }else{
-                    // Total month
-                    employeeCostPerMonthDict_Final[employeeRoleId]['projection_months'][projectionMonthIndex] = yearTotal
-                }
-            })
 
+            employeeCostPerMonthDict_Final[employeeRoleId]['name'] = name
+            employeeCostPerMonthDict_Final[employeeRoleId]['projection_months'] = {}
+            $.each(employeeRoleDetails['yearly'], function(year, number) {
+                employeeCostPerMonthDict_Final[employeeRoleId]['year'] = year
+                var rate = parseInt(employeeRoleDetails['rate']);
+                var hours = parseInt(employeeRoleDetails['hours']);
+                var monthCost = hours * rate * parseInt(number);
+
+                // Get the list of month projections for the year
+                var yearTotal = 0;
+                var projectionMonthsInYear = getMonthsListForYear(year, true);
+                // Set values for each month
+                $.each(projectionMonthsInYear, function (projectionMonthIndex, projectionMonth) {
+                    if (!projectionMonth['is_total']) {
+                        // Not total month
+                        employeeCostPerMonthDict_Final[employeeRoleId]['projection_months'][projectionMonthIndex] = monthCost
+                        yearTotal += monthCost;
+                    } else {
+                        // Total month
+                        employeeCostPerMonthDict_Final[employeeRoleId]['projection_months'][projectionMonthIndex] = yearTotal
+                    }
+                })
+            })
         })
         return employeeCostPerMonthDict_Final;
     }
@@ -2244,19 +2483,77 @@ $(document).ready(function () {
         return depreciationTotalPerMonthDict;
     }
 
+    function calculateTaxFromSlab(EBT){
+        var taxAmount = 0;
+        var amountTaxed = 0;
+
+        for(var i = 1; i <= taxSlabs['slabCount']; i++){
+            // Everything within the slabs
+            // starting from the very first slab
+            // check if EBT is greater than tax slab
+            var currentSlab = taxSlabs[i];
+            // check if upper limit exist
+            if(currentSlab['upperLimit'] == null){
+                // This is the last slab with over $above
+                // check if tax rate exists...
+                var rate = currentSlab['taxRate'];
+                if(currentSlab['taxRate'] == null){
+                    // User did not enter tax rate...
+                    // User previous rate
+                    rate = taxSlabs[(i-1)]['taxRate']; // That's what to be used for tax computation
+                }
+
+                var balanceToTax = EBT - amountTaxed;
+                    taxAmount += Math.round(balanceToTax * rate / 100)
+                    amountTaxed += balanceToTax;
+                // proceed to compute tax
+            }else{
+                // Upper limit exists
+                // Normal slab
+                if(EBT > currentSlab['upperLimit']){
+                    // Means this overlaps to the next slab
+                    // No need to compute tax... Just add already computed tax
+                    taxAmount += currentSlab['tax'];
+                    amountTaxed += currentSlab['upperLimit']
+                }else{
+                    // EBT lies within this slab. Get amount not yet taxed
+                    var balanceToTax = EBT - amountTaxed;
+                    taxAmount += Math.round(balanceToTax * currentSlab['taxRate'] / 100)
+                    amountTaxed += balanceToTax;
+                }
+
+            }
+
+        }
+
+        // Supposed EBT is still greater than amount taxed, tax the balance at the last rate
+        if(EBT > amountTaxed){
+            var relSlab = taxSlabs[taxSlabs['slabCount']]['taxRate'] == null ? taxSlabs[taxSlabs['slabCount'] -1 ]['taxRate'] : taxSlabs[taxSlabs['slabCount']];
+            var balanceToTax = EBT - amountTaxed;
+            taxAmount += Math.round(balanceToTax * relSlab['taxRate'] / 100)
+        }
+
+        return taxAmount;
+    }
+
     function getTaxPerMonth(EBT){
         // Return Tax dict per month;
         // Get taxation system, 0= Slab System, 1= Single Rate
         var taxPerMonthDict = {};
         var taxationSystem = $('#id_taxation_system').val();
-        if(taxationSystem == 0){
+        if(taxationSystem == 0)
+        {
             // 0= Slab System
-
-        }else{
+            $.each(EBT, function (monthInex, ebtAmount) {
+                taxPerMonthDict[monthInex] = calculateTaxFromSlab(ebtAmount);
+            })
+        }
+        else
+        {
             // 1= Single Rate
             var corporateTaxRate = $('#id_corporate_tax_rate').val();
             $.each(EBT, function (monthInex, ebtAmount) {
-                taxPerMonthDict[monthInex] = Math.round(parseFloat(ebtAmount) * (parseFloat(corporateTaxRate || 0)/100))
+                taxPerMonthDict[monthInex] = Math.round(parseInt(ebtAmount) * (parseInt(corporateTaxRate || 0)/100))
             })
         }
 
@@ -2584,24 +2881,7 @@ $(document).ready(function () {
             $.each(monthlyOperatingCost['monthly'], function (monthIndex, costDict) {
                 var year = costDict['year'];
                 var costingPeriod = costDict['costing_period'];
-                var cost = costDict['cost'];
-                var costValue = 0;
-                // Compute the correct value depending on the costing mperiod/method
-                if(costingPeriod == 0){
-                    // Per month.. Use the value as is
-                    costValue = cost;
-                }else if(costingPeriod == 1){
-                    // Per annum.. Divide the value by the number of months in a financial year
-                    costValue = (cost/countOfMonthsInFinancialYear);
-
-                }else if(costingPeriod == 2){
-                    // Percentage of revenue. Get revenue total for the month and apply the percentage
-                    costValue = (revenueTotals[monthIndex] * cost)/100
-                }else if(costingPeriod == 3){
-                    // Percentage of Employee salary. Get total employe salary for this month and return the percentage
-                    costValue = (employeeCostTotals[monthIndex] * cost)/100
-                }
-
+                var costValue = costDict['cost'];
                 // Overall Cost value needs to be added
                 operatingCostPerMonthTotals[monthIndex] = parseFloat(operatingCostPerMonthTotals[monthIndex] || 0) + parseFloat(costValue);
                 overallCost[monthIndex] = parseFloat(overallCost[monthIndex] || 0) +  parseFloat(costValue);
@@ -2692,20 +2972,25 @@ $(document).ready(function () {
 
         // INTEREST ON DEBT
         // This is retrieved from amortization schedule which we already have
+        //amortizationSchedule[amortizationScheduleId]['monthly'][monthIndex]['interest_paid'] = Math.round(interestPaid );
         var monthlyInterestOnDebt = {};
         $.each(projectionMonthsList, function (monthIndex, projectionMonth) {
             // for each amortization Schedule Item, retrieve interest paid
             // Plan on handling totals... Should be very easy...
             $.each(amortizationSchedule, function (amortizationScheduleId, scheduleDict) {
                 // get corresponding month index val
+                var interesPaid = 0;
                 try{
-                     var interesPaid = parseFloat(scheduleDict['monthly'][monthIndex]['interest_paid'] || 0);
-                    monthlyInterestOnDebt[monthIndex] += interesPaid
-                    costsBeforeTaxAfterEBITDS[monthIndex] += interesPaid
-                }catch (err){
-                    // No such exists.. Move on to the next
+                    interesPaid = parseInt(scheduleDict['monthly'][monthIndex]['interest_paid']);
+                }catch(error){
+                    //console.log('Error wiht monthIndex: ' + monthIndex)
+                }
+
+                if(monthlyInterestOnDebt[monthIndex] == null){
                     monthlyInterestOnDebt[monthIndex] = 0;
                 }
+                monthlyInterestOnDebt[monthIndex] += interesPaid
+                //costsBeforeTaxAfterEBITDS[monthIndex] += interesPaid
             })
         })
 
@@ -2847,8 +3132,10 @@ $(document).ready(function () {
 
         // NET MARGIN
         $.each(EAT, function (monthIndex, eatAmount) {
-            netMarginPerMonth[monthIndex] = Math.round(eatAmount/revenueTotals[monthIndex]);
+            var revAmount = parseInt(revenueTotals[monthIndex])
+            netMarginPerMonth[monthIndex] = Math.round(eatAmount / revAmount * 100)/100; // This is the only one not rounded
         })
+
         strHtml = '<tr class="">'
                 +   '<td class="td-label">Net Margin (%)</td>'
         $.each(netMarginPerMonth, function (monthIndex, netMarginPerMonthAmount) {
@@ -3337,7 +3624,6 @@ $(document).ready(function () {
 
         // Get yearly amortization amount rounded to the nearest integer
         var amortizationAmountPerYear = Math.round(totalAmount/amortizationYears);
-
         // Get start projection period
         var startAmortizationYear = parseInt($('#id_first_financial_year').val());
         var endAmortizationYear = startAmortizationYear + amortizationYears;
@@ -3383,7 +3669,7 @@ $(document).ready(function () {
         //startUpCostItemsPerMonthDict[startUpItemId]['monthly'][projectionMonthIndex] = val
         $.each(otherStartUpCostsPerMonthList, function (startUpItemId, otherStartUpCostsPerItem ) {
             $.each(otherStartUpCostsPerItem['monthly'], function (projectionMonthIndex,  amount) {
-                startupCostTotal += Math.round(parseFloat(amount || 0 ))/100;
+                startupCostTotal += parseInt(amount,0);
             })
         })
 
@@ -3392,7 +3678,7 @@ $(document).ready(function () {
         if(amortizationYears == 0)
             return
         var amortizationMonthsCount = amortizationYears * countOfMonthsInFinancialYear;
-        var monthlyAmortizationAmount = startupCostTotal/amortizationMonthsCount;
+        var monthlyAmortizationAmount = Math.round(startupCostTotal/amortizationMonthsCount);
         var amortizedAmount = 0;
         var financialYearTotal = 0
         $.each(projectionMonthsList, function (projectionMonthIndex, projectionMonth) {
