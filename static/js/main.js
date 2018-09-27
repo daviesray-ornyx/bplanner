@@ -1121,7 +1121,6 @@ $(document).ready(function () {
         taxSlabs[currentSlabKey]['taxRate'] = taxRate
         $(differenceInput).val(difference);
         // check if tax rate is set
-        console.log('Taxrate: ' + taxRate);
         if(taxRate == null || isNaN(taxRate) || taxRate == '' || taxRate == 0){
             // set focus to taxrate input
             isValidStatus = false;
@@ -2206,6 +2205,7 @@ $(document).ready(function () {
             $.each(projectionMonths, function (projectionMonthIndex, projectionMonth) {
                 var amount = (investmentYearDict['month_of_investment'] == projectionMonthIndex) ? investmentYearDict['investment'] : 0;
                 investmentPerMonthDict[projectionMonthIndex] = amount;
+                yearTotal = amount;
             })
 
         })
@@ -3565,6 +3565,7 @@ $(document).ready(function () {
                 depositItemsTotalPerYear[depositItemId] = {};
                 depositItemsTotalPerYear[depositItemId]['name'] = depositItem['name'];
                 depositItemsTotalPerYear[depositItemId]['yearly'] = {}
+
                 $.each(depositItem['monthly'], function(projectionMonthId, depositAmount){
                     // Get corresponding year
                     var year = projectionMonthId.split('-')[1]; // Get's second item in projection month index after split
@@ -3871,6 +3872,7 @@ $(document).ready(function () {
         })
 
         // OTHER START UP COSTS
+
         $.each(otherStartUpCostsPerMonthList, function (startUpCostItemId, monthlyStartUpCostDict) {
             strHtml = '<tr class="">'
                     +   '<td>'+ monthlyStartUpCostDict['name'] +'</td>'
@@ -3880,6 +3882,8 @@ $(document).ready(function () {
                     totalOutFlowsFromOperatingActivities[monthIndex] = 0;
                 }
                 totalOutFlowsFromOperatingActivities[monthIndex] += parseFloat(startUpCost || 0);
+
+
                 strHtml    += '<td class="monthly td-input readonly' + ' Addyear ' + ' ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
                                         + ' data-is_total_col="' + 'Showistotal' + '"'
                                         + ' data-projection_month_id="' + 'Addmonth' + '" '
@@ -4259,9 +4263,24 @@ $(document).ready(function () {
         $('#tbl_cash_flow tbody').append(strHtml);
 
         var openingBalance = 0;
+        var openingYearBalance = 0;
         $.each(projectionMonthsList, function (projectionMonthIndex, projectionMonth) {
             if(projectionMonth['is_total']){
-                // Handle case for total columns
+                // Set year opening balance
+                openingCashBalancePerMonth[projectionMonthIndex] = openingYearBalance
+                // Need to compute cashflow changes during the year
+                var totalOperatingCashFlow = parseInt(netCashFlowFromOperatingActivities[projectionMonthIndex], 0)
+                totalOperatingCashFlow = isNaN(totalOperatingCashFlow) ? 0 : totalOperatingCashFlow;
+                var totalInvestingCashFlow = parseInt(netCashFlowsFromInvestingActivities[projectionMonthIndex], 0)
+                totalInvestingCashFlow = isNaN(totalInvestingCashFlow) ? 0 : totalInvestingCashFlow;
+                var totalFinancingCashFlow = parseInt(netCashFlowFromFinancingActivities[projectionMonthIndex], 0)
+                totalFinancingCashFlow  = isNaN(totalFinancingCashFlow) ? 0 : totalFinancingCashFlow
+                var changesDuringTheYearTotal = totalOperatingCashFlow - totalInvestingCashFlow + totalFinancingCashFlow;
+                cashFlowChangesDuringTheYearPerMonth[projectionMonthIndex] = changesDuringTheYearTotal;
+                closingCashBalancePerMonth[projectionMonthIndex] = openingYearBalance + changesDuringTheYearTotal
+
+                // Update year opening balance
+                openingYearBalance = openingYearBalance + changesDuringTheYearTotal
             }else{
                 openingCashBalancePerMonth[projectionMonthIndex] = openingBalance;
                 closingCashBalancePerMonth[projectionMonthIndex] = openingBalance + cashFlowChangesDuringTheYearPerMonth[projectionMonthIndex];
@@ -6072,5 +6091,21 @@ $(document).ready(function () {
         }
     })
 
+    function getYearTotalFromProjectionMonthsDict(dict, totalMonth){
+        var total = 0;
+        // get projection months in year
+        var projectionMonths = getMonthsListForYear(totalMonth['year'], false) // don not include the total month dict
+        $.each(dict, function (projectionMonthIndex, val) {
+            $.each(projectionMonths, function (index, month) {
+                if(index == projectionMonthIndex){
+                    // Add
+                    total += val;
+                    return false; // to exit from current each iteration
+                }
+            })
+        })
+
+        return total;
+    }
 })
 
