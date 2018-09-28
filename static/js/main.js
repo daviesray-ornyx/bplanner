@@ -2125,10 +2125,22 @@ $(document).ready(function () {
             $.each(assetInvestmentDict['years'], function (investmentYear, yearInvestmentDict) {
                 // Get projection months in year, including totals
                 var projectionMonths = getMonthsListForYear(investmentYear, true);
+                var totalAmount = 0;
+                var yearAdded = null;
                 $.each(projectionMonths, function (projectionMonthIndex, projectionMonth) {
                     // get year
-                    var amount = (yearInvestmentDict['month_added'] == projectionMonthIndex) ? yearInvestmentDict['amount_added'] : 0;
-                    investmentPerAssetPerMonthDict[assetId]['months'][projectionMonthIndex] = amount;
+                    if(yearInvestmentDict['month_added'] == projectionMonthIndex){
+                        totalAmount = parseInt(yearInvestmentDict['amount_added'],0)
+                        yearAdded = projectionMonth['year'];
+                        investmentPerAssetPerMonthDict[assetId]['months'][projectionMonthIndex] = totalAmount;
+                    }else{
+                        investmentPerAssetPerMonthDict[assetId]['months'][projectionMonthIndex] = 0;
+                    }
+
+                    if(projectionMonth['is_total'] && projectionMonth['year'] == yearAdded){
+                        investmentPerAssetPerMonthDict[assetId]['months'][projectionMonthIndex] = totalAmount;
+                    }
+
                     // Add value if month== investment month
                 })
             })
@@ -2201,11 +2213,22 @@ $(document).ready(function () {
         var investmentPerMonthDict = {}
         $.each(investmentDict, function (investmentYear, investmentYearDict) {
 
-            var projectionMonths = getMonthsListForYear(investmentYear, true);
+            var projectionMonths = getMonthsListForYear(investmentYear, true);  // true to include the totals dict
+            var totalAmount = 0;
+            var yearAdded = null;
             $.each(projectionMonths, function (projectionMonthIndex, projectionMonth) {
-                var amount = (investmentYearDict['month_of_investment'] == projectionMonthIndex) ? investmentYearDict['investment'] : 0;
-                investmentPerMonthDict[projectionMonthIndex] = amount;
-                yearTotal = amount;
+
+                if(investmentYearDict['month_of_investment'] == projectionMonthIndex){
+                    totalAmount = parseInt(investmentYearDict['investment'], 0);
+                    investmentPerMonthDict[projectionMonthIndex] = totalAmount;
+                    yearAdded= projectionMonth['year'];
+                }else{
+                    investmentPerMonthDict[projectionMonthIndex] = 0;
+                }
+
+                if(projectionMonth['is_total'] && projectionMonth['year'] == yearAdded){
+                    investmentPerMonthDict[projectionMonthIndex] = totalAmount;
+                }
             })
 
         })
@@ -2578,9 +2601,10 @@ $(document).ready(function () {
     function getReservesAndSurplusesPerYear(EATPerYear){
         var reservesAndSurplusesDict = {}
         var currentReserves = 0;
+        var count = 0;
         $.each(EATPerYear, function (projectionYear, eatAmount) {
-            reservesAndSurplusesDict[projectionYear] = parseFloat(currentReserves) + parseFloat(eatAmount);
-            currentReserves = reservesAndSurplusesDict[projectionYear]
+            reservesAndSurplusesDict[projectionYear] = currentReserves
+            currentReserves = parseInt(currentReserves) + parseInt(eatAmount);
         })
         return reservesAndSurplusesDict;
     }
@@ -2974,9 +2998,14 @@ $(document).ready(function () {
         // This is retrieved from amortization schedule which we already have
         //amortizationSchedule[amortizationScheduleId]['monthly'][monthIndex]['interest_paid'] = Math.round(interestPaid );
         var monthlyInterestOnDebt = {};
+        var yearTotal = 0;
         $.each(projectionMonthsList, function (monthIndex, projectionMonth) {
             // for each amortization Schedule Item, retrieve interest paid
             // Plan on handling totals... Should be very easy...
+            if(projectionMonth['is_total']){
+                monthlyInterestOnDebt[monthIndex] = yearTotal;
+                yearTotal = 0;
+            }
             $.each(amortizationSchedule, function (amortizationScheduleId, scheduleDict) {
                 // get corresponding month index val
                 var interesPaid = 0;
@@ -2990,6 +3019,7 @@ $(document).ready(function () {
                     monthlyInterestOnDebt[monthIndex] = 0;
                 }
                 monthlyInterestOnDebt[monthIndex] += interesPaid
+                yearTotal += interesPaid;
                 //costsBeforeTaxAfterEBITDS[monthIndex] += interesPaid
             })
         })
@@ -3478,39 +3508,50 @@ $(document).ready(function () {
                 }
             })
         })
-        return debtAndInterestRepaymentPerMonth;
+
+        // Incorporate totals cols
+        var debtAndInterestRepaymentPerMonthPlusTotals = {};
+        var yearTotal = 0;
+        $.each(projectionMonthsList, function (projectionMonthIndex, projectionMonth) {
+            //
+            if(projectionMonth['is_total']){
+                debtAndInterestRepaymentPerMonthPlusTotals[projectionMonthIndex] = yearTotal;
+                yearTotal = 0; // Reset year total in readiness for the next year
+            }else{
+                var amount = parseInt(debtAndInterestRepaymentPerMonth[projectionMonthIndex]) || 0;
+                debtAndInterestRepaymentPerMonthPlusTotals[projectionMonthIndex] = amount;
+                yearTotal += amount; // Increment year totals
+            }
+        })
+        return debtAndInterestRepaymentPerMonthPlusTotals;
     }
 
     function getDebtAndInterestRepaymentPerYear(amortizationSchedule){
         var debtAnInterestRepaymentPerYearDict = {};
-
-        $.each(amortizationSchedule, function (amortizationScheduleId, amortizationScheduleItem) {
-            // into each amortization schedule item
-            $.each(amortizationScheduleItem['monthly'], function (amortizationMonthIndex,amortizationScheduleMonthlyItem ) {
-                var year = amortizationMonthIndex.split('_')[1];
-                if(year == null)
-                    return;
-                // Matching month found.. Increment value for the month
-                    if(debtAnInterestRepaymentPerYearDict[year] == null){
-                        debtAnInterestRepaymentPerYearDict[year] = 0;
-                    }
-                    debtAnInterestRepaymentPerYearDict[year] += parseFloat(amortizationScheduleMonthlyItem['installment_amount'] || 0);
-            })
+        var repaymentPerMonth = getDebtAndInterestRepaymentPerMonth(amortizationSchedule);
+        $.each(repaymentPerMonth, function (projectionMonthIndex, repaymentAmount) {
+            if(projectionMonthIndex.indexOf('_') > -1){
+                // this is a totals object.
+                // get year
+                var year = projectionMonthIndex.split('_')[0];
+                // update value
+                debtAnInterestRepaymentPerYearDict[year] = repaymentAmount
+            }
         })
         return debtAnInterestRepaymentPerYearDict;
     }
 
     function getInterestRepaymentOnDebtPerYear(monthlyInterestOnDebt){
         var interestRepaymentPerYearDict = {};
-        $.each(monthlyInterestOnDebt, function (monthIndex,interestAmount ) {
-            var year = monthIndex.split('_')[1];
-            if(year == null)
-                return;
-            // Matching month found.. Increment value for the month
-                if(interestRepaymentPerYearDict[year] == null){
-                    interestRepaymentPerYearDict[year] = 0;
-                }
-                interestRepaymentPerYearDict[year] += parseFloat(interestAmount || 0);
+
+        $.each(monthlyInterestOnDebt, function (projectionMonthIndex, interestAmount) {
+            if(projectionMonthIndex.indexOf('_') > -1){
+                // this is a totals object.
+                // get year
+                var year = projectionMonthIndex.split('_')[0];
+                // update value
+                interestRepaymentPerYearDict[year] = interestAmount
+            }
         })
 
         return interestRepaymentPerYearDict;
@@ -3544,12 +3585,19 @@ $(document).ready(function () {
             depositItemsDictPerMonthDict[depositItemId]['name'] = depositItemDict['name'];
             depositItemsDictPerMonthDict[depositItemId]['monthly'] = {}
             var counter = 0;
+            var yearAdded = null;
             $.each(projectionMonthsList, function (projectionMonthIndex, projectionMonth) {
                 if(counter == 0){
                     // Add cost to the first monthly item
                     depositItemsDictPerMonthDict[depositItemId]['monthly'][projectionMonthIndex] = depositItemDict['amount'];
+                    yearAdded = projectionMonth['year'];
                 }else{
-                    depositItemsDictPerMonthDict[depositItemId]['monthly'][projectionMonthIndex] = 0;
+                    if(projectionMonth['is_total'] && projectionMonth['year'] == yearAdded){
+                        depositItemsDictPerMonthDict[depositItemId]['monthly'][projectionMonthIndex] = depositItemDict['amount'];
+                    }else{
+                        depositItemsDictPerMonthDict[depositItemId]['monthly'][projectionMonthIndex] = 0;
+                    }
+
                 }
                 counter++; // Increment counter
             })
@@ -3649,12 +3697,19 @@ $(document).ready(function () {
             startUpCostItemsPerMonthDict[startUpItemId]['name'] = startUpItemDict['name'];
             startUpCostItemsPerMonthDict[startUpItemId]['monthly'] = {}
             var counter = 0;
+            var yearAdded = null;
             $.each(projectionMonthsList, function (projectionMonthIndex, projectionMonth) {
                 if(counter == 0){
                     // Add cost to the first monthly item
                     startUpCostItemsPerMonthDict[startUpItemId]['monthly'][projectionMonthIndex] = startUpItemDict['amount']
+                    yearAdded = projectionMonth['year'];
                 }else{
-                    startUpCostItemsPerMonthDict[startUpItemId]['monthly'][projectionMonthIndex] = 0;
+                    if(projectionMonth['is_total']  && projectionMonth['year'] == yearAdded){
+                        startUpCostItemsPerMonthDict[startUpItemId]['monthly'][projectionMonthIndex] = startUpItemDict['amount']
+                    }else{
+                        startUpCostItemsPerMonthDict[startUpItemId]['monthly'][projectionMonthIndex] = 0;
+                    }
+
                 }
                 counter++; // Increment counter
             })
@@ -3812,7 +3867,7 @@ $(document).ready(function () {
             if(totalOutFlowsFromOperatingActivities[monthIndex] == null){
                 totalOutFlowsFromOperatingActivities[monthIndex] = 0;
             }
-            totalOutFlowsFromOperatingActivities[monthIndex] += parseFloat(monthlyDirectCostTotal || 0);
+            totalOutFlowsFromOperatingActivities[monthIndex] += parseInt(monthlyDirectCostTotal || 0);
             strHtml    += '<td class="monthly td-input readonly' + ' Addyear ' + ' ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
                                         + ' data-is_total_col="' + 'Showistotal' + '"'
                                         + ' data-projection_month_id="' + 'Addmonth' + '" '
@@ -3980,7 +4035,7 @@ $(document).ready(function () {
             if(totalOutFlowsFromOperatingActivities[monthIndex] == null){
                 totalOutFlowsFromOperatingActivities[monthIndex] = 0;
             }
-            totalOutFlowsFromOperatingActivities[monthIndex] += parseFloat(receivableAmount || 0);
+            totalOutFlowsFromOperatingActivities[monthIndex] += parseFloat(receivableAmount || 0);  // Note that receivables are added
         strHtml    += '<td class="monthly td-input readonly' + ' Addyear ' + ' ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
                     +   ' data-is_total_col="' + 'Showistotal' + '"'
                     +   ' data-projection_month_id="' + 'Addmonth' + '" '
@@ -4003,7 +4058,7 @@ $(document).ready(function () {
             if(totalOutFlowsFromOperatingActivities[monthIndex] == null){
                 totalOutFlowsFromOperatingActivities[monthIndex] = 0;
             }
-            totalOutFlowsFromOperatingActivities[monthIndex] += parseFloat(payablesAmount || 0);
+            totalOutFlowsFromOperatingActivities[monthIndex] -= parseFloat(payablesAmount || 0);
         strHtml    += '<td class="monthly td-input readonly' + ' Addyear ' + ' ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
                     +   ' data-is_total_col="' + 'Showistotal' + '"'
                     +   ' data-projection_month_id="' + 'Addmonth' + '" '
@@ -4011,7 +4066,7 @@ $(document).ready(function () {
                     +   ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           'value="' + payablesAmount + '"'
+                    +           'value="-' + payablesAmount + '"'
                     +           ' class="form-control text-right" readonly></td>'
 
         })
@@ -4027,7 +4082,7 @@ $(document).ready(function () {
             if(totalOutFlowsFromOperatingActivities[monthIndex] == null){
                 totalOutFlowsFromOperatingActivities[monthIndex] = 0;
             }
-            totalOutFlowsFromOperatingActivities[monthIndex] += parseFloat(otherExpensesPayablesAmount || 0);
+            totalOutFlowsFromOperatingActivities[monthIndex] -= parseFloat(otherExpensesPayablesAmount || 0);
         strHtml    += '<td class="monthly td-input readonly' + ' Addyear ' + ' ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
                     +   ' data-is_total_col="' + 'Showistotal' + '"'
                     +   ' data-projection_month_id="' + 'Addmonth' + '" '
@@ -4035,7 +4090,7 @@ $(document).ready(function () {
                     +   ' width="200">'
                     +       '<input name="" '
                     +           ' type="number" min="0"'
-                    +           'value="' + otherExpensesPayablesAmount + '"'
+                    +           'value="-' + otherExpensesPayablesAmount + '"'
                     +           ' class="form-control text-right" readonly></td>'
 
         })
@@ -4384,6 +4439,7 @@ $(document).ready(function () {
         totalLiabilities = {} // Given by Total current liabilities + Net debt + total capital
         var debtAndInterestRepaymentPerYear = getDebtAndInterestRepaymentPerYear(amortizationSchedule);
         var interestOnDebtRepaymentPerYear = getInterestRepaymentOnDebtPerYear(monthlyInterestOnDebt)
+
         var debtRepaymentPerYear = {} // Given by debtAndInterestRepaymentPerYear - interestOnDebtRepaymentPerYear
         var netDebtPerYear  = {} //
 
@@ -4407,6 +4463,7 @@ $(document).ready(function () {
         })
         strHtml += '</tr>'
         $('#tbl_balance_sheet tbody').append(strHtml);
+
         // Tangible assets listing
         $.each(tangibleAssetsInvestmentPerYear, function (assetId, tangibleAssetInvestment) {
             var name = tangibleAssetInvestment['name'];
@@ -4433,7 +4490,8 @@ $(document).ready(function () {
                 if(assetId == depAssetId){
                     tangibleAssetsBalancePerYear[assetId] = {}
                     $.each(assetDepreciation, function (projectionYear, depreciationAmount) {
-                        tangibleAssetsBalancePerYear[assetId][projectionYear] = parseFloat(tangibleAssetsInvestmentPerYear[assetId][projectionYear]) - parseFloat(depreciationAmount)
+
+                        tangibleAssetsBalancePerYear[assetId][projectionYear] = parseFloat(tangibleAssetsInvestmentPerYear[assetId]['years'][projectionYear]) - parseFloat(depreciationAmount)
                         strHtml += '<td class="monthly td-input readonly' + ' Addyear ' + ' ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
                                 +       ' data-is_total_col="' + 'Showistotal' + '"'
                                 +       ' data-projection_month_id="' + 'Addmonth' + '" '
@@ -4443,13 +4501,12 @@ $(document).ready(function () {
                                 +           ' type="number" min="0"'
                                 +           ' value="' + depreciationAmount  + '"'
                                 +           ' class="form-control text-right" readonly></td>'
-                        })
+                    })
                         strHtml += '</tr>'
-                        $('#tbl_balance_sheet tbody').append(strHtml);
-                        return true;
+                    $('#tbl_balance_sheet tbody').append(strHtml);
                 }
             })
-    
+
             // Balance for each
             strHtml = '<tr class="tr-totals">'
                     +       '<td class="td-label">Balance</td>'
@@ -4459,7 +4516,7 @@ $(document).ready(function () {
                         if(tangibleAssetsBalanceTotal[projectionYear] == null){
                             tangibleAssetsBalanceTotal[projectionYear] = 0;
                         }
-                        tangibleAssetsBalanceTotal[projectionYear] += parseFloat(assetBalance || 0);
+                        tangibleAssetsBalanceTotal[projectionYear] += parseInt(balanceAmount || 0);
                         strHtml += '<td class="monthly td-input readonly' + ' Addyear ' + ' ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
                                 +       ' data-is_total_col="' + 'Showistotal' + '"'
                                 +       ' data-projection_month_id="' + 'Addmonth' + '" '
@@ -4790,16 +4847,26 @@ $(document).ready(function () {
         // Debt
         // We have debt
         // debt repayment
+        console.log('debtAndInterestRepaymentPerYear')
+        console.log(debtAndInterestRepaymentPerYear)
+        console.log('interestOnDebtRepaymentPerYear')
+        console.log(interestOnDebtRepaymentPerYear)
+        //console.log()
         $.each(projectionYearsList, function (yearIndex, yearString) {
-            debtRepaymentPerYear[yearString] = parseFloat(debtAndInterestRepaymentPerYear[yearString] || 0) - parseFloat(interestOnDebtRepaymentPerYear || 0)
+            console.log('yearString: ' + yearString )
+            debtRepaymentPerYear[yearString] = parseInt(debtAndInterestRepaymentPerYear[yearString] || 0) - parseFloat(interestOnDebtRepaymentPerYear[yearString] || 0)
         })
 
+        console.log('loanDebtDict')
+        console.log(loanDebtDict)
+        console.log('debtRepaymentPerYear')
+        console.log(debtRepaymentPerYear)
         var netDebtPreviousYear = 0
         var debtTotalsPerYear = {}
         $.each(loanDebtDict, function (investmentYear, investmentDict) {
             if (netDebtPerYear[investmentYear] == null)
                 netDebtPerYear[investmentYear] = 0
-            netDebtPerYear[investmentYear] = parseFloat(investmentDict['investment'] || 0) - parseFloat(debtRepaymentPerYear[investmentYear] || 0) + parseFloat(netDebtPreviousYear);
+            netDebtPerYear[investmentYear] = investmentDict['investment'] - debtRepaymentPerYear[investmentYear] + netDebtPreviousYear;
             debtTotalsPerYear[investmentYear] = parseFloat(investmentDict['investment'] || 0) + parseFloat(netDebtPreviousYear)
             // Increment totalLiabilities
             if(totalLiabilities[investmentYear] == null)
