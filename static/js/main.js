@@ -20,7 +20,7 @@ $(document).ready(function () {
             'difference': null,
             'tax' : null,
             'cumulativeTax': null
-        },
+        }
     }
 
     function getCookie(name) {
@@ -49,7 +49,6 @@ $(document).ready(function () {
         if(currencyId=='None'){
             return '$';
         }
-
         if(currencyId == 0){
             return '$';
         }else if(currencyId == 1){
@@ -68,7 +67,7 @@ $(document).ready(function () {
 
     $('#id_first_financial_year').change(function(event){
         // First financial year altered
-        firstFinancialYear = parseInt($(this).val(), 0)
+        firstFinancialYear = parseInt($(this).val())
         $(this).attr('value', $(this).val());
     })
 
@@ -299,9 +298,9 @@ $(document).ready(function () {
                                 strBody += '<td class="yearly ' + projectionYear +' td-input td-sm' + readonlyText + ' ' + autoFilledText + '"'
                                             +    ' data-projection_year="'+ projectionYear +'">'
                                             + '<input data-product_id="' + productIndex + '" name="' + productIndex + '_price_' + projectionYear +'" '
-                                                    + 'type="number" min="0" data-projection_year="' + projectionYear +'" '
+                                                    + 'type="text" data-projection_year="' + projectionYear +'" '
                                                     + ' value=""'
-                                                    + ' class="form-control input-md '+ priceChangetext +' text-right render_required" required="required " + ' + readonlyText + '></td>'
+                                                    + ' class="form-control number-input-format input-md '+ priceChangetext +' text-right render_required" required="required " + ' + readonlyText + '></td>'
                                 firstYear = false;
                             })
                 strBody += '</tr>'
@@ -325,7 +324,7 @@ $(document).ready(function () {
         }else{
             truncateTable('#tbl_assumptions_direct_cost_per_product');
         }
-        var strHead =   '<caption style="color: #73879C;"><label class="control-label">Direct Cost per <span class="span-item_offered"> ' + getItemOffered(false) + ' </span></label></caption>'
+        var strHead =   '<caption style="color: #73879C;"><label class="control-label">Direct Cost per <span class="span-item_offered"> ' + getItemOffered(false) + ' </span> (% of Price)</label></caption>'
                         + '<thead>'
                         + '<tr >'
                         +   '<th class="text-left">'
@@ -428,12 +427,13 @@ $(document).ready(function () {
                                                 + ' data-projection_year="' + projectionMonthYear['year'] +'" '
                                                 + ' width="200">'
                                                 + '<input name="' + productIndex + '_units_of_measuring_revenue_' + projectionMonthIndex +'" '
-                                                    + ' type="number" min="0" '
+                                                    + ' type="text" '
                                                     + ' data-product_id="' + productIndex + '" '
                                                     + ' data-projection_month_id="' + projectionMonthIndex +'" '
                                                     + ' data-projection_year="' + projectionMonthYear['year'] +'" '
+                                                    + ' data-value="'+ 0 +'" '
                                                     + ' value=""'
-                                                    + ' class="form-control input-md '+ unitChangeText +' text-right render_required" required="required " + ' + readonlyText + '></td>'
+                                                    + ' class="form-control number-input-format input-md '+ unitChangeText +' text-right render_required" required="required " + ' + readonlyText + '></td>'
 
                             })
                 strBody += '</tr>'
@@ -447,6 +447,11 @@ $(document).ready(function () {
         // Unbind and bind change events
         $('.unit-change').unbind('change');
         $('.unit-change').change(measurementUnitChangeHandler);
+
+
+        // Unbind/ bind events
+        $('.number-input-format').unbind('keydown')
+        $('.number-input-format').keydown(numberFormatKeyDownHandler)
 
         // Invoke DataTable
         // Wait 3 seconds then
@@ -487,7 +492,7 @@ $(document).ready(function () {
                                  var operatingCostChange = (colOrder == 0) ? 'operating-cost-change' : '';
              strRow +=       '<td class="cost td-input td-sm ' + readonlyText + ' ' + autoFilledText + '" '
                       +             ' data-projection_year= "'+ projectionYear +'">'
-                      +          '<input type="number" class="form-control input-md text-right render_required ' + operatingCostChange + '" name="' + inputName + '" min="0" value="" required="required" ' + readonlyText + '>'
+                      +          '<input type="text" class="form-control number-input-format input-md text-right render_required ' + operatingCostChange + '" name="' + inputName + '" value="" required="required" ' + readonlyText + '>'
                       +      '</td>'
                                  colOrder++;
                              })
@@ -561,7 +566,7 @@ $(document).ready(function () {
             var inputName = employeeRoleId + '_' + projectionYear
           strRowHtml += '<td class="number_of_employees td-input td-sm"'
                      +      'data-projection_year="'+ projectionYear +'">'
-                     +       '<input type="number" name="' + inputName + '" class="form-control text-right render_required" placeholder="" min="0" value="" required="required" >'
+                     +       '<input type="text" name="' + inputName + '" class="form-control number-input-format text-right render_required" placeholder="" value="" required="required" >'
                      +   '</td>'
         });
           strRowHtml +=   '<td class="td-input td-sm">'
@@ -621,7 +626,7 @@ $(document).ready(function () {
             var inputName = employeeRoleId + '_' + projectionYear
             strRowHtml +=       '<td class="working_hours td-input td-sm '
                        +            'data-projection_year="'+ projectionYear + '">'
-                       +            '<input type="number" name="' + inputName + '" class="form-control text-right render_required" placeholder="" min="0" value="" required="required" >'
+                       +            '<input type="text" name="' + inputName + '" class="form-control number-input-format text-right render_required" placeholder="" value="" required="required" >'
                        +        '</td>'
         });
 
@@ -679,7 +684,7 @@ $(document).ready(function () {
              var autoFilledText = (isReadonlyField) ? 'auto-filled' : '';
              var hourlyRateChangeText = (!isReadonlyField) ? 'hourly-rate-change' : '';
             strRowHtml +=       '<td class="hourly_rate td-input td-sm ' + readonlyText + ' ' + autoFilledText + '">'
-                       +            '<input type="number" name="' + inputName + '" class="form-control text-right render_required ' + hourlyRateChangeText +' " placeholder="" min="0" value="" required="required" ' + readonlyText + '>'
+                       +            '<input type="text" name="' + inputName + '" class="form-control number-input-format text-right render_required ' + hourlyRateChangeText +' " placeholder="" value="" required="required" ' + readonlyText + '>'
                        +        '</td>'
             colOrder++;
         });
@@ -726,7 +731,7 @@ $(document).ready(function () {
         $('#div_assumptions_employees_hourly_rates').css('display','block');
     }
 
-    function generateCapitalTableRow(capitalSource){
+    function generateCapitalTableRow(capitalSource, rowCount){
         capitalSource = (typeof capitalSource !== 'undefined') ?  capitalSource : '';
         var rowId = $('#tbl_assumptions_capital tbody').children('tr').length + 1;
         var capitalSourceId = 'tbl_assumptions_capital_' + rowId;
@@ -740,15 +745,18 @@ $(document).ready(function () {
             var investmentMonth = inputName + '_investment_month'
             var capitalChangedClassText = ' capital-changed ';
             strRowHtml +=       '<td class="td-input td-sm ' + capitalChangedClassText + ' ' + projectionYear + ' investment ">'
-                       +            '<input type="number" name="' + inputName + '" class="form-control text-right render_required" placeholder="" min="0" value="" required="required">'
+                       +            '<input type="text" name="' + inputName + '" class="form-control number-input-format text-right render_required" placeholder="" value="" required="required">'
                        +        '</td>'
-                       +        '<td class="td-input td-md ' + projectionYear +' month_of_investment">'
-                       +            '<select class="form-control text-center" name="' + investmentMonth + '" required="required">'
+                       +        '<td class="td-input text-right td-md ' + projectionYear +' month_of_investment">'
+                                if(rowCount <= 1)
+                                {
+            strRowHtml +=           '<select class="form-control text-right" name="' + investmentMonth + '" required="required">'
             $.each(getMonthsListForYear(projectionYear, false), function (monthIndex, projectionMonth) {
                 strRowHtml +=             '<option value="'+ monthIndex +'">'+ projectionMonth['display'] +'</option>'
             })
             strRowHtml +=           '</select>'
-                       +        '</td>'
+                                }
+            strRowHtml +=      '</td>'
         });
 
             strRowHtml += '</tr>'
@@ -776,9 +784,11 @@ $(document).ready(function () {
                            +'</tbody>';
         $('#tbl_assumptions_capital').append(strTableInner);
         // Get table rows:
+        var rowCount = 0;
         $.each(capitalSourcesList, function (index, capitalSource) {
-            var rowHtml = generateCapitalTableRow(capitalSource);
+            var rowHtml = generateCapitalTableRow(capitalSource, rowCount);
             $('#tbl_assumptions_capital tbody').append(rowHtml);
+            rowCount++;
         })
 
         // Show div section
@@ -808,7 +818,7 @@ $(document).ready(function () {
 
             var tangibleAssetUsageChangedClassText = ' tangible-assets-changed ';
             strRowHtml +=       '<td class=" '+ projectionYear +' amount_added td-input td-sm ' + tangibleAssetUsageChangedClassText +'">'
-                       +            '<input type="number" name="' + inputName + '" class="form-control text-right" placeholder="" min="0" value="" required="required">'
+                       +            '<input type="text" name="' + inputName + '" class="form-control number-input-format text-right" placeholder="" value="" required="required">'
                        +        '</td>'
                        +        '<td class="'+ projectionYear+' month_added td-input td-sm">'
                        +            '<select class="form-control text-center" name="' + investmentMonth + '" required="required">'
@@ -819,7 +829,7 @@ $(document).ready(function () {
                        +        '</td>'
         });
             strRowHtml +=       '<td class="td-input td-sm">'
-                       +            '<input type="number" name="' + depreciationRate + '" class="form-control text-right render_required" placeholder="" min="0" required="required">'
+                       +            '<input type="text" name="' + depreciationRate + '" class="form-control number-input-format text-right render_required" placeholder="" required="required">'
                        +        '</td>'
                        +    '</tr>'
         return strRowHtml;
@@ -883,7 +893,7 @@ $(document).ready(function () {
 
             var intangibleAssetUsageChangedClassText = ' intangible-assets-changed ';
             strRowHtml +=       '<td class="'+ projectionYear +' amount_added td-input td-sm ' + intangibleAssetUsageChangedClassText +'">'
-                       +            '<input type="number" name="' + inputName + '" class="form-control text-right render_required" placeholder="" min="0" required="required">'
+                       +            '<input type="text" name="' + inputName + '" class="form-control number-input-format text-right render_required" placeholder="" required="required">'
                        +        '</td>'
                        +        '<td class="'+ projectionYear + ' month_added td-input td-sm">'
                        +            '<select class="form-control text-center" name="' + investmentMonth + '" required="required">'
@@ -948,7 +958,7 @@ $(document).ready(function () {
                         +            '<input type="text" class="form-control" name="' + depositItemNameId + '" value="' + depositItemName + '" placeholder="" required="required" >'
                         +        '</td>'
                         +       '<td class="td-input td-md">'
-                        +            '<input type="number" class="form-control text-right render_required" name="' + inputName + '" placeholder="" min="1" value="" required="required" >'
+                        +            '<input type="text" class="form-control number-input-format text-right render_required" name="' + inputName + '" placeholder="" value="" required="required" >'
                         +        '</td>'
                         +   '</tr>'
         return strRowHtml;
@@ -1001,7 +1011,7 @@ $(document).ready(function () {
                         +            '<input type="text" class="form-control" name="' + costItemNameId + '" value="' + costName + '" placeholder="" required="required" >'
                         +        '</td>'
                         +       '<td class="td-input td-sm">'
-                        +            '<input type="number" class="form-control text-right render_required" name="' + inputName + '" placeholder="" min="1" value="" required="required" >'
+                        +            '<input type="text" class="form-control text-right number-input-format render_required" name="' + inputName + '" placeholder="" value="" required="required" >'
                         +        '</td>'
                         +   '</tr>'
         return strRowHtml;
@@ -1130,7 +1140,7 @@ $(document).ready(function () {
             return isValidStatus;
         }
         // new tax
-        var newTax = Math.round(differenceInput * taxRate/100); // Tax rate is in percentage
+        var newTax = differenceInput * taxRate / 100 ; // Tax rate is in percentage
         $(taxInput).val(newTax);
         taxSlabs[currentSlabKey]['tax'] = newTax;
 
@@ -1229,7 +1239,7 @@ $(document).ready(function () {
         var difference = upperLimit - lowerLimit;
         taxSlabs[currentSlabKey]['difference'] = difference
         taxSlabs[currentSlabKey]
-        var newTax = Math.round(difference * taxRate/100); // Tax rate is in percentage
+        var newTax = difference * taxRate / 100; // Tax rate is in percentage
         $(taxInput).val(newTax);
         taxSlabs[currentSlabKey]['tax'] = newTax;
 
@@ -1242,10 +1252,6 @@ $(document).ready(function () {
         }
         taxSlabs['totalTaxSlabTableCumulativeTax'] += taxDifference;
         taxSlabs[currentSlabKey]['cumulativeTax'] = taxSlabs['totalTaxSlabTableCumulativeTax']
-
-        console.log(taxSlabs)
-        console.log("Cumulative tax: taxSlabs['totalTaxSlabTableCumulativeTax']")
-        console.log(taxSlabs['totalTaxSlabTableCumulativeTax'])
 
         $(cumulativeTaxInput).val(taxSlabs['totalTaxSlabTableCumulativeTax'])
 
@@ -1349,7 +1355,8 @@ $(document).ready(function () {
 
         var pivotTD = $currTR.children('.' + pivotMonth['display'])[0]; // Get td with correspoding class
         var pivotInput = $(pivotTD).children('input')[0];
-        var principalVal = $(pivotInput).val();
+        var principalVal = removeCommas($(pivotInput).val());
+        principalVal = principalVal != '' ? parseInt(principalVal) : 0;
         var growthRate = parseFloat(products[productId]['growth_rate'] || 0)
 
         // Get year totals
@@ -1366,15 +1373,16 @@ $(document).ready(function () {
                 $.each(childrenTds, function (childTdIndex, childTd) {
                     // Get the total and update input value
                     var childTdInput = $(childTd).children('input')[0];
-                    var val = $(childTdInput).val();
+                    var val = removeCommas($(childTdInput).val());
+                    val = val != '' ? parseInt(val) : 0
                     if(val){
                         newTotal += parseFloat(val);
                     }
                 })
 
                 // Update Input value
-                $(autoFillTDInput).val(newTotal);
-                $(autoFillTDInput).attr('value', newTotal);
+                $(autoFillTDInput).val(newTotal.toLocaleString('en'));
+                $(autoFillTDInput).attr('value', newTotal.toLocaleString('en'));
             }else{
                 // Process non-total autofill co
                 var currProjectionMonth = projectionMonthsList[projectionMonthId];
@@ -1382,16 +1390,14 @@ $(document).ready(function () {
                 var t = currProjectionMonth['order'] - pivotMonth['order'];
                 //console.log("Value of t: " + t);
 
-                if(!principalVal){
+                if(!principalVal || principalVal == '' || principalVal == 0 ){
                     //console.log("Principal: " + principalVal)
                     return; // This is a simple continue to the next iteration command
                 }
 
-                principalVal = parseFloat(principalVal); // Ensure we parse the value to float
-                // Rate is important
                 var newVal = calculateCompoundedGrowth(principalVal, growthRate/100, 1, t);
-                $(autoFillTDInput).val(newVal);
-                $(autoFillTDInput).attr('value', newVal);
+                $(autoFillTDInput).val(newVal.toLocaleString('en'));
+                $(autoFillTDInput).attr('value', newVal.toLocaleString('en'));
             }
         })
 
@@ -1411,7 +1417,8 @@ $(document).ready(function () {
     }
 
     function productPriceChangeHandler(event) {
-        var principalVal = parseFloat($(this).val(), 0);
+        var principalVal = removeCommas($(this).val())
+        principalVal = principalVal != '' ? parseFloat(principalVal) : 0;
         var productId = $(this).data('product_id');
         var growthRate = parseFloat(products[productId]['growth_rate'], 0);
         // Get siblings...
@@ -1425,8 +1432,8 @@ $(document).ready(function () {
             // Check compounding formula
             var newVal = calculateCompoundedGrowth(principalVal, (growthRate / 100), 1, dtYearIndex);
             // Update new value
-            $(inputField).val(newVal);
-            $(inputField).attr('value', newVal);
+            $(inputField).val(newVal.toLocaleString('en'));
+            $(inputField).attr('value', newVal.toLocaleString('en'));
         })
         $(this).attr('value', $(this).val());
     }
@@ -1438,8 +1445,9 @@ $(document).ready(function () {
     function operatingCostChangeHandler(event){
         $(this).attr('value', $(this).val());
         // Operating cost changed
-        var inflationRate = parseFloat($('#id_inflation_rate').val() || 0)/100;
-        var principal = parseFloat($(this).val() | 0); // Get's the value or zero
+        var inflationRate = parseFloat($('#id_inflation_rate').val())/100;
+        var principal = removeCommas($(this).val()); // Get's the value or zero
+        var principal = principal != '' ? parseFloat(principal) : 0; // Get's the value or zero
         // get auto filled tds
         var currentTD = $(this).parent();
         var autoFillTDs = $(currentTD).siblings('.auto-filled');
@@ -1448,15 +1456,16 @@ $(document).ready(function () {
             var compoundedGrowth = calculateCompoundedGrowth(principal, inflationRate, 1, (tdIndex + 1));
             // Update dt value
             var currentInput = $(autofillTD).children('input')[0];
-            $(currentInput).val(compoundedGrowth)
+            $(currentInput).val(compoundedGrowth.toLocaleString('en'))
         })
     }
 
     function employeeHourlyRateChangeHandler(event){
         $(this).attr('value', $(this).val());
         // Operating cost changed
-        var salaryGrowthRate = parseFloat($('#id_salary_growth_rate').val() || 0)/100;
-        var principal = parseFloat($(this).val() | 0); // Get's the value or zero
+        var salaryGrowthRate = parseFloat($('#id_salary_growth_rate').val()) / 100;
+        var principal = removeCommas($(this).val()); // Get's the value or zero
+        principal = principal != '' ? parseFloat(principal) : 0; // Get's the value or zero
         // get auto filled tds
         var currentTD = $(this).parent();
         var autoFillTDs = $(currentTD).siblings('.auto-filled');
@@ -1465,7 +1474,7 @@ $(document).ready(function () {
             var compoundedGrowth = calculateCompoundedGrowth(principal, salaryGrowthRate, 1, (tdIndex + 1));
             // Update dt value
             var currentInput = $(autofillTD).children('input')[0];
-            $(currentInput).val(compoundedGrowth)
+            $(currentInput).val(compoundedGrowth.toLocaleString('en'))
         })
     }
 
@@ -1520,7 +1529,7 @@ $(document).ready(function () {
         // rate is given in decimal and not percentage
         var nt = numberOfTimesCompoundedPerYear * timeInYears;
         var innerBracket = 1 + (rate/numberOfTimesCompoundedPerYear)
-        return Math.round(principal * Math.pow(innerBracket, nt)); //  Whole numbers always returned
+        return principal * Math.pow(innerBracket, nt); //  Whole numbers always returned
     }
 
     $('#btn-generate_pricing_tables').click(function(event){
@@ -1692,10 +1701,12 @@ $(document).ready(function () {
                 var year = $(yearlyTD).data('projection_year');
                 // get price val
                 var priceInput = $(yearlyTD).children('input')[0]
-                var price = $(priceInput).val()
-                pricePerProductPerYearDict[productId][year] = price
+                var price = removeCommas($(priceInput).val())
+                pricePerProductPerYearDict[productId][year] = parseInt(price);
             })
         })
+        console.log("pricePerProductPerYearDict")
+        console.log(pricePerProductPerYearDict)
         return pricePerProductPerYearDict;
     }
 
@@ -1717,7 +1728,7 @@ $(document).ready(function () {
         // Receivables total = revenueTotals x Receivables Period/ Number of months in a year
         var receivablesPeriod = parseFloat($('#id_trade_receivables').val() || 0);
         $.each(revenueTotalsPerYear, function (projectionYear, revenueAmount) {
-            receivableTotalsPerYearDict[projectionYear] = Math.round(revenueAmount * receivablesPeriod / countOfMonthsInFinancialYear);
+            receivableTotalsPerYearDict[projectionYear] = revenueAmount * receivablesPeriod / countOfMonthsInFinancialYear;
         })
 
         return receivableTotalsPerYearDict;
@@ -1725,19 +1736,23 @@ $(document).ready(function () {
 
     function getReceivablesPerMonth(receivableTotalsPerYear){
         var receivablePerMonthDict = {};
+        // Remember the formula... CurrentYear - Previous Year / # of months
+        var previousReceivables = 0;
         $.each(receivableTotalsPerYear, function (projectionYear, receivableTotalAmount) {
             // Get projection Months in year
             var projectionMonths = getMonthsListForYear(projectionYear, true);
             // We have the months including the total column
+            var difference = receivableTotalAmount - previousReceivables;
             $.each(projectionMonths, function (monthIndex, projectionMonth) {
                 if(projectionMonth['is_total']){
                     // Handle the totals section
-                    receivablePerMonthDict[monthIndex] = receivableTotalAmount;
+                    receivablePerMonthDict[monthIndex] = difference
                 }else{
                     // Handle individual month sections
-                    receivablePerMonthDict[monthIndex] = Math.round(parseFloat(receivableTotalAmount || 0) / countOfMonthsInFinancialYear);
+                    receivablePerMonthDict[monthIndex] = difference/ countOfMonthsInFinancialYear;
                 }
             })
+            previousReceivables = receivableTotalAmount;
         })
         return receivablePerMonthDict;
     }
@@ -1763,7 +1778,7 @@ $(document).ready(function () {
         // Receivables total = revenueTotals x Receivables Period/ Number of months in a year
         var payablesPeriod = parseFloat($('#id_trade_payables').val() || 0);
         $.each(directCostTotalsPerYear, function (projectionYear, directCostAmount) {
-            payableTotalsPerYearDict[projectionYear] = Math.round(directCostAmount * payablesPeriod / countOfMonthsInFinancialYear);
+            payableTotalsPerYearDict[projectionYear] = directCostAmount * payablesPeriod / countOfMonthsInFinancialYear;
         })
 
         return payableTotalsPerYearDict;
@@ -1782,7 +1797,7 @@ $(document).ready(function () {
                     payablesPerMonthDict[monthIndex] = payableTotalAmount;
                 }else{
                     // Handle individual month sections
-                    payablesPerMonthDict[monthIndex] = Math.round(parseFloat(payableTotalAmount || 0) / countOfMonthsInFinancialYear);
+                    payablesPerMonthDict[monthIndex] = parseInt(payableTotalAmount, 10) / countOfMonthsInFinancialYear;
                 }
             })
         })
@@ -1829,7 +1844,6 @@ $(document).ready(function () {
         return employeeCostTotals;
     }
 
-
     function getOperatingCostPerMonth(){
         //var operatingCostPerYearDict = {}
         try {
@@ -1855,7 +1869,7 @@ $(document).ready(function () {
                 // 2. Costing period
                 var costingPeriodTD = $(operatingCostTR).children('td.costing_period')[0]
                 var opearingCostNameInput = $(costingPeriodTD).children('select')[0]
-                var costingPeriod = parseInt($(opearingCostNameInput).val(), 0);
+                var costingPeriod = parseInt($(opearingCostNameInput).val(), 10);
                 // 3. Cost values
 
                 if (costingPeriod == 0)
@@ -1866,7 +1880,7 @@ $(document).ready(function () {
                         // Get year and value
                         var year = $(costTD).data('projection_year');
                         var costInput = $(costTD).children('input')[0];
-                        var cost = parseInt($(costInput).val(), 0);
+                        var cost = parseInt(removeCommas($(costInput).val()), 10);
                         var months = getMonthsListForYear(year + "", true);
                         var total = 0;
                         $.each(months, function (monthIndex, month) {
@@ -1898,9 +1912,8 @@ $(document).ready(function () {
                         // Get year and value
                         var year = $(costTD).data('projection_year');
                         var costInput = $(costTD).children('input')[0];
-                        var cost = parseInt($(costInput).val(), 0); // This should be replicated everywhere.. Return 0 if value is non or undefined
-                        var costPerMonth = Math.round(cost / 12); // We assume that 12 is the # of moths by defaul
-                        // Get all months belonging to this year
+                        var cost = parseInt(removeCommas($(costInput).val()), 10); // This should be replicated everywhere.. Return 0 if value is non or undefined
+                        var costPerMonth = cost / 12
                         var months = getMonthsListForYear(year + "", true);
                         var total = 0;
                         $.each(months, function (monthIndex, month) {
@@ -1931,7 +1944,7 @@ $(document).ready(function () {
                         // Get year and value
                         var year = $(costTD).data('projection_year');
                         var costInput = $(costTD).children('input')[0];
-                        var percentage = parseInt($(costInput).val(), 0); // This should be replicated everywhere.. Return 0 if value is non or undefined
+                        var percentage = parseInt(removeCommas($(costInput).val()), 10); // This should be replicated everywhere.. Return 0 if value is non or undefined
 
                         // Get all months belonging to this year
                         var months = getMonthsListForYear(year + "", true);
@@ -1944,7 +1957,7 @@ $(document).ready(function () {
                                 operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['cost'] = total;
                                 total = 0
                             } else {
-                                var amount = Math.round(revenueTotalsPerMonth[monthIndex] * parseInt(percentage) / 100);
+                                var amount = revenueTotalsPerMonth[monthIndex] * parseInt(percentage, 10)
                                 operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex] = {}
                                 operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['year'] = year;
                                 operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['costing_period'] = costingPeriod
@@ -1964,7 +1977,7 @@ $(document).ready(function () {
                         // Get year and value
                         var year = $(costTD).data('projection_year');
                         var costInput = $(costTD).children('input')[0];
-                        var percentage = parseInt($(costInput).val(), 0)
+                        var percentage = parseInt(removeCommas($(costInput).val()), 10)
                         var months = getMonthsListForYear(year + "", true);
                         var total = 0;
                         $.each(months, function (monthIndex, month) {
@@ -1975,7 +1988,7 @@ $(document).ready(function () {
                                 operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['cost'] = total;
                                 total = 0;
                             } else {
-                                var amount = Math.round(employeeCostTotalsPerMonth[monthIndex] * parseInt(percentage) / 100);
+                                var amount = employeeCostTotalsPerMonth[monthIndex] * parseInt(percentage);
                                 ;
                                 operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex] = {}
                                 operatingCostPerMonthDict[operatingCostId]['monthly'][monthIndex]['year'] = year;
@@ -2010,12 +2023,11 @@ $(document).ready(function () {
         return operatingCostTotalsPerYearDict;
     }
 
-
     function getOtherExpensesPayableTotalsPerYear(operatingCostTotalsPerYear){
         var otherExpensesPayableTotalsPerYearDict = {};
-        var otherExpensesPayablesPeriod = parseFloat($('#id_other_expenses_payables').val() || 0);
+        var otherExpensesPayablesPeriod = parseFloat(removeCommas($('#id_other_expenses_payables').val()), 10);
         $.each(operatingCostTotalsPerYear, function (projectionYear, operatingCostAmount) {
-            otherExpensesPayableTotalsPerYearDict[projectionYear] = Math.round(operatingCostAmount * otherExpensesPayablesPeriod / countOfMonthsInFinancialYear);
+            otherExpensesPayableTotalsPerYearDict[projectionYear] = operatingCostAmount * otherExpensesPayablesPeriod / countOfMonthsInFinancialYear;
         })
         return otherExpensesPayableTotalsPerYearDict;
     }
@@ -2032,7 +2044,7 @@ $(document).ready(function () {
                     otherExpensesPayablePerMonthDict[monthIndex] = otherExpensesPayableTotalAmount;
                 }else{
                     // Handle individual month sections
-                    otherExpensesPayablePerMonthDict[monthIndex] = Math.round(parseFloat(otherExpensesPayableTotalAmount || 0) / countOfMonthsInFinancialYear);
+                    otherExpensesPayablePerMonthDict[monthIndex] = otherExpensesPayableTotalAmount / countOfMonthsInFinancialYear;
                 }
             })
         })
@@ -2074,7 +2086,7 @@ $(document).ready(function () {
             // get depreciation rate
             var depreciationTD = $(assetTr).children('td').last();
             var depreciationInput = $(depreciationTD).children('input')[0];
-            var depreciation = parseFloat($(depreciationInput).val() || 0);
+            var depreciation = parseFloat(removeCommas($(depreciationInput).val()));
             investmentDict[assetId]['depreciation'] = depreciation;
             investmentDict[assetId]['years'] = {}
 
@@ -2088,7 +2100,7 @@ $(document).ready(function () {
 
                 var amountTD = $(assetTr).children('td.' + projectionyear + '.amount_added')[0];
                 var amountInput = $(amountTD).children('input')[0];
-                var amount = parseFloat($(amountInput).val() || 0);
+                var amount = parseFloat(removeCommas($(amountInput).val()));
                 investmentDict[assetId]['years'][projectionyear]['amount_added'] = amount;
 
                 var monthTD = $(assetTr).children('td.' + projectionyear + '.month_added')[0];
@@ -2113,7 +2125,6 @@ $(document).ready(function () {
         })
         return investmentPerAssetPerYearDict
     }
-
 
     function getInvestmentPerAssetPerMonth(investmentDict){
         var investmentPerAssetPerMonthDict = {}
@@ -2148,7 +2159,6 @@ $(document).ready(function () {
         return investmentPerAssetPerMonthDict;
     }
 
-
     /*
         Share Capital dict
      */
@@ -2165,7 +2175,9 @@ $(document).ready(function () {
 
             var investmentTD = $(shareCapitalTR).children('td.' + year + '.investment')[0];
             var investmentInput = $(investmentTD).children('input')[0];
-            var investment = parseFloat($(investmentInput).val() || 0);
+            var investment = removeCommas($(investmentInput).val());
+            investment = investment != '' ?  parseInt(investment) : 0;
+
 
             var monthOfInvestmentTD = $(shareCapitalTR).children('td.' + year + '.month_of_investment')[0];
             var monthOfInvestmentSelect = $(monthOfInvestmentTD).children('select')[0];
@@ -2196,7 +2208,8 @@ $(document).ready(function () {
 
             var investmentTD = $(loanDebtTR).children('td.' + year + '.investment')[0];
             var investmentInput = $(investmentTD).children('input')[0];
-            var investment = parseFloat($(investmentInput).val() || 0);
+            var investment = removeCommas($(investmentInput).val());
+            var investment = investment != '' ?  parseInt(investment) : 0;
 
             var monthOfInvestmentTD = $(loanDebtTR).children('td.' + year + '.month_of_investment')[0];
             var monthOfInvestmentSelect = $(monthOfInvestmentTD).children('select')[0];
@@ -2216,13 +2229,16 @@ $(document).ready(function () {
             var projectionMonths = getMonthsListForYear(investmentYear, true);  // true to include the totals dict
             var totalAmount = 0;
             var yearAdded = null;
-            $.each(projectionMonths, function (projectionMonthIndex, projectionMonth) {
+            $.each(projectionMonths, function (projectionMonthIndex, projectionMonth)
+            {
 
-                if(investmentYearDict['month_of_investment'] == projectionMonthIndex){
-                    totalAmount = parseInt(investmentYearDict['investment'], 0);
+                if(investmentYearDict['month_of_investment'] == projectionMonthIndex)
+                {
+                    totalAmount = investmentYearDict['investment'];
                     investmentPerMonthDict[projectionMonthIndex] = totalAmount;
                     yearAdded= projectionMonth['year'];
-                }else{
+                }
+                else{
                     investmentPerMonthDict[projectionMonthIndex] = 0;
                 }
 
@@ -2241,10 +2257,12 @@ $(document).ready(function () {
         $.each(directCostTableRows, function (index, row) {
             var productId = $(row).data('product_id')
             directCostPerProductPerYearDict[productId] = {}
-            $.each($(row).children('.yearly'), function (yearlyTDIndex, yearlyTD) {
+            $.each($(row).children('.yearly'), function (yearlyTDIndex, yearlyTD)
+            {
                 var year = $(yearlyTD).data('projection_year');
                 var directCostInput = $(yearlyTD).children('input')[0]
-                var cost = $(directCostInput).val() // Remember this is the cost percentage
+                var cost = removeCommas($(directCostInput).val())
+                cost = cost != '' ? parseInt(cost, 10) : 0; // Remember this is the cost percentage
                 directCostPerProductPerYearDict[productId][year] = cost
             })
         })
@@ -2262,7 +2280,8 @@ $(document).ready(function () {
                 var month = $(monthlyTD).data('projection_month_id');
                 var year = $(monthlyTD).data('projection_year');
                 var unitsInput = $(monthlyTD).children('input')[0];
-                var units = $(unitsInput).val();
+                var units = removeCommas($(unitsInput).val());
+                units = units != '' ? parseInt(units) : 0;
                 unitsPerProductPerMonthDict[productId][month] = {}
                 unitsPerProductPerMonthDict[productId][month]['units'] = units;
                 unitsPerProductPerMonthDict[productId][month]['year'] = year;
@@ -2289,12 +2308,14 @@ $(document).ready(function () {
             $.each(numberTDs, function (tdIndex, numberTD) {
                 var year = $(numberTD).data('projection_year');
                 var numberInput = $(numberTD).children('input')[0];
-                var number = $(numberInput).val();
+                var number = removeCommas($(numberInput).val());
+                number = number != '' ? parseInt(number) : 0;
                 // Store values
                 employeeCostPerMonthDict[employeeRoleId]['name'] = roleName;
                 employeeCostPerMonthDict[employeeRoleId]['yearly'][year] = number;
             })
         })
+
 
         // Adding working hours per month
         var workingHoursPerRoleTableRows = $('#tbl_assumptions_employees_working_hours tr');
@@ -2304,23 +2325,27 @@ $(document).ready(function () {
             var workingHoursTDs = $(workingHoursTR).children('.working_hours')
             $.each(workingHoursTDs, function (tdIndex, workingHoursTD) {
                 var workingHoursInput = $(workingHoursTD).children('input')[0]
-                var hours = $(workingHoursInput).val();
+                var hours = removeCommas($(workingHoursInput).val());
+                hours = hours != '' ? parseInt(hours) : 0 ;
                 employeeCostPerMonthDict[employeeRoleId]['hours'] = hours;
             })
         })
 
+
         // Adding Rate per hour
-        var hourlyRatesPerRoleTableRows = $('#div_assumptions_employees_hourly_rates tr');
+        var hourlyRatesPerRoleTableRows = $('#tbl_assumptions_employees_hourly_rates tr');
         $.each(hourlyRatesPerRoleTableRows, function (hourlyRatesTRIndex, hourlyRatesTR) {
             // Get employeeRoleId
             var employeeRoleId = $(hourlyRatesTR).data('row_id');
             var hourlyRatesTDs = $(hourlyRatesTR).children('.hourly_rate');
             $.each(hourlyRatesTDs, function (tdIndex, hourlyRateTD) {
                 var hourlyRateInput = $(hourlyRateTD).children('input')[0]
-                var rate = $(hourlyRateInput).val();
+                var rate = removeCommas($(hourlyRateInput).val());
+                rate = rate != '' ? parseInt(rate) : 0;
                 employeeCostPerMonthDict[employeeRoleId]['rate'] = rate;
             })
         })
+
 
         // Dividing this into monthly values for all the years
         $.each(employeeCostPerMonthDict, function (employeeRoleId, employeeRoleDetails) {
@@ -2351,6 +2376,7 @@ $(document).ready(function () {
                 })
             })
         })
+
         return employeeCostPerMonthDict_Final;
     }
 
@@ -2359,11 +2385,10 @@ $(document).ready(function () {
         // Get bad debt percentage
         var badDebtPercentage = $('#id_bad_debts').val() || 0; // Return 0 if value is not provided
         $.each(revenueTotals, function (monthIndex, revenueTotal) {
-            badDebtsPerMonthDict[monthIndex] = Math.round(revenueTotal * (badDebtPercentage/100));
+            badDebtsPerMonthDict[monthIndex] = revenueTotal * badDebtPercentage/100;
         })
         return badDebtsPerMonthDict;
     }
-
 
     function getAssetNameFromId(assetId){
         var assetName = '';
@@ -2396,7 +2421,8 @@ $(document).ready(function () {
             // get depreciation rate
             var depreciationTD = $(assetTr).children('td').last();
             var depreciationInput = $(depreciationTD).children('input')[0];
-            var depreciation = parseFloat($(depreciationInput).val() || 0);
+            var depreciation = removeCommas($(depreciationInput).val());
+            depreciation = depreciation != '' ? parseInt(depreciation) : 0;
             depreciationSettingsPerYearDict[assetId]['depreciation'] = depreciation;
             depreciationSettingsPerYearDict[assetId]['years'] = {}
 
@@ -2410,7 +2436,8 @@ $(document).ready(function () {
 
                 var amountTD = $(assetTr).children('td.' + projectionyear + '.amount_added')[0];
                 var amountInput = $(amountTD).children('input')[0];
-                var amount = parseFloat($(amountInput).val() || 0);
+                var amount = removeCommas($(amountInput).val());
+                amount = amount != '' ? parseInt(amount) : 0;
                 depreciationSettingsPerYearDict[assetId]['years'][projectionyear]['amount_added'] = amount;
 
                 var monthTD = $(assetTr).children('td.' + projectionyear + '.month_added')[0];
@@ -2434,12 +2461,15 @@ $(document).ready(function () {
                 // add variable for year totals
                 var financialYearTotals = 0;
                 $.each(projectionMonthsList, function (projectionMontIndex, projectionMonth) {
-                    if(projectionMonth['is_total']){
+                    if(projectionMonth['is_total'])
+                    {
                         // Handling of yearly totals
                         depreciationPerAssetPerMonth[assetId][projectionMontIndex] = financialYearTotals; // Total col set to 0.00 for the meantime
                         // reset financialYearTotals
                         financialYearTotals = 0;
-                    }else{
+                    }
+                    else
+                    {
                         // Handling non-total values
                         // Add depreciation value for as long as
                         // 1. year > year added or
@@ -2458,7 +2488,7 @@ $(document).ready(function () {
                                 totalDepreciation < depreciationSetting['amount_added']
                         ){
                             // Condition satisfied for adding depreciation. Go ahead
-                            var depreciationAmount =  Math.round(depreciationSetting['amount_added'] * ((depreciationRate/100)/12));
+                            var depreciationAmount =  depreciationSetting['amount_added'] * depreciationRate / 100 / 12;
                             depreciationPerAssetPerMonth[assetId][projectionMontIndex] = parseFloat(depreciationPerAssetPerMonth[assetId][projectionMontIndex] || 0) + depreciationAmount;
                             totalDepreciation += depreciationAmount;
                             // Increment financial year totals
@@ -2484,7 +2514,8 @@ $(document).ready(function () {
             $.each(depreciationPerMonthList, function (projectionMonthIndex, depreciationAmount) {
                 var projectionMonth = projectionMonthsList[projectionMonthIndex];
                 var year = projectionMonth['year'];
-                if(depreciationPerAssetPerYear[assetId][year] == null){
+                if(depreciationPerAssetPerYear[assetId][year] == null)
+                {
                     depreciationPerAssetPerYear[assetId][year] = 0;
                 }
                 depreciationPerAssetPerYear[assetId][year] += parseFloat(depreciationAmount || 0);
@@ -2493,11 +2524,13 @@ $(document).ready(function () {
         return depreciationPerAssetPerYear;
     }
 
-    function getDepreciationTotalPerMonth(depreciationPerAssetPerMonth){
+    function getDepreciationTotalPerMonth(depreciationPerAssetPerMonth)
+    {
         var depreciationTotalPerMonthDict = {};
         $.each(depreciationPerAssetPerMonth, function (assetId, depreciationPerAsset) {
             $.each(depreciationPerAsset, function (monthIndex, depreciationAmountPerMonth) {
-                if(depreciationTotalPerMonthDict[monthIndex] == null){
+                if(depreciationTotalPerMonthDict[monthIndex] == null)
+                {
                     depreciationTotalPerMonthDict[monthIndex] = 0
                 }
                 depreciationTotalPerMonthDict[monthIndex] += depreciationAmountPerMonth
@@ -2527,7 +2560,7 @@ $(document).ready(function () {
                 }
 
                 var balanceToTax = EBT - amountTaxed;
-                    taxAmount += Math.round(balanceToTax * rate / 100)
+                    taxAmount += balanceToTax * rate / 100
                     amountTaxed += balanceToTax;
                 // proceed to compute tax
             }else{
@@ -2541,7 +2574,7 @@ $(document).ready(function () {
                 }else{
                     // EBT lies within this slab. Get amount not yet taxed
                     var balanceToTax = EBT - amountTaxed;
-                    taxAmount += Math.round(balanceToTax * currentSlab['taxRate'] / 100)
+                    taxAmount += balanceToTax * currentSlab['taxRate'] / 100
                     amountTaxed += balanceToTax;
                 }
 
@@ -2553,7 +2586,7 @@ $(document).ready(function () {
         if(EBT > amountTaxed){
             var relSlab = taxSlabs[taxSlabs['slabCount']]['taxRate'] == null ? taxSlabs[taxSlabs['slabCount'] -1 ]['taxRate'] : taxSlabs[taxSlabs['slabCount']];
             var balanceToTax = EBT - amountTaxed;
-            taxAmount += Math.round(balanceToTax * relSlab['taxRate'] / 100)
+            taxAmount += balanceToTax * relSlab['taxRate'] / 100
         }
 
         return taxAmount;
@@ -2576,7 +2609,7 @@ $(document).ready(function () {
             // 1= Single Rate
             var corporateTaxRate = $('#id_corporate_tax_rate').val();
             $.each(EBT, function (monthInex, ebtAmount) {
-                taxPerMonthDict[monthInex] = Math.round(parseInt(ebtAmount) * (parseInt(corporateTaxRate || 0)/100))
+                taxPerMonthDict[monthInex] = parseInt(ebtAmount) * parseInt(corporateTaxRate) / 100
             })
         }
 
@@ -2613,6 +2646,8 @@ $(document).ready(function () {
         // Get each product and it's unit price for each of the n projection years
         var fullTableColSpan = ((projectionYears * countOfMonthsInFinancialYear) + 1)
         var pricePerProductPerYear = getPricePerProductPerYear();
+        console.log('pricePerProductPerYear')
+        console.log(pricePerProductPerYear)
         var revenuePerProductPerMonth = {}
         var directCostPerProductPerYear = getDirectCostPerProductPerYear();
         var employeeCostPerMonth = getEmployeeCostPerMonth();
@@ -2682,7 +2717,8 @@ $(document).ready(function () {
         strHtml += '</tr></thead><tbody></tbody>'
         $('#tbl_pnl').append(strHtml);
 
-
+        console.log('unitsPerProductPerMonth')
+        console.log(unitsPerProductPerMonth)
         //Add revenues section rows
         var rowCount = 0;
         $.each(unitsPerProductPerMonth, function (productIdIndex, productMonthlyUnits) {
@@ -2715,21 +2751,23 @@ $(document).ready(function () {
                                                 revenuePerProductPerMonth[productIdIndex][monthIndex] = {}
                                             }
                                             var year = monthlyUnit['year']
-                                            var yearlyPrice = parseFloat(pricePerProductPerYear[productIdIndex][year], 0);
-                                            var units = parseFloat(monthlyUnit['units'], 0);
+                                            var yearlyPrice = parseInt(pricePerProductPerYear[productIdIndex][year], 10);
+                                            var units = parseInt(monthlyUnit['units'], 10);
                                             var revenue = yearlyPrice * units;
                                             revenueTotals[monthIndex] += revenue;
                                             revenuePerProductPerMonth[productIdIndex][monthIndex]['revenue'] = revenue;
                                             revenuePerProductPerMonth[productIdIndex][monthIndex]['year'] = year;
-            strHtml +=    '<td class="monthly td-input readonly ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
+            strHtml +=    '<td class=" monthly td-input text-right readonly ' + ' Addmonth ' + ' ' + ' Showistotal ' + ' "'
                                             + ' data-is_total_col="' + 'Showistotal' + '"'
                                             + ' data-projection_month_id="' + 'Addmonth' +'" '
                                             + ' data-projection_year="' + 'Addyear' +'" '
+                                            + ' data-val="' + revenue + '"'
                                             + ' width="200">'
-                                            + '<input name="" '
-                                            + ' type="number" min="0"'
-                                            + ' value="'+ revenue +'"'
-                                            + ' class="form-control input-md text-right" readonly></td>'
+                                            +   '<input name="" '
+                                            +       ' type="text"'
+                                            +       ' value="' + revenue + '"'
+                                            +       ' class="form-control input-md text-right rpt_presentation" readonly></td>'
+                                            + '</td>'
                                     })
 
             $('#tbl_pnl tbody').append(strHtml);
@@ -2748,9 +2786,9 @@ $(document).ready(function () {
                                         + ' data-projection_year="' + 'Addyear' + '" '
                                         + ' width="200">'
                                         +   '<input name="" '
-                                        +       ' type="number" min="0"'
+                                        +       ' type="text"'
                                         +       ' value="' + monthlyRevenueTotal + '"'
-                                        +       ' class="form-control input-md text-right" readonly></td>'
+                                        +       ' class="form-control input-md text-right rpt_presentation" readonly></td>'
         })
         strHtml          +='</tr>'
 
@@ -2760,6 +2798,8 @@ $(document).ready(function () {
         // Revenue Totals per year
         revenueTotalsPerYear = getRevenueTotalsPerYear(revenueTotals);
         receivableTotalsPerYear = getReceivablesTotalsPerYear(revenueTotalsPerYear);
+        console.log("############receivableTotalsPerYear")
+        console.log(receivableTotalsPerYear)
         receivablesPerMonth = getReceivablesPerMonth(receivableTotalsPerYear);
         // End-- Revenue Totals per year
 
@@ -2794,9 +2834,9 @@ $(document).ready(function () {
                                             + ' data-projection_year="' + 'Addyear' +'" '
                                             + ' width="200">'
                                             + '<input name="" '
-                                            + ' type="number" min="0"'
+                                            + ' type="text"'
                                             + ' value="'+ productMonthlyDireCost +'"'
-                                            + ' class="form-control input-md text-right" readonly></td>'
+                                            + ' class="form-control input-md text-right rpt_presentation" readonly></td>'
             })
             strHtml += '</tr>'
             $('#tbl_pnl tbody').append(strHtml);
@@ -2834,9 +2874,9 @@ $(document).ready(function () {
                             + ' data-projection_year="' + 'Addyear' +'" '
                             + ' width="200">'
                             + '<input name="" '
-                            + ' type="number" min="0"'
+                            + ' type="text"'
                             + ' value="'+ employmentCost +'"'
-                            + ' class="form-control input-md text-right" readonly></td>'
+                            + ' class="form-control input-md text-right rpt_presentation" readonly></td>'
             })
             $('#tbl_pnl tbody').append(strHtml);
         })
@@ -2855,9 +2895,9 @@ $(document).ready(function () {
                                         + ' data-projection_year="' + 'Addyear' + '" '
                                         + ' width="200">'
                                         +   '<input name="" '
-                                        +       ' type="number" min="0"'
+                                        +       ' type="text"'
                                         +       ' value="' + monthlyDirectCostTotal + '"'
-                                        +       ' class="form-control input-md text-right" readonly></td>'
+                                        +       ' class="form-control input-md text-right rpt_presentation" readonly></td>'
             })
             strHtml          +='</tr>'
 
@@ -2881,9 +2921,9 @@ $(document).ready(function () {
                                         + ' data-projection_year="' + 'Addyear' + '" '
                                         + ' width="200">'
                                         +   '<input name="" '
-                                        +       ' type="number" min="0"'
+                                        +       ' type="text"'
                                         +       ' value="' + grossProfit[monthIndex] + '"'
-                                        +       ' class="form-control input-md text-right" readonly></td>'
+                                        +       ' class="form-control input-md text-right rpt_presentation" readonly></td>'
             })
             strHtml          +='</tr>'
 
@@ -2915,9 +2955,9 @@ $(document).ready(function () {
                                         + ' data-projection_year="' + 'Addyear' + '" '
                                         + ' width="200">'
                                         +   '<input name="" '
-                                        +       ' type="number" min="0"'
+                                        +       ' type="text"'
                                         +       ' value="' + costValue + '"'
-                                        +       ' class="form-control input-md text-right" readonly></td>'
+                                        +       ' class="form-control input-md text-right rpt_presentation" readonly></td>'
 
             })
             strHtml          +='</tr>'
@@ -2939,9 +2979,9 @@ $(document).ready(function () {
                     +   ' data-projection_year="' + 'Addyear' + '" '
                     +   ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           'value="' + badDebtAmount + '"'
-                    +           ' class="form-control input-md text-right" readonly></td>'
+                    +           ' class="form-control input-md text-right rpt_presentation" readonly></td>'
 
         })
         strHtml          +='</tr>'
@@ -2957,9 +2997,9 @@ $(document).ready(function () {
                     +   ' data-projection_year="' + 'Addyear' + '" '
                     +   ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           'value="' + operatingCostTotal + '"'
-                    +           ' class="form-control input-md text-right" ' +
+                    +           ' class="form-control input-md text-right rpt_presentation" ' +
         'readonly></td>'
 
         })
@@ -2986,9 +3026,9 @@ $(document).ready(function () {
                     +   ' data-projection_year="' + 'Addyear' + '" '
                     +   ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           'value="' + monthEbitda + '"'
-                    +           ' class="form-control input-md text-right" required="required " readonly></td>'
+                    +           ' class="form-control input-md text-right rpt_presentation" required="required " readonly></td>'
 
         })
         strHtml          +='</tr>'
@@ -3038,9 +3078,9 @@ $(document).ready(function () {
                     +   ' data-projection_year="' + 'Addyear' + '" '
                     +   ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           'value="' + interestAmount + '"'
-                    +           ' class="form-control input-md text-right" readonly></td>'
+                    +           ' class="form-control input-md text-right rpt_presentation" readonly></td>'
 
         })
         strHtml          +='</tr>'
@@ -3061,9 +3101,9 @@ $(document).ready(function () {
                     +   ' data-projection_year="' + 'Addyear' + '" '
                     +   ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           'value="' + depreciationAmount + '"'
-                    +           ' class="form-control input-md text-right" readonly></td>'
+                    +           ' class="form-control input-md text-right rpt_presentation" readonly></td>'
 
         })
         strHtml          +='</tr>'
@@ -3084,9 +3124,9 @@ $(document).ready(function () {
                     +   ' data-projection_year="' + 'Addyear' + '" '
                     +   ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           'value="' + startupCostAmount + '"'
-                    +           ' class="form-control input-md text-right" readonly></td>'
+                    +           ' class="form-control input-md text-right rpt_presentation" readonly></td>'
 
         })
         strHtml          +='</tr>'
@@ -3104,9 +3144,9 @@ $(document).ready(function () {
                     +   ' data-projection_year="' + 'Addyear' + '" '
                     +   ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           'value="' + ebtAmount + '"'
-                    +           ' class="form-control input-md text-right" readonly></td>'
+                    +           ' class="form-control input-md text-right rpt_presentation" readonly></td>'
 
         })
         strHtml          +='</tr>'
@@ -3124,9 +3164,9 @@ $(document).ready(function () {
                     +   ' data-projection_year="' + 'Addyear' + '" '
                     +   ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           'value="' + taxAmount + '"'
-                    +           ' class="form-control input-md text-right" readonly></td>'
+                    +           ' class="form-control input-md text-right rpt_presentation" readonly></td>'
 
         })
         strHtml          +='</tr>'
@@ -3149,9 +3189,9 @@ $(document).ready(function () {
                     +   ' data-projection_year="' + 'Addyear' + '" '
                     +   ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           'value="' + eatAmount + '"'
-                    +           ' class="form-control input-md text-right" readonly></td>'
+                    +           ' class="form-control input-md text-right rpt_presentation" readonly></td>'
 
         })
         strHtml          +='</tr>'
@@ -3163,7 +3203,7 @@ $(document).ready(function () {
         // NET MARGIN
         $.each(EAT, function (monthIndex, eatAmount) {
             var revAmount = parseInt(revenueTotals[monthIndex])
-            netMarginPerMonth[monthIndex] = Math.round(eatAmount / revAmount * 100)/100; // This is the only one not rounded
+            netMarginPerMonth[monthIndex] = eatAmount / revAmount * 100 / 100; // This is the only one not rounded
         })
 
         strHtml = '<tr class="">'
@@ -3175,8 +3215,8 @@ $(document).ready(function () {
                     +   ' data-projection_year="' + 'Addyear' + '" '
                     +   ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
-                    +           'value="' + netMarginPerMonthAmount + '"'
+                    +           ' type="text"'
+                    +           'value="' + netMarginPerMonthAmount.toLocaleString('en', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '"'
                     +           ' class="form-control input-md text-right" readonly></td>'
 
         })
@@ -3199,6 +3239,8 @@ $(document).ready(function () {
             amortizationSchedule, depreciationPerAssetPerMonth
         );
 
+        updateReportPresentation('#tbl_pnl');
+
         var cashFlowClosingBalancePerYear = getCashFlowClosingBalancePerYear(cashFlowClosingCashBalancePerMonth);
         // Aggregate changes in cashflow during the year per month to yearly
 
@@ -3219,7 +3261,7 @@ $(document).ready(function () {
         var innerBracket = Math.pow(1 + convertedRate, paymentPeriod);
         var upper  = convertedRate * innerBracket;
         var lower = innerBracket - 1;
-        return Math.round(principal * (upper/lower)); // To 2 decimal places
+        return principal * upper / lower; // To 2 decimal places
     }
 
     function getMonthOfInvestmentFromCode(monthCode){
@@ -3268,10 +3310,8 @@ $(document).ready(function () {
                                 + ' data-projection_month_id="' + 'Addmonth' + '" '
                                 + ' data-projection_year="' + 'Addyear' + '" '
                                 + ' width="200">'
-                                +   '<input name="" '
-                                +       ' type="text" min="0"'
-                                +       ' value="' + monthIndex  + '"'
-                                +       ' class="form-control text-right" readonly> <span class="span-currency"></span></td>'
+                                + monthIndex + '<span class="span-currency"> </span> '
+                                + '</td>'
 
         })
         strHtml          +='</tr>'
@@ -3287,9 +3327,9 @@ $(document).ready(function () {
                                 + ' data-projection_year="' + 'Addyear' + '" '
                                 + ' width="200">'
                                 +   '<input name="" '
-                                +       ' type="number" min="0"'
+                                +       ' type="text"'
                                 +       ' value="' + monthScheduleItem['opening_balance'] + '"'
-                                +       ' class="form-control text-right" readonly></td>'
+                                +       ' class="form-control text-right rpt_presentation" readonly></td>'
 
         })
         strHtml          +='</tr>'
@@ -3323,9 +3363,9 @@ $(document).ready(function () {
                                 + ' data-projection_year="' + 'Addyear' + '" '
                                 + ' width="200">'
                                 +   '<input name="" '
-                                +       ' type="number" min="0"'
+                                +       ' type="text"'
                                 +       ' value="' + monthScheduleItem['installment_amount'] + '"'
-                                +       ' class="form-control text-right" readonly></td>'
+                                +       ' class="form-control text-right rpt_presentation" readonly></td>'
 
         })
         strHtml          +='</tr>'
@@ -3341,9 +3381,9 @@ $(document).ready(function () {
                                 + ' data-projection_year="' + 'Addyear' + '" '
                                 + ' width="200">'
                                 +   '<input name="" '
-                                +       ' type="number" min="0"'
+                                +       ' type="text"'
                                 +       ' value="' + monthScheduleItem['interest_paid'] + '"'
-                                +       ' class="form-control text-right" readonly></td>'
+                                +       ' class="form-control text-right rpt_presentation" readonly></td>'
 
         })
         strHtml          +='</tr>'
@@ -3359,9 +3399,9 @@ $(document).ready(function () {
                                 + ' data-projection_year="' + 'Addyear' + '" '
                                 + ' width="200">'
                                 +   '<input name="" '
-                                +       ' type="number" min="0"'
+                                +       ' type="text"'
                                 +       ' value="' + monthScheduleItem['capital_repaid'] + '"'
-                                +       ' class="form-control text-right" readonly></td>'
+                                +       ' class="form-control text-right rpt_presentation" readonly></td>'
 
         })
         strHtml          +='</tr>'
@@ -3377,9 +3417,9 @@ $(document).ready(function () {
                                 + ' data-projection_year="' + 'Addyear' + '" '
                                 + ' width="200">'
                                 +   '<input name="" '
-                                +       ' type="number" min="0"'
+                                +       ' type="text"'
                                 +       ' value="' + monthScheduleItem['closing_balance'] + '"'
-                                +       ' class="form-control text-right" readonly></td>'
+                                +       ' class="form-control text-right rpt_presentation" readonly></td>'
 
         })
         strHtml          +='</tr>'
@@ -3400,6 +3440,7 @@ $(document).ready(function () {
             rowGroupCounter++;
         })
 
+        updateReportPresentation('#tbl_amortization');
     }
 
     function generateAmortizationSchedule(){
@@ -3423,8 +3464,10 @@ $(document).ready(function () {
 
             var debtTD = $(debtTR).children('.' + projectionyear + '.investment')[0];
             var debtInput = $(debtTD).children('input')[0];
-            var debt = $(debtInput).val();
-            amortizationScheduleSettingsDict[amortizationScheduleId]['debt'] = parseFloat(debt || 0)
+            var debt = removeCommas($(debtInput).val());
+            debt = debt != '' ? parseInt(debt) : 0;
+
+            amortizationScheduleSettingsDict[amortizationScheduleId]['debt'] = debt;
             // Get month of investment
             var monthOfInvestmentTD = $(debtTR).children('.' + projectionyear + '.month_of_investment');
             var monthOfInvestmentSelect = $(monthOfInvestmentTD).children('select')[0];
@@ -3433,8 +3476,10 @@ $(document).ready(function () {
             // Interest rate
             var interestRateTD = $(interestRateTR).children('.' + projectionyear + '.investment')[0];
             var interestRateInput = $(interestRateTD).children('input')[0];
-            var interestRate = $(interestRateInput).val();
-            amortizationScheduleSettingsDict[amortizationScheduleId]['rate'] = parseFloat(interestRate || 0)
+            var interestRate = removeCommas($(interestRateInput).val());
+            interestRate = interestRate != '' ? parseInt(interestRate) : 0;
+
+            amortizationScheduleSettingsDict[amortizationScheduleId]['rate'] = interestRate;
             // Loan period
             var loanPeriodTD = $(loanPeriodTR).children('.' + projectionyear + '.investment')[0];
             var loanPeriodInput = $(loanPeriodTD).children('input')[0];
@@ -3464,15 +3509,15 @@ $(document).ready(function () {
             $.each(amortizationMonths, function (monthIndex, amortizationMonth) {
                 // Create a list of amortization schedule items.
                 amortizationSchedule[amortizationScheduleId]['monthly'][monthIndex] = {}
-                amortizationSchedule[amortizationScheduleId]['monthly'][monthIndex]['opening_balance'] = Math.round(openingBalance );
+                amortizationSchedule[amortizationScheduleId]['monthly'][monthIndex]['opening_balance'] = openingBalance;
                 amortizationSchedule[amortizationScheduleId]['monthly'][monthIndex]['installment_number'] = installmentNumber;
-                amortizationSchedule[amortizationScheduleId]['monthly'][monthIndex]['installment_amount'] = Math.round(installment );
-                var interestPaid = openingBalance * ((amortizationScheduleItem['rate']/12)/100 || 0)
-                amortizationSchedule[amortizationScheduleId]['monthly'][monthIndex]['interest_paid'] = Math.round(interestPaid );
+                amortizationSchedule[amortizationScheduleId]['monthly'][monthIndex]['installment_amount'] = installment;
+                var interestPaid = openingBalance * ((amortizationScheduleItem['rate']/12)/100)
+                amortizationSchedule[amortizationScheduleId]['monthly'][monthIndex]['interest_paid'] = interestPaid;
                 var capitalRepaid = installment - interestPaid;
-                amortizationSchedule[amortizationScheduleId]['monthly'][monthIndex]['capital_repaid'] = Math.round(capitalRepaid )
+                amortizationSchedule[amortizationScheduleId]['monthly'][monthIndex]['capital_repaid'] = capitalRepaid;
                 var closingBalance = openingBalance - capitalRepaid;
-                amortizationSchedule[amortizationScheduleId]['monthly'][monthIndex]['closing_balance'] = Math.round(closingBalance );
+                amortizationSchedule[amortizationScheduleId]['monthly'][monthIndex]['closing_balance'] = closingBalance;
                 // Adjust new opening balance
                 openingBalance = closingBalance;
                 installmentNumber++;
@@ -3504,7 +3549,7 @@ $(document).ready(function () {
                     if(debtAndInterestRepaymentPerMonth[amortizationMonthIndex] == null){
                         debtAndInterestRepaymentPerMonth[amortizationMonthIndex] = 0;
                     }
-                    debtAndInterestRepaymentPerMonth[amortizationMonthIndex] += parseFloat(amortizationScheduleMonthlyItem['installment_amount'] || 0);
+                    debtAndInterestRepaymentPerMonth[amortizationMonthIndex] += amortizationScheduleMonthlyItem['installment_amount'];
                 }
             })
         })
@@ -3672,7 +3717,7 @@ $(document).ready(function () {
             return;
 
         // Get yearly amortization amount rounded to the nearest integer
-        var amortizationAmountPerYear = Math.round(totalAmount/amortizationYears);
+        var amortizationAmountPerYear =  totalAmount / amortizationYears;
         // Get start projection period
         var startAmortizationYear = parseInt($('#id_first_financial_year').val());
         var endAmortizationYear = startAmortizationYear + amortizationYears;
@@ -3734,7 +3779,7 @@ $(document).ready(function () {
         if(amortizationYears == 0)
             return
         var amortizationMonthsCount = amortizationYears * countOfMonthsInFinancialYear;
-        var monthlyAmortizationAmount = Math.round(startupCostTotal/amortizationMonthsCount);
+        var monthlyAmortizationAmount = startupCostTotal / amortizationMonthsCount;
         var amortizedAmount = 0;
         var financialYearTotal = 0
         $.each(projectionMonthsList, function (projectionMonthIndex, projectionMonth) {
@@ -3794,7 +3839,7 @@ $(document).ready(function () {
 
 
         // Table header
-        // Create table head
+        // Create table headtrade
         truncateTable('#tbl_cash_flow', true, true);
 
         var strHtml = '<thead><tr ><th class="td-md">Particulars </th>'
@@ -3833,9 +3878,9 @@ $(document).ready(function () {
                                             + ' data-projection_year="' + 'Addyear' +'" '
                                             + ' width="200">'
                                             + '<input name="" '
-                                            + ' type="number" min="0"'
+                                            + ' type="text"'
                                             + ' value="'+ monthlyRevenue['revenue'] +'"'
-                                            + ' class="form-control text-right" readonly></td>'
+                                            + ' class="form-control text-right rpt_presentation" readonly></td>'
                                     })
             $('#tbl_cash_flow tbody').append(strHtml);
             rowCount++;
@@ -3851,9 +3896,9 @@ $(document).ready(function () {
                                         + ' data-projection_year="' + 'Addyear' + '" '
                                         + ' width="200">'
                                         +   '<input name="" '
-                                        +       ' type="number" min="0"'
+                                        +       ' type="text"'
                                         +       ' value="' + monthlyRevenueTotal + '"'
-                                        +       ' class="form-control text-right" readonly></td>'
+                                        +       ' class="form-control text-right rpt_presentation" readonly></td>'
         })
         strHtml +='</tr>'
         $('#tbl_cash_flow tbody').append(strHtml);
@@ -3874,9 +3919,9 @@ $(document).ready(function () {
                                         + ' data-projection_year="' + 'Addyear' + '" '
                                         + ' width="200">'
                                         +   '<input name="" '
-                                        +       ' type="number" min="0"'
+                                        +       ' type="text"'
                                         +       ' value="' + monthlyDirectCostTotal + '"'
-                                        +       ' class="form-control text-right" readonly></td>'
+                                        +       ' class="form-control text-right rpt_presentation" readonly></td>'
             })
             strHtml          +='</tr>'
         $('#tbl_cash_flow tbody').append(strHtml);
@@ -3917,9 +3962,9 @@ $(document).ready(function () {
                                         + ' data-projection_year="' + 'Addyear' + '" '
                                         + ' width="200">'
                                         +   '<input name="" '
-                                        +       ' type="number" min="0"'
+                                        +       ' type="text"'
                                         +       ' value="' + costValue + '"'
-                                        +       ' class="form-control text-right" readonly></td>'
+                                        +       ' class="form-control text-right rpt_presentation" readonly></td>'
 
             })
             strHtml          +='</tr>'
@@ -3945,9 +3990,9 @@ $(document).ready(function () {
                                         + ' data-projection_year="' + 'Addyear' + '" '
                                         + ' width="200">'
                                         +   '<input name="" '
-                                        +       ' type="number" min="0"'
+                                        +       ' type="text"'
                                         +       ' value="' + startUpCost + '"'
-                                        +       ' class="form-control text-right" readonly></td>'
+                                        +       ' class="form-control text-right rpt_presentation" readonly></td>'
 
             })
             strHtml          +='</tr>'
@@ -3971,9 +4016,9 @@ $(document).ready(function () {
                                         + ' data-projection_year="' + 'Addyear' + '" '
                                         + ' width="200">'
                                         +   '<input name="" '
-                                        +       ' type="number" min="0"'
+                                        +       ' type="text"'
                                         +       ' value="' + depositCost + '"'
-                                        +       ' class="form-control text-right" readonly></td>'
+                                        +       ' class="form-control text-right rpt_presentation" readonly></td>'
 
             })
             strHtml          +='</tr>'
@@ -3995,9 +4040,9 @@ $(document).ready(function () {
                     +   ' data-projection_year="' + 'Addyear' + '" '
                     +   ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           'value="' + taxAmount + '"'
-                    +           ' class="form-control text-right" readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation" readonly></td>'
 
         })
         strHtml          +='</tr>'
@@ -4018,9 +4063,9 @@ $(document).ready(function () {
                     +   ' data-projection_year="' + 'Addyear' + '" '
                     +   ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           'value="' + badDebtAmount + '"'
-                    +           ' class="form-control text-right" readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation" readonly></td>'
 
         })
         strHtml          +='</tr>'
@@ -4042,9 +4087,9 @@ $(document).ready(function () {
                     +   ' data-projection_year="' + 'Addyear' + '" '
                     +   ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           'value="' + receivableAmount + '"'
-                    +           ' class="form-control text-right" readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation" readonly></td>'
 
         })
         strHtml          +='</tr>'
@@ -4065,9 +4110,9 @@ $(document).ready(function () {
                     +   ' data-projection_year="' + 'Addyear' + '" '
                     +   ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           'value="-' + payablesAmount + '"'
-                    +           ' class="form-control text-right" readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation" readonly></td>'
 
         })
         strHtml          +='</tr>'
@@ -4089,9 +4134,9 @@ $(document).ready(function () {
                     +   ' data-projection_year="' + 'Addyear' + '" '
                     +   ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           'value="-' + otherExpensesPayablesAmount + '"'
-                    +           ' class="form-control text-right" readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation" readonly></td>'
 
         })
         strHtml          +='</tr>'
@@ -4107,9 +4152,9 @@ $(document).ready(function () {
                     +   ' data-projection_year="' + 'Addyear' + '" '
                     +   ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           'value="' + totalOutflowAmount + '"'
-                    +           ' class="form-control text-right"readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation"readonly></td>'
 
         })
         strHtml          +='</tr>'
@@ -4129,9 +4174,9 @@ $(document).ready(function () {
                     +   ' data-projection_year="' + 'Addyear' + '" '
                     +   ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           'value="' + netCahsFlowAmount + '"'
-                    +           ' class="form-control text-right" readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation" readonly></td>'
 
         })
         strHtml          +='</tr>'
@@ -4153,9 +4198,9 @@ $(document).ready(function () {
                     +       ' data-projection_year="' + 'Addyear' + '" '
                     +       ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           'value="' + investmentAmount + '"'
-                    +           ' class="form-control text-right" readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation" readonly></td>'
 
             })
             strHtml +='</tr>'
@@ -4177,9 +4222,9 @@ $(document).ready(function () {
                     +       ' data-projection_year="' + 'Addyear' + '" '
                     +       ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           'value="' + investmentAmount + '"'
-                    +           ' class="form-control text-right" readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation" readonly></td>'
 
             })
             strHtml +='</tr>'
@@ -4196,9 +4241,9 @@ $(document).ready(function () {
                 +       ' data-projection_year="' + 'Addyear' + '" '
                 +       ' width="200">'
                 +       '<input name="" '
-                +           ' type="number" min="0"'
+                +           ' type="text"'
                 +           'value="' + investmentAmount + '"'
-                +           ' class="form-control text-right" readonly></td>'
+                +           ' class="form-control text-right rpt_presentation" readonly></td>'
 
         })
         strHtml +='</tr>'
@@ -4220,9 +4265,9 @@ $(document).ready(function () {
                 +       ' data-projection_year="' + 'Addyear' + '" '
                 +       ' width="200">'
                 +       '<input name="" '
-                +           ' type="number" min="0"'
+                +           ' type="text"'
                 +           'value="' + investmentAmount + '"'
-                +           ' class="form-control text-right" readonly></td>'
+                +           ' class="form-control text-right rpt_presentation" readonly></td>'
 
         })
         strHtml +='</tr>'
@@ -4242,9 +4287,9 @@ $(document).ready(function () {
                 +       ' data-projection_year="' + 'Addyear' + '" '
                 +       ' width="200">'
                 +       '<input name="" '
-                +           ' type="number" min="0"'
+                +           ' type="text"'
                 +           'value="' + investmentAmount + '"'
-                +           ' class="form-control text-right" readonly></td>'
+                +           ' class="form-control text-right rpt_presentation" readonly></td>'
 
         })
         strHtml +='</tr>'
@@ -4265,9 +4310,9 @@ $(document).ready(function () {
                 +       ' data-projection_year="' + 'Addyear' + '" '
                 +       ' width="200">'
                 +       '<input name="" '
-                +           ' type="number" min="0"'
+                +           ' type="text"'
                 +           'value="' + repaymentAmount + '"'
-                +           ' class="form-control text-right" readonly></td>'
+                +           ' class="form-control text-right rpt_presentation" readonly></td>'
 
         })
         strHtml +='</tr>'
@@ -4283,9 +4328,9 @@ $(document).ready(function () {
                 +       ' data-projection_year="' + 'Addyear' + '" '
                 +       ' width="200">'
                 +       '<input name="" '
-                +           ' type="number" min="0"'
+                +           ' type="text"'
                 +           'value="' + netAmount + '"'
-                +           ' class="form-control text-right" readonly></td>'
+                +           ' class="form-control text-right rpt_presentation" readonly></td>'
 
         })
         strHtml +='</tr>'
@@ -4309,9 +4354,9 @@ $(document).ready(function () {
                 +       ' data-projection_year="' + 'Addyear' + '" '
                 +       ' width="200">'
                 +       '<input name="" '
-                +           ' type="number" min="0"'
+                +           ' type="text"'
                 +           'value="' + changeAmount + '"'
-                +           ' class="form-control text-right" readonly></td>'
+                +           ' class="form-control text-right rpt_presentation" readonly></td>'
 
         })
         strHtml +='</tr>'
@@ -4354,9 +4399,9 @@ $(document).ready(function () {
                 +       ' data-projection_year="' + 'Addyear' + '" '
                 +       ' width="200">'
                 +       '<input name="" '
-                +           ' type="number" min="0"'
+                +           ' type="text"'
                 +           'value="' + balanceAmount + '"'
-                +           ' class="form-control text-right" readonly></td>'
+                +           ' class="form-control text-right rpt_presentation" readonly></td>'
 
         })
         strHtml +='</tr>'
@@ -4372,9 +4417,9 @@ $(document).ready(function () {
                 +       ' data-projection_year="' + 'Addyear' + '" '
                 +       ' width="200">'
                 +       '<input name="" '
-                +           ' type="number" min="0"'
+                +           ' type="text"'
                 +           'value="' + balanceAmount + '"'
-                +           ' class="form-control text-right" readonly></td>'
+                +           ' class="form-control text-right rpt_presentation" readonly></td>'
 
         })
         strHtml +='</tr>'
@@ -4402,9 +4447,9 @@ $(document).ready(function () {
                     +       ' data-projection_year="' + 'Addyear' + '" '
                     +       ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           'value="' + depreciationAmountPerMonth + '"'
-                    +           ' class="form-control text-right" readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation" readonly></td>'
 
             })
             strHtml +='</tr>'
@@ -4412,6 +4457,10 @@ $(document).ready(function () {
         })
 
         // Returning Changes in cashflow during the year
+
+        //update formatting
+        updateReportPresentation('#tbl_cash_flow');
+
         return closingCashBalancePerMonth;
     }
 
@@ -4476,9 +4525,9 @@ $(document).ready(function () {
                     +       ' data-projection_year="' + 'Addyear' + '" '
                     +       ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           ' value="' + investmentAmount + '"'
-                    +           ' class="form-control text-right" readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation" readonly></td>'
             })
             strHtml += '</tr>'
             $('#tbl_balance_sheet tbody').append(strHtml);
@@ -4498,9 +4547,9 @@ $(document).ready(function () {
                                 +       ' data-projection_year="' + 'Addyear' + '" '
                                 +       ' width="200">'
                                 +       '<input name="" '
-                                +           ' type="number" min="0"'
+                                +           ' type="text"'
                                 +           ' value="' + depreciationAmount  + '"'
-                                +           ' class="form-control text-right" readonly></td>'
+                                +           ' class="form-control text-right rpt_presentation" readonly></td>'
                     })
                         strHtml += '</tr>'
                     $('#tbl_balance_sheet tbody').append(strHtml);
@@ -4523,9 +4572,9 @@ $(document).ready(function () {
                                 +       ' data-projection_year="' + 'Addyear' + '" '
                                 +       ' width="200">'
                                 +       '<input name="" '
-                                +           ' type="number" min="0"'
+                                +           ' type="text"'
                                 +           ' value="' + balanceAmount + '"'
-                                +           ' class="form-control text-right" readonly></td>'
+                                +           ' class="form-control text-right rpt_presentation" readonly></td>'
                         })
                         strHtml += '</tr>'
                         $('#tbl_balance_sheet tbody').append(strHtml);
@@ -4547,9 +4596,9 @@ $(document).ready(function () {
                                 +       ' data-projection_year="' + 'Addyear' + '" '
                                 +       ' width="200">'
                                 +       '<input name="" '
-                                +           ' type="number" min="0"'
+                                +           ' type="text"'
                                 +           ' value="' + totalBalanceAmount + '"'
-                                +           ' class="form-control text-right" readonly></td>'
+                                +           ' class="form-control text-right rpt_presentation" readonly></td>'
         })
         strHtml += '</tr>'
         $('#tbl_balance_sheet tbody').append(strHtml);
@@ -4570,9 +4619,9 @@ $(document).ready(function () {
                     +       ' data-projection_year="' + 'Addyear' + '" '
                     +       ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           ' value="' + investmentAmount + '"'
-                    +           ' class="form-control text-right" readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation" readonly></td>'
             })
             strHtml += '</tr>'
             $('#tbl_balance_sheet tbody').append(strHtml);
@@ -4592,9 +4641,9 @@ $(document).ready(function () {
                                 +       ' data-projection_year="' + 'Addyear' + '" '
                                 +       ' width="200">'
                                 +       '<input name="" '
-                                +           ' type="number" min="0"'
+                                +           ' type="text"'
                                 +           ' value="' + totalBalanceAmount + '"'
-                                +           ' class="form-control text-right" readonly></td>'
+                                +           ' class="form-control text-right rpt_presentation" readonly></td>'
         })
         strHtml += '</tr>'
         $('#tbl_balance_sheet tbody').append(strHtml);
@@ -4610,9 +4659,9 @@ $(document).ready(function () {
                                 +       ' data-projection_year="' + 'Addyear' + '" '
                                 +       ' width="200">'
                                 +       '<input name="" '
-                                +           ' type="number" min="0"'
+                                +           ' type="text"'
                                 +           ' value="' + totalBalanceAmount + '"'
-                                +           ' class="form-control text-right" readonly></td>'
+                                +           ' class="form-control text-right rpt_presentation" readonly></td>'
         })
         strHtml += '</tr>'
         $('#tbl_balance_sheet tbody').append(strHtml);
@@ -4636,9 +4685,9 @@ $(document).ready(function () {
                 strHtml += '<td class="monthly td-input readonly' + ' Addyear ' + ' ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
                         +       ' width="200">'
                         +       '<input name="" '
-                        +           ' type="number" min="0"'
+                        +           ' type="text"'
                         +           ' value="' + depositAmount + '"'
-                        +           ' class="form-control text-right" readonly></td>'
+                        +           ' class="form-control text-right rpt_presentation" readonly></td>'
             })
             strHtml += '</tr>'
             $('#tbl_balance_sheet tbody').append(strHtml);
@@ -4653,9 +4702,9 @@ $(document).ready(function () {
             strHtml += '<td class="monthly td-input readonly' + ' Addyear ' + ' ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
                     +       ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           ' value="' + receivablesAmount + '"'
-                    +           ' class="form-control text-right" readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation" readonly></td>'
         })
         strHtml += '</tr>'
         $('#tbl_balance_sheet tbody').append(strHtml);
@@ -4668,9 +4717,9 @@ $(document).ready(function () {
             strHtml += '<td class="monthly td-input readonly' + ' Addyear ' + ' ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
                     +       ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           ' value="' + cashBalance + '"'
-                    +           ' class="form-control text-right" readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation" readonly></td>'
         })
         strHtml += '</tr>'
         $('#tbl_balance_sheet tbody').append(strHtml);
@@ -4683,9 +4732,9 @@ $(document).ready(function () {
             strHtml += '<td class="monthly td-input readonly' + ' Addyear ' + ' ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
                     +       ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           ' value="' + currentAssetsAmount + '"'
-                    +           ' class="form-control text-right" readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation" readonly></td>'
         })
         strHtml += '</tr>'
         $('#tbl_balance_sheet tbody').append(strHtml);
@@ -4707,9 +4756,9 @@ $(document).ready(function () {
             strHtml += '<td class="monthly td-input readonly' + ' Addyear ' + ' ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
                 +       ' width="200">'
                 +       '<input name="" '
-                +           ' type="number" min="0"'
+                +           ' type="text"'
                 +           ' value="' + startUpCostDict['cost'] + '"'
-                +           ' class="form-control text-right" readonly></td>'
+                +           ' class="form-control text-right rpt_presentation" readonly></td>'
         })
         strHtml += '</tr>'
         $('#tbl_balance_sheet tbody').append(strHtml);
@@ -4722,9 +4771,9 @@ $(document).ready(function () {
             strHtml += '<td class="monthly td-input readonly' + ' Addyear ' + ' ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
                     +       ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           ' value="' + startUpCostDict['amortization'] + '"'
-                    +           ' class="form-control text-right" readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation" readonly></td>'
         })
         strHtml += '</tr>'
         $('#tbl_balance_sheet tbody').append(strHtml);
@@ -4738,9 +4787,9 @@ $(document).ready(function () {
             strHtml += '<td class="monthly td-input readonly' + ' Addyear ' + ' ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
                     +       ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           ' value="' + startUpCostDict['balance'] + '"'
-                    +           ' class="form-control text-right" readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation" readonly></td>'
         })
         strHtml += '</tr>'
         $('#tbl_balance_sheet tbody').append(strHtml);
@@ -4754,9 +4803,9 @@ $(document).ready(function () {
             strHtml += '<td class="monthly td-input readonly' + ' Addyear ' + ' ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
                     +       ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           ' value="' + totalAmount + '"'
-                    +           ' class="form-control text-right" readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation" readonly></td>'
         })
         strHtml += '</tr>'
         $('#tbl_balance_sheet tbody').append(strHtml);
@@ -4778,9 +4827,9 @@ $(document).ready(function () {
             strHtml += '<td class="monthly td-input readonly' + ' Addyear ' + ' ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
                     +       ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           ' value="' + investmentDict['investment'] + '"'
-                    +           ' class="form-control text-right" readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation" readonly></td>'
         })
         strHtml += '</tr>'
         $('#tbl_balance_sheet tbody').append(strHtml);
@@ -4795,9 +4844,9 @@ $(document).ready(function () {
             strHtml += '<td class="monthly td-input readonly' + ' Addyear ' + ' ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
                     +       ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           ' value="' + amount + '"'
-                    +           ' class="form-control text-right" readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation" readonly></td>'
         })
         strHtml += '</tr>'
         $('#tbl_balance_sheet tbody').append(strHtml);
@@ -4810,9 +4859,9 @@ $(document).ready(function () {
             strHtml += '<td class="monthly td-input readonly' + ' Addyear ' + ' ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
                     +       ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           ' value="' + amount + '"'
-                    +           ' class="form-control text-right" readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation" readonly></td>'
         })
         strHtml += '</tr>'
         $('#tbl_balance_sheet tbody').append(strHtml);
@@ -4829,9 +4878,9 @@ $(document).ready(function () {
             strHtml += '<td class="monthly td-input readonly' + ' Addyear ' + ' ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
                     +       ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           ' value="' + amount + '"'
-                    +           ' class="form-control text-right" readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation" readonly></td>'
         })
         strHtml += '</tr>'
         $('#tbl_balance_sheet tbody').append(strHtml);
@@ -4847,20 +4896,12 @@ $(document).ready(function () {
         // Debt
         // We have debt
         // debt repayment
-        console.log('debtAndInterestRepaymentPerYear')
-        console.log(debtAndInterestRepaymentPerYear)
-        console.log('interestOnDebtRepaymentPerYear')
-        console.log(interestOnDebtRepaymentPerYear)
         //console.log()
         $.each(projectionYearsList, function (yearIndex, yearString) {
             console.log('yearString: ' + yearString )
             debtRepaymentPerYear[yearString] = parseInt(debtAndInterestRepaymentPerYear[yearString] || 0) - parseFloat(interestOnDebtRepaymentPerYear[yearString] || 0)
         })
 
-        console.log('loanDebtDict')
-        console.log(loanDebtDict)
-        console.log('debtRepaymentPerYear')
-        console.log(debtRepaymentPerYear)
         var netDebtPreviousYear = 0
         var debtTotalsPerYear = {}
         $.each(loanDebtDict, function (investmentYear, investmentDict) {
@@ -4884,9 +4925,9 @@ $(document).ready(function () {
             strHtml += '<td class="monthly td-input readonly' + ' Addyear ' + ' ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
                     +       ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           ' value="' + amount + '"'
-                    +           ' class="form-control text-right" readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation" readonly></td>'
         })
         strHtml += '</tr>'
         $('#tbl_balance_sheet tbody').append(strHtml);
@@ -4898,9 +4939,9 @@ $(document).ready(function () {
             strHtml += '<td class="monthly td-input readonly' + ' Addyear ' + ' ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
                     +       ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           ' value="' + amount + '"'
-                    +           ' class="form-control text-right" readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation" readonly></td>'
         })
         strHtml += '</tr>'
         $('#tbl_balance_sheet tbody').append(strHtml);
@@ -4912,9 +4953,9 @@ $(document).ready(function () {
             strHtml += '<td class="monthly td-input readonly' + ' Addyear ' + ' ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
                     +       ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           ' value="' + amount + '"'
-                    +           ' class="form-control text-right" readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation" readonly></td>'
         })
         strHtml += '</tr>'
         $('#tbl_balance_sheet tbody').append(strHtml);
@@ -4941,9 +4982,9 @@ $(document).ready(function () {
             strHtml += '<td class="monthly td-input readonly' + ' Addyear ' + ' ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
                     +       ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           ' value="' + payablesAmount + '"'
-                    +           ' class="form-control text-right" readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation" readonly></td>'
         })
         strHtml += '</tr>'
         $('#tbl_balance_sheet tbody').append(strHtml);
@@ -4959,9 +5000,9 @@ $(document).ready(function () {
             strHtml += '<td class="monthly td-input readonly' + ' Addyear ' + ' ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
                     +       ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           ' value="' + payablesAmount + '"'
-                    +           ' class="form-control text-right" readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation" readonly></td>'
         })
         strHtml += '</tr>'
         $('#tbl_balance_sheet tbody').append(strHtml);
@@ -4977,9 +5018,9 @@ $(document).ready(function () {
             strHtml += '<td class="monthly td-input readonly' + ' Addyear ' + ' ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
                     +       ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           ' value="' + liabilityAmount + '"'
-                    +           ' class="form-control text-right" readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation" readonly></td>'
         })
         strHtml += '</tr>'
         $('#tbl_balance_sheet tbody').append(strHtml);
@@ -4993,13 +5034,14 @@ $(document).ready(function () {
             strHtml += '<td class="monthly td-input readonly' + ' Addyear ' + ' ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
                     +       ' width="200">'
                     +       '<input name="" '
-                    +           ' type="number" min="0"'
+                    +           ' type="text"'
                     +           ' value="' + liabilityAmount + '"'
-                    +           ' class="form-control text-right" readonly></td>'
+                    +           ' class="form-control text-right rpt_presentation" readonly></td>'
         })
         strHtml += '</tr>'
         $('#tbl_balance_sheet tbody').append(strHtml);
 
+        updateReportPresentation('#tbl_balance_sheet')
         // Check total assets should be equal to total liabilities
         // End of balance Sheet
         //
@@ -5128,6 +5170,11 @@ $(document).ready(function () {
                     generateUsageDepositsTable();
                     generateUsageOtherStartupCostsTable();
 
+                    // Unbind/ bind events
+                    $('.number-input-format').unbind('keydown')
+                    $('.number-input-format').keydown(numberFormatKeyDownHandler)
+
+
                     // Update currency symbols after every regeneration
                     updateCurrency(getCurrency());
 
@@ -5217,16 +5264,6 @@ $(document).ready(function () {
 
     })
 
-    function updateFormIdField(formId, val){
-        if(val == null || val){
-            // try parse then update
-            var idParsed =  parseInt(val);
-            if(!isNaN(idParsed)){
-                $(formId + ' .id').val(idParsed);
-                $(formId + ' .id').attr('value', idParsed)
-            }
-        }
-    }
 
     function toggleSpinner(show, message){
         if(show){
@@ -5247,6 +5284,17 @@ $(document).ready(function () {
                     $('#spinner_modal').modal('hide');
                 }, 500);
             }, 1000);
+        }
+    }
+
+    function updateFormIdField(formId, val){
+        if(val == null || val){
+            // try parse then update
+            var idParsed =  parseInt(val);
+            if(!isNaN(idParsed)){
+                $(formId + ' .id').val(idParsed);
+                $(formId + ' .id').attr('value', idParsed)
+            }
         }
     }
 
@@ -5396,6 +5444,9 @@ $(document).ready(function () {
     }
 
     function saveFinancialAssumptions(){
+        $('#financial_assumptions input,textarea,select').change(function(event){
+            $(this).attr('value', $(this).val());
+        })
         var data = $('#frm_bplanner_financial_assumptions_page').serializeArray();
         var titlePageId = $('#frm_bplanner_title_page .id').val()
         // add titlePageId to serialized data
@@ -6070,15 +6121,21 @@ $(document).ready(function () {
           // disable regenerate button
           $('#btn_regenerate_page').addClass('disabled')
           regenerateCurentPate();
-          // enable regenerate buttond
-          $('#btn_regenerate_page').removeClass('disabled')
+
+          // Unbind/ bind events
+        $('.number-input-format').unbind('keydown')
+        $('.number-input-format').keydown(numberFormatKeyDownHandler)
+
+         // enable regenerate button
+        $('#btn_regenerate_page').removeClass('disabled')
       },
       onCancel: function() {
         // page not regenerated... Don't do anything
 
       },
+      placement: 'bottom',
       title: 'Sure to regenerate page?',
-      content: 'Note: This action will clear all initial table data/content and require data entry.'
+      content: 'Note: This action will clear all initial table data and require data entry.'
     });
     
     $('#btn_save_business_plan').click(function (event) {
@@ -6122,10 +6179,12 @@ $(document).ready(function () {
         var systemId = $(this).val();
         if(systemId == 0){
             // Tiered system... Show tax slab
-            $('#div-tax_slab').removeClass('hidden');
+            $('#div-tax_slab').removeClass('hidden')
+            $('#div_corporate_tax_rate').addClass('hidden');
         }else{
             // Single system.. Hide tax slab
             $('#div-tax_slab').addClass('hidden');
+            $('#div_corporate_tax_rate').removeClass('hidden');
         }
     })
 
@@ -6174,5 +6233,67 @@ $(document).ready(function () {
 
         return total;
     }
+    
+    // Data presentation...
+    function updateReportPresentation(containerIds){
+
+        $(containerIds + ' .rpt_presentation').each(function() {
+            var val = parseInt($(this).val(), 0)
+            $(this).val(val.toLocaleString('en'));
+        })    
+    }
+
+    function formatNumber(num){
+
+    }
+
+    function removeCommas(val){
+        if(val == null){
+            return '';
+        }
+        return val.replace(/\,/g,'');
+    }
+
+    $('.number-input-format').keydown(numberFormatKeyDownHandler)
+
+    function numberFormatKeyDownHandler(ev){
+
+        var currVal = $(this).val();
+        // Handle allowing only integers and 1 .
+        var keyCode = window.event ? ev.keyCode : ev.which;
+        //codes for 0-9
+        if (keyCode < 48 || keyCode > 57) {
+            if (keyCode == 46 || keyCode == 190) {
+                // point typed..
+                // Check if input has a point already
+                if (currVal.indexOf('.') > -1) {
+                    // Input has a decimal already.. prevent entry
+                    ev.preventDefault();
+                    direction = 0;
+                }
+            }
+            //codes for backspace, delete, tab, enter
+            else if (keyCode != 0 && keyCode != 8 && keyCode != 13 && keyCode != 9 && !ev.ctrlKey) {
+                ev.preventDefault();
+            }
+
+            if( keyCode != 9){
+            }
+        }
+
+        // wait seconds and update value
+        setTimeout(function(){
+            var currVal = $(ev.target).val();
+            if(currVal == ''){
+                return;
+            }
+            currVal = currVal.replace(/\,/g,'');
+            var val = parseFloat(currVal, 10)
+            $(ev.target).val(val.toLocaleString('en'));
+        }, 10)
+
+    }
+
+    // handle formatting!!
 })
 
