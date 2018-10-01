@@ -5,109 +5,105 @@
 {% block page_content %}
     <!-- /page content -->
 
-    <div id="right_col" class="right_col" role="main" style="background-color: #ffffff;" data-mode="{{ mode }}">
-        <div class="page-title">
-          <div class="title_left">
-{#            <h3>New Business Plan</h3>#}
-          </div>
-        </div>
-        <div class="clearfix"></div>
-
-
-        <div id="alert_main" class="alert alert-info alert-dismissible hidden text-center" style="background-color: transparent!important;border: none!important;">
-            <strong class="status">  Saving</strong> <span class="message"></span>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-
+    <div id="right_col" class="right_col" role="main" style="background-color: #ffffff; padding-top: 0px;" data-mode="{{ mode }}">
         <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12 ">
+            <div class="col-md-12 col-sm-12 col-xs-12 " style="margin-top: -12px;">
                 <div class="x_content">
                         <!-- tabs -->
                       <div class="tabbable tabs-top">
 
                         <!-- tab content -->
-                        <ul class="nav nav-tabs" STYLE="margin-right:60px;">
-                            <li class="active">
-                                <a id="a_bplanner_title_page" href="#page_title" data-step="#step-1" data-step_previous=""  data-toggle="tab">
-                                    <div class="alert alert-default">
-                                        <span class="tab-name">Title Page </span><img class="loading-gif hidden" src="{% static 'imgs/loading-2.gif' %}" style="height: 28px;margin-left: 20px;"/>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a id="a_bplanner_main_content_page" href="#page_main_content" data-step="#step-2" data-step_previous="#step-1"  data-toggle="tab">
-                                    <div class="alert alert-default">
-                                        <span class="tab-name">Main Content </span><img class="loading-gif hidden" src="{% static 'imgs/loading-2.gif' %}" style="height: 28px;"/>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a id="a_bplanner_financial_assumptions_page" href="#financial_assumptions" data-step="#step-3" data-step_previous="#step-2" data-toggle="tab">
-                                    <div class="alert alert-default">
-                                        <span class="tab-name">Financial Assumptions </span><img class="loading-gif hidden" src="{% static 'imgs/loading-2.gif' %}" style="height: 28px;"/>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a id="a_bplanner_financial_data_input_page" href="#financial_data_input" data-step="#step-4" data-step_previous="#step-3" data-toggle="tab">
-                                    <div class="alert alert-default">
-                                        <span class="tab-name">Financial Data Input </span><img class="loading-gif hidden" src="{% static 'imgs/loading-2.gif' %}" style="height: 28px;"/>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#rpt_pnl" data-step="#step-5" data-step_previous="#step-4" data-toggle="tab">
-                                    <div class="alert alert-default">
-                                        <span class="tab-name">Monthly Summary P&L </span>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#rpt_amortization" data-step="#step-5" data-step_previous="#step-4" data-toggle="tab">
-                                    <div class="alert alert-default">
-                                        <span class="tab-name">Amortization Schedule </span>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#rpt_cash_flow" data-step="#step-5" data-step_previous="#step-4" data-toggle="tab">
-                                    <div class="alert alert-default">
-                                        <span class="tab-name">Cash Flow </span>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#rpt_balance_sheet" data-step="#step-5" data-step_previous="#step-4" data-toggle="tab">
-                                    <div class="alert alert-default">
-                                        <span class="tab-name">Balance Sheet </span>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#rpt_dashboard" data-step="#step-5" data-step_previous="#step-4" data-toggle="tab">
-                                    <div class="alert alert-default">
-                                        <span class="tab-name">Dashboard </span>
-                                    </div>
-                                </a>
-                            </li>
-                            <li id="li-save">
-                                <div class="alert-section">
-                                    <div class="alert alert-default">
-                                        <button id="btn_regenerate_page" type="button" class="btn btn-default hidden" style="margin-top: 5px;" data-toggle="confirmation" data-popout="true">
-                                            <i class="fa fa-refresh" aria-hidden="true"></i> Update tables
-                                        </button>
-                                    </div>
-                                </div>
-                            </li>
+                          <div id="top-conatiner">
+                              <div id="top-tab-container">
+                                <div class="scroller scroller-left"><i class="glyphicon glyphicon-chevron-left"></i></div>
+                                <div class="scroller scroller-right"><i class="glyphicon glyphicon-chevron-right"></i></div>
+                                <div class="wrapper">
+                                    <ul class="nav nav-tabs list" STYLE="margin-right:60px;">
+                                        <li class="active">
+                                            <a id="a_bplanner_title_page" href="#page_title" data-step="#step-1" data-step_previous=""  data-toggle="tab">
+                                                <div class="alert alert-default">
+                                                    <span class="tab-name">Title Page </span><img class="loading-gif hidden" src="{% static 'imgs/loading-2.gif' %}" style="height: 28px;margin-left: 20px;"/>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a id="a_bplanner_main_content_page" href="#page_main_content" data-step="#step-2" data-step_previous="#step-1"  data-toggle="tab">
+                                                <div class="alert alert-default">
+                                                    <span class="tab-name">Main Content </span><img class="loading-gif hidden" src="{% static 'imgs/loading-2.gif' %}" style="height: 28px;"/>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a id="a_bplanner_financial_assumptions_page" href="#financial_assumptions" data-step="#step-3" data-step_previous="#step-2" data-toggle="tab">
+                                                <div class="alert alert-default">
+                                                    <span class="tab-name">Financial Assumptions </span><img class="loading-gif hidden" src="{% static 'imgs/loading-2.gif' %}" style="height: 28px;"/>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a id="a_bplanner_financial_data_input_page" href="#financial_data_input" data-step="#step-4" data-step_previous="#step-3" data-toggle="tab">
+                                                <div class="alert alert-default">
+                                                    <span class="tab-name">Financial Data Input </span><img class="loading-gif hidden" src="{% static 'imgs/loading-2.gif' %}" style="height: 28px;"/>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#rpt_pnl" data-step="#step-5" data-step_previous="#step-4" data-toggle="tab">
+                                                <div class="alert alert-default">
+                                                    <span class="tab-name">Monthly Summary P&L </span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#rpt_amortization" data-step="#step-5" data-step_previous="#step-4" data-toggle="tab">
+                                                <div class="alert alert-default">
+                                                    <span class="tab-name">Amortization Schedule </span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#rpt_cash_flow" data-step="#step-5" data-step_previous="#step-4" data-toggle="tab">
+                                                <div class="alert alert-default">
+                                                    <span class="tab-name">Cash Flow </span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#rpt_balance_sheet" data-step="#step-5" data-step_previous="#step-4" data-toggle="tab">
+                                                <div class="alert alert-default">
+                                                    <span class="tab-name">Balance Sheet </span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#rpt_dashboard" data-step="#step-5" data-step_previous="#step-4" data-toggle="tab">
+                                                <div class="alert alert-default">
+                                                    <span class="tab-name">Dashboard </span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li id="li-save">
+                                            <div class="alert-section">
+                                                <div class="alert alert-default">
 
-{#                            <li id="li-save"><button class="btn btn-success" data-step="#step-5" data-step_previous="#step-4" style="margin-top: 5px;"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save and Continue</button></li>#}
+                                                </div>
+                                            </div>
+                                        </li>
 
-                        </ul>
-                        <button id="btn_save_business_plan" type="button" class="btn btn-primary" style="margin-top: 5px;">
-                            <i class="fa fa-floppy-o" aria-hidden="true"></i> Save Business Plan
-                        </button>
+            {#                            <li id="li-save"><button class="btn btn-success" data-step="#step-5" data-step_previous="#step-4" style="margin-top: 5px;"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save and Continue</button></li>#}
+
+                                    </ul>
+                                </div> <!-- Closing wrapper-->
+                              </div>
+                              <div id="action-conainer">
+                                  <button id="btn_save_business_plan" type="button" class="btn btn-primary" style="margin-top: 5px; ">
+                                      <i class="fa fa-floppy-o" aria-hidden="true"></i> Save Business Plan
+                                  </button>
+                                  <button id="btn_regenerate_page" type="button" class="btn btn-warning hidden" style="margin-top: 5px;" data-toggle="confirmation" data-popout="true">
+                                      <i class="fa fa-refresh" aria-hidden="true"></i> Refresh Page Tables
+                                  </button>
+                              </div>
+                          </div>
 
                         <div class="tab-content">
                             <div class="tab-pane active container-fluid" id="page_title" data-friendly_name="Title Page" style="">
@@ -1273,7 +1269,7 @@
                                 </form>
                             </div>
                             <div class="tab-pane container-fluid" id="financial_assumptions" data-friendly_name="Financial assumptions page">
-                                <br/><br/>
+                                <br/>
                                 <form id="frm_bplanner_financial_assumptions_page" method="post" action="/dashboard/new/business-plan/financial_assumptions_page" class="form-horizontal" autocomplete="off" data-parsley-validate>
                                     {% csrf_token %}
                                     <input name="id" value="{{ bplan_financial_assumptions_page_form.id }}" class="hidden id">
@@ -1486,8 +1482,7 @@
                                     </div>
                                 </form>
                             </div>
-                            <div class="tab-pane container-fluid" id="financial_data_input" data-friendly_name="Monthly summary P&L page" >
-                                <br/>
+                            <div class="tab-pane container-fluid" id="financial_data_input" style="margin-top: -10px;" data-friendly_name="Financial data input" >
                                 <form id="frm_bplanner_settings" method="post" action="/dashboard/save/business-plan/settings" class="form-horizontal form-label-left" autocomplete="off" data-parsley-validate>
                                     {% csrf_token %}
                                 </form>
@@ -1617,7 +1612,7 @@
 
                                     </form>
                             </div>
-                            <div class="tab-pane step-5" id="rpt_pnl"  data-friendly_name="#" >
+                            <div class="tab-pane step-5" id="rpt_pnl"  data-friendly_name="Monthly Summary P&L" >
                                 <table id="tbl_pnl" class="table table-bordered ">
                                     <caption style="color: #73879C;"><label class="control-label">Monthly Summary P&L</label></caption>
                                 </table>

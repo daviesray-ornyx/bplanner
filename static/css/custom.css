@@ -51,6 +51,11 @@
     overflow: visible;
 }
 
+table thead {
+    background: rgba(52,73,94,.94);
+    color: #ECF0F1;
+}
+
 .table .form-control{
     border: none!important;
     box-shadow: none;
@@ -594,10 +599,25 @@ nav li {
     vertical-align: middle;
 }
 
+#top-conatiner{
+    display: flex;
+}
+
+#top-tab-container{
+    flex: 0 0 calc(100% - 170px);
+}
+
+#action-conainer{
+    flex: 1;
+    padding: 0 8px;
+}
+
 #btn_save_business_plan{
-    position:absolute;
-    top:0px;
-    right:0px;
+    width: 172px;
+}
+
+#btn_regenerate_page{
+    width: 172px;
 }
 
 .span-optional{
@@ -607,4 +627,64 @@ nav li {
 .span-help{
     color: #99979c;
     /*padding-left: 6px;*/
+}
+
+/*
+Scrollable tab
+*/
+
+.wrapper {
+    position:relative;
+    margin:0 auto;
+    overflow:hidden;
+	padding:5px;
+  	height:70px;
+}
+
+.list {
+    position:absolute;
+    left:0px;
+    top:0px;
+  	min-width:3000px;
+  	margin-left:12px;
+    margin-top:0px;
+}
+
+.list li{
+	display:table-cell;
+    position:relative;
+    text-align:center;
+    cursor:grab;
+    cursor:-webkit-grab;
+    color:#efefef;
+    vertical-align:middle;
+}
+
+.scroller {
+  text-align:center;
+  cursor:pointer;
+  display:none;
+  padding:7px;
+  padding-top:11px;
+  white-space:no-wrap;
+  vertical-align:middle;
+  background-color:#3a7fd5;
+    opacity: 0.9;
+    height: 56px;
+    align-content: center;
+    color: #fff;
+    display: flex;
+    align-items: center;
+}
+
+.scroller i{
+    margin-top: -5px;
+}
+
+.scroller-right{
+  float:right;
+}
+
+.scroller-left {
+  float:left;
 }
