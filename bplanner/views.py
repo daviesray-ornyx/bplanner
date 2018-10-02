@@ -1,5 +1,4 @@
 import sys, os
-import settings
 from io import BytesIO
 import xhtml2pdf.pisa as pisa
 from django.template.loader import get_template
