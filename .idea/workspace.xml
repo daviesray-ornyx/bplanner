@@ -87,10 +87,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bplanner/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.34946236" vertical-offset="1141" max-vertical-offset="4444">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1141" max-vertical-offset="4444">
               <caret line="229" column="26" selection-start-line="229" selection-start-column="26" selection-end-line="229" selection-end-column="26" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
@@ -161,18 +161,17 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/bplanner/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="374" max-vertical-offset="4202">
-              <caret line="28" column="101" selection-start-line="28" selection-start-column="101" selection-end-line="28" selection-end-column="101" />
+            <state vertical-scroll-proportion="0.33333334" vertical-offset="2723" max-vertical-offset="5060">
+              <caret line="157" column="26" selection-start-line="157" selection-start-column="18" selection-end-line="157" selection-end-column="26" />
               <folding>
                 <element signature="e#0#28#0" expanded="true" />
-                <element signature="e#8775#10067#0" expanded="false" />
-                <element signature="e#10115#14154#0" expanded="false" />
-                <element signature="e#14756#15361#0" expanded="false" />
-                <element signature="e#15403#15937#0" expanded="false" />
-                <element signature="e#15986#16611#0" expanded="false" />
+                <element signature="e#8697#9989#0" expanded="false" />
+                <element signature="e#14678#15283#0" expanded="false" />
+                <element signature="e#15325#15859#0" expanded="false" />
+                <element signature="e#15908#16533#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -231,7 +230,6 @@
         <option value="$PROJECT_DIR$/bplanner/admin.py" />
         <option value="$PROJECT_DIR$/static/js/main.js" />
         <option value="$PROJECT_DIR$/templates/business-plan.html" />
-        <option value="$PROJECT_DIR$/bplanner/models.py" />
         <option value="$PROJECT_DIR$/templates/sample-business-plan.html" />
         <option value="$PROJECT_DIR$/static/css/custom.css" />
         <option value="$PROJECT_DIR$/Project/urls.py" />
@@ -241,6 +239,7 @@
         <option value="$PROJECT_DIR$/templates/dashboard.html" />
         <option value="$PROJECT_DIR$/templates/view-business-plan.html" />
         <option value="$PROJECT_DIR$/bplanner/views.py" />
+        <option value="$PROJECT_DIR$/bplanner/models.py" />
       </list>
     </option>
   </component>
@@ -250,8 +249,8 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1056" />
+    <option name="width" value="1616" />
+    <option name="height" value="876" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -719,18 +718,18 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="false" />
+    <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32885906" sideWeight="0.4395887" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.35243243" sideWeight="0.5003131" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4375839" sideWeight="0.5003131" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32864866" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29513514" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32885906" sideWeight="0.6086118" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18710022" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22557841" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19616205" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -1168,21 +1167,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bplanner/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="374" max-vertical-offset="4202">
-          <caret line="28" column="101" selection-start-line="28" selection-start-column="101" selection-end-line="28" selection-end-column="101" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-            <element signature="e#8775#10067#0" expanded="false" />
-            <element signature="e#10115#14154#0" expanded="false" />
-            <element signature="e#14756#15361#0" expanded="false" />
-            <element signature="e#15403#15937#0" expanded="false" />
-            <element signature="e#15986#16611#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Project/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="489" max-vertical-offset="1386">
@@ -1243,7 +1227,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/bplanner/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.34946236" vertical-offset="1141" max-vertical-offset="4444">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1141" max-vertical-offset="4444">
           <caret line="229" column="26" selection-start-line="229" selection-start-column="26" selection-end-line="229" selection-end-column="26" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
@@ -1264,6 +1248,20 @@
             <element signature="e#28129#29875#0" expanded="false" />
             <element signature="e#29915#30613#0" expanded="false" />
             <element signature="e#30644#32055#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bplanner/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33333334" vertical-offset="2723" max-vertical-offset="5060">
+          <caret line="157" column="26" selection-start-line="157" selection-start-column="18" selection-end-line="157" selection-end-column="26" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+            <element signature="e#8697#9989#0" expanded="false" />
+            <element signature="e#14678#15283#0" expanded="false" />
+            <element signature="e#15325#15859#0" expanded="false" />
+            <element signature="e#15908#16533#0" expanded="false" />
           </folding>
         </state>
       </provider>

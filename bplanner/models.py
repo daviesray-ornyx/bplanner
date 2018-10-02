@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from bplanner.choices import  *
-import os, settings
+
 
 class Profile(models.Model):
     user = models.ForeignKey(User,related_name='user_profile', verbose_name="User", null=True, on_delete=models.DO_NOTHING)
@@ -34,9 +34,6 @@ class BusinessPlanTitlePage(models.Model):
     date_created = models.DateTimeField(verbose_name='Date Created', blank=True, null=True)
     date_modified = models.DateTimeField(verbose_name='Date Modified', blank=True, null=True)
     owner = models.ForeignKey(User, verbose_name="Business Plan Owner", null=True, blank=True, on_delete=models.DO_NOTHING) # Ensure this is changed to False on deployment!!
-
-    def base_dir(self):
-        return settings.BASE_DIR;
 
 
     def save(self, *args, **kwargs):
