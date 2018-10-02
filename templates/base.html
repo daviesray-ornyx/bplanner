@@ -181,7 +181,7 @@
 
   </head>
 
-  <body class="nav-md footer_fixed" style="background-color: #fff;">
+  <body class="nav-md footer_fixed" style="background-color: #ecedef;">
     <div class="container body">
       <div class="main_container">
         <!-- top navigation -->
@@ -215,8 +215,13 @@
                     Samples
                   </a>
                   <ul class="dropdown-menu dropdown-usermenu pull-right">
-                      <li><a href="{% static 'files/Business Plan Sample Art Organization.xlsx' %}" target="_blank" >Art organization</a></li>
-                      <li><a href="{% static 'files/Business Plan Sample Non-Profit Organisation.xlsx'%}" target="_blank" > Non-profit organization</a></li>
+                      {% if bplan_samples.count > 0 %}
+                          {% for sample in bplan_samples %}
+                              <li><a href="/dashboard/business-plan/view?sample=sample&id={{ sample.id }}" target="_blank"> {{ sample.display_name }}</a></li>
+                          {% endfor %}
+                      {% else %}
+                          <li><a href=""> No samples currently.</a></li>
+                      {% endif %}
                   </ul>
                 </li>
                 <li class="">
@@ -316,6 +321,22 @@
                         <div class="ln_solid"></div>
                         <div class="table-container"></div>
                         <button class="btn btn-primary btn-sm" style="float: left;" data-toggle="modal" data-target="#message-dialog">Close</button>
+                        <br/>
+                    </div>
+                </div>
+              </div>
+          </div>
+
+          <div class="modal fade" id="sample-dialog" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h2 class="modal-h3 header text-left">This is the sample dialog</h2>
+{#                        <div class="ln_solid"></div>#}
+                        <p class="message text-left text-danger">Don't have an account?</p>
+                        <div class="ln_solid"></div>
+                        <div class="table-container"></div>
+                        <button class="btn btn-primary btn-sm" style="float: left;" data-toggle="modal" data-target="#sample-dialog">Close</button>
                         <br/>
                     </div>
                 </div>

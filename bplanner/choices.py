@@ -15,3 +15,8 @@ TAXATION_SYSTEM_CHOICES = (
     (0, "Tiered System"),
     (1, "Single System")
 )
+
+BUSINESS_TYPES = (
+    (0, "Non-Profit"),
+    (1, "For Profit")
+)

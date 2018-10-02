@@ -3,6 +3,10 @@
     /*overflow: visible;*/
 /*}*/
 
+body{
+    /*background-color: #ecedef;*/
+}
+
 .right_col{
     bottom: 0;
     margin-bottom: 0px;
@@ -687,4 +691,27 @@ Scrollable tab
 
 .scroller-left {
   float:left;
+}
+
+/*
+    Page designs
+*/
+
+.page-start {
+    height: auto;
+    margin-bottom: 25px;
+}
+
+
+.page-title{
+    min-height: calc(100vh - 200px)!important;
+    /*height: 1000px!important;*/
+}
+
+.editor-wrapper div{
+    margin-bottom: 10px;
+}
+
+.page-start div{
+    margin-bottom: 10px;
 }

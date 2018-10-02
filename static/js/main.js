@@ -6358,5 +6358,32 @@ $(document).ready(function () {
         });
     });
 //    End-- Scrollable tab
+
+    //WYSIWYG Editor focus in and out
+    $('.editor-wrapper').focusin(function(event){
+        var currentVal = $(this).html()
+        if(currentVal.trim() == "Click to start writing..."){
+            $(this).html("");
+        }
+    })
+
+    $('.editor-wrapper').focusout(function(event){
+        if($(this).html().trim() == ""){
+            $(this).html("Click to start writing...");
+        }
+    })
+
+    //// Sample dialog setup
+    //$('#sample-dialog').on('show.bs.modal', function (e) {
+    //  // do something..
+    //    var $link = $(e.relatedTarget)
+    //    var sample_id = $link.data('sample_id');
+    //    // do an ajax to get sample html
+    //
+    //    console.log('sampleHtml')
+    //    console.log(sampleHtml)
+    //    $('#sample-dialog .modal-body').html(sampleHtml)
+    //
+    //})
 })
 

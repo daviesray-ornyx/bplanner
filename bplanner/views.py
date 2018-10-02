@@ -1,13 +1,19 @@
-import sys
+import sys, os
+import settings
+from io import BytesIO
+import xhtml2pdf.pisa as pisa
+from django.template.loader import get_template
 from MySQLdb.converters import NoneType
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views import View
 from bplanner.models import *
 from bplanner.forms import (BusinessPlanTitlePageForm, BusinessPlanMainContentForm,
-                            BusinessPlanFinancialAssumptionsForm, BusinessPlanFinancialDataInputForm, BusinessPlanSettingsForm)
+                            BusinessPlanFinancialAssumptionsForm, BusinessPlanFinancialDataInputForm, BusinessPlanSettingsForm,
+                            )
+
 
 # common functions
 def get_size(obj, seen=None):
@@ -231,7 +237,8 @@ class DashboardView(View):
             return redirect('landing-page');
         bplans = BusinessPlanTitlePage.objects.filter(owner=request.user).order_by('-date_created') # order by date_created desc
         user_profile = Profile.objects.get(user=request.user)
-        return render(request, 'dashboard.html', {'user': request.user, 'user_profile': user_profile, 'bplans': bplans})
+        bplan_samples =  BusinessPlanSample.objects.all();  # get's all business plan samples
+        return render(request, 'dashboard.html', {'user': request.user, 'user_profile': user_profile, 'bplans': bplans, 'bplan_samples': bplan_samples })
 
 
     def post(self, request):
@@ -316,7 +323,7 @@ class BusinessPlanDetailView(View):
 
         currencies = Currency.objects.all()
         months = Month.objects.all()
-
+        bplan_samples =  BusinessPlanSample.objects.all();  # get's all business plan samples
         return render(request, 'business-plan.html', {
             'id': id,
             'bplan_title_page_form': bplan_title_page_form,
@@ -326,7 +333,8 @@ class BusinessPlanDetailView(View):
             'bplan_settings': bplan_settings,
             'currencies': currencies,
             'months': months,
-            'mode': mode
+            'mode': mode,
+            'bplan_samples': bplan_samples
         })
 
 class BusinessPlanDeleteView(View):
@@ -635,8 +643,84 @@ class BusinessPlanHelpView(View):
         section = request.GET.get('section', None)
         # get find help model
         help_section = HelpSection.objects.get(ref_id=section) if section is not None else HelpSection.objects.first()
-        return render(request, 'help.html', {'help_section': help_section})
+        bplan_samples =  BusinessPlanSample.objects.all();  # get's all business plan samples
+        return render(request, 'help.html', {'help_section': help_section, 'bplan_samples': bplan_samples})
 
 
     def post(self, request):
-        return render(request, 'help.html', {'name': "Post action"})
+        bplan_samples =  BusinessPlanSample.objects.all();  # get's all business plan samples
+        return render(request, 'help.html', {'name': "Post action", 'bplan_samples': bplan_samples})
+
+def view_bplan(request):
+    if request.method == 'POST':
+        return JsonResponse({'status':500, 'message': 'Get action does not allow POST'})
+    # check if sample
+    sample = request.GET.get('sample', None)
+    sample_id = request.GET.get('id', None)
+    if sample_id == None:
+        return JsonResponse({'status': 500, 'message': 'Could not process request...'})
+
+    bplan_samples =  BusinessPlanSample.objects.all();  # get's all business plan samples
+    # we have a valid id. get sample
+    if sample:
+        sample = BusinessPlanSample.objects.get(id=sample_id);
+        bplan_main_content_page = BusinessPlanMainContent.objects.get(title_page=sample.title_page)
+        # data = jsonpickle.encode(sample)
+        return render(request, 'view-business-plan.html', {'view': True, 'sample': sample, 'bplan_main_content_page': bplan_main_content_page, 'title_page': sample.title_page})
+    else:
+        # actual business pla
+        title_page = BusinessPlanTitlePage.objects.get(id=sample_id)
+        try:
+            bplan_main_content_page = BusinessPlanMainContent.objects.get(title_page=title_page)
+        except:
+            # data = jsonpickle.encode(sample)
+            bplan_main_content_page = None
+        return render(request, 'view-business-plan.html', {'sample': sample, 'bplan_samples': bplan_samples, 'view': True, 'sample': None, 'bplan_main_content_page': bplan_main_content_page, 'title_page': title_page})
+
+
+def link_callback(uri, rel):
+    # use short variable names
+    sUrl = settings.STATIC_URL      # Typically /static/
+    sRoot = settings.STATIC_ROOT    # Typically /home/userX/project_static/
+    mUrl = settings.MEDIA_URL       # Typically /static/media/
+    mRoot = settings.MEDIA_ROOT     # Typically /home/userX/project_static/media/
+
+    # convert URIs to absolute system paths
+    if uri.startswith(mUrl):
+        path = os.path.join(mRoot, uri.replace(mUrl, ""))
+    elif uri.startswith(sUrl):
+        path = os.path.join(sRoot, uri.replace(sUrl, ""))
+
+    print("Resulting path")
+    print(path)
+    # make sure that file exists
+    if not os.path.isfile(path):
+        raise Exception('media URI must start with %s or %s' % (sUrl, mUrl))
+    return path
+
+def download_pdf(request):
+    if request.method == 'POST':
+        return JsonResponse({'status':500, 'message': 'Get action does not allow POST'})
+    bplan_id = request.GET.get('id', None)
+    if bplan_id == None:
+        return JsonResponse({'status': 500, 'message': 'Could not process request...'})
+
+    # we have a valid id. get sample
+    bplan = BusinessPlanTitlePage.objects.get(id=bplan_id);
+    bplan_main_content_page = BusinessPlanMainContent.objects.get(title_page=bplan)
+    # data = jsonpickle.encode(sample)
+    context = {'view': False, 'sample': None, 'bplan_main_content_page': bplan_main_content_page, 'title_page': bplan}
+
+    template = get_template('download-template.html')
+    html = template.render(context)
+    # print(html); # print pred before
+    # return HttpResponse(html);
+    response = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), response, link_callback=link_callback)
+    if not pdf.err:
+        return HttpResponse(response.getvalue(), content_type='application/pdf')
+    else:
+        return HttpResponse("Error Rendering PDF", status=400)
+
+    # return render(request, 'sample-business-plan.html', )
+

@@ -23,7 +23,7 @@ from bplanner.views import (
     LandingPageView, RegisterView, LoginView, LogoutView, PasswordResetView,
     PasswordChangeView, DashboardView, BusinessPlanDetailView, BusinessPlanHelpView, BusinessPlanDeleteView,
     save_title_page, save_main_content_page, save_financial_assumptions_page, save_financial_data_input_page,
-    save_bplanner_settings)
+    save_bplanner_settings, view_bplan, download_pdf)
 
 
 urlpatterns = [
@@ -44,6 +44,8 @@ urlpatterns = [
     url(r'dashboard/view/business-plan$', BusinessPlanDetailView.as_view(), name='business-plan-view-detail'),
     url(r'dashboard/edit/business-plan$', BusinessPlanDetailView.as_view(), name='business-plan-edit-detail'),
     url(r'dashboard/save/business-plan/settings$', save_bplanner_settings, name='business-plan-save-settings'),
+    url(r'dashboard/business-plan/view$', view_bplan, name='business-plan-get-view'),
+    url(r'dashboard/business-plan/download$', download_pdf, name='business-plan-download-pdf'),
     url(r'dashboard/delete/business-plan$', BusinessPlanDeleteView.as_view(), name='business-plan-delete-detail'),
     url(r'dashboard$', DashboardView.as_view(), name='dashboard'),
     url(r'', LandingPageView.as_view(), name='landing-page'),

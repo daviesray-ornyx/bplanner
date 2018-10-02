@@ -1,0 +1,100 @@
+{% load static from staticfiles %}
+<div id="bplan-container" style="padding-top: 50px; padding-bottom: 20px;">
+    <div class="page-start page-title">
+        <br/>
+        <h2 id="business_plan" class="text-center margin-15">Business Plan </h2>
+{#                            <br/>#}
+        <h2 class="for-h text-center margin-15">For</h2>
+        <h2 class="full-width text-center margin-15">{{ title_page.company_name | safe }}</h2>
+        <h3 class="text-center" style="font-style: italic;">{{ title_page.tagline }}</h3>
+        <br/>
+        <h3 class="text-center">Contact Information:</h3>
+        {% if title_page.address != None %}<h4 class="text-center">{{ title_page.address }}</h4>{% endif %}
+        {% if title_page.phone_number != None %}<h4 class="text-center">{{ title_page.phone_number }}</h4>{% endif %}
+        {% if title_page.email != None %}<h4 class="text-center">{{ title_page.email }}</h4>{% endif %}
+        {% if title_page.website != None %}<h4 class="text-center">{{ title_page.website }}</h4>{% endif %}
+        <br/>
+        {% if title_page.presented_to != '' and title_page.presented_to != None %}
+            <h3 class="text-center" style="">Presented to: </h3>
+            <h4 class="text-center">{{ title_page.presented_to }} Davies Limited Incorporated</h4>
+        {% endif %}
+
+{#        <img id="logo-image" style="display: block; margin: auto; width: 120px;text-align: center;" class="text-center" src="{% if view == False %} {% static 'title_page.logo' %} {% else %}  /static{{ title_page.logo}} {% endif %}"/>#}
+    </div>
+    {% if bplan_main_content_page.mission_vision != '' and bplan_main_content_page.mission_vision != 'Click to start writing...' %}
+        <div class="breakAlways"></div>
+        <div class="page-start testing1" >
+            <font size="5">1. Mission and Vision</font><br/>
+            {{ bplan_main_content_page.mission_vision | safe }}
+        </div>
+    {% endif %}
+
+    {% if bplan_main_content_page.executive_summary != '' and bplan_main_content_page.executive_summary != 'Click to start writing...'  %}
+        <div class="breakAlways"></div>
+        <div class="page-start">
+            <font size="5">2. Executive Summary</font><br/>
+            {{ bplan_main_content_page.executive_summary | safe }}
+        </div>
+    {% endif %}
+    {% if bplan_main_content_page.company_description != '' and bplan_main_content_page.company_description != 'Click to start writing...' %}
+    <div class="page-start">
+        <div class="breakAlways"></div>
+        <font size="5">3. Company Description</font><br/>
+        {{ bplan_main_content_page.company_description | safe }}
+    </div>
+    {% endif %}
+    {% if bplan_main_content_page.key_success_factors != '' and bplan_main_content_page.key_success_factors != 'Click to start writing...' %}
+    <div class="page-start">
+        <font size="5">4. Key Success Factors</font><br/>
+        {{ bplan_main_content_page.key_success_factors | safe }}
+    </div>
+    {% endif %}
+    {% if bplan_main_content_page.objectives != '' and bplan_main_content_page.objectives != 'Click to start writing...' %}
+    <div class="page-start">
+        <font size="5">5. Objectives</font><br/>
+        {{ bplan_main_content_page.objectives | safe }}
+    </div>
+    {% endif %}
+    {% if bplan_main_content_page.industry_analysis != '' and bplan_main_content_page.industry_analysis != 'Click to start writing...' %}
+    <div class="page-start">
+        <font size="5">6. Industry Analysis</font><br/>
+        {{ bplan_main_content_page.industry_analysis | safe }}
+    </div>
+    {% endif %}
+    {% if bplan_main_content_page.tam_sam_som_analysis != '' and bplan_main_content_page.tam_sam_som_analysis != 'Click to start writing...' %}
+    <div class="page-start">
+        <font size="5">7. TAM-SAM-SOM Analysys</font><br/>
+        {{ bplan_main_content_page.tam_sam_som_analysis | safe }}
+    </div>
+    {% endif %}
+    {% if bplan_main_content_page.swot_analysis != '' and bplan_main_content_page.swot_analysis != 'Click to start writing...' %}
+    <div class="page-start">
+        <font size="5">8. SWOT Analys</font><br/>
+        {{ bplan_main_content_page.swot_analysis | safe }}
+    </div>
+    {% endif %}
+    {% if bplan_main_content_page.insights != '' and bplan_main_content_page.insights != 'Click to start writing...' %}
+    <div class="page-start">
+        <font size="5">9. Insights</font><br/>
+        {{ bplan_main_content_page.insights | safe }}
+    </div>
+    {% endif %}
+    {% if bplan_main_content_page.marketing_plan != '' and bplan_main_content_page.marketing_plan != 'Click to start writing...' %}
+    <div class="page-start">
+        <font size="5">10. Marketing Plan</font><br/>
+        {{ bplan_main_content_page.marketing_plan | safe }}
+    </div>
+    {% endif %}
+    {% if bplan_main_content_page.ownership_and_management_plan != '' and bplan_main_content_page.ownership_and_management_plan != 'Click to start writing...' %}
+    <div class="page-start">
+        <font size="5">11. Ownership and Management Plan</font><br/>
+        {{ bplan_main_content_page.ownership_and_management_plan | safe }}
+    </div>
+    {% endif %}
+    {% if bplan_main_content_page.milestones != '' and bplan_main_content_page.milestones != 'Click to start writing...' %}
+    <div class="page-start">
+        <font size="5">12. Milestones</font><br/>
+        {{ bplan_main_content_page.milestones | safe }}
+    </div>
+    {% endif %}
+</div>

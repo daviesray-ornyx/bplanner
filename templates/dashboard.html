@@ -6,25 +6,6 @@
     <!-- page content -->
     <div class="right_col" role="main"  style="background-color: #ffffff;">
       <div class="container-fluid">
-        <div class="page-title">
-{#              <div class="title_left">#}
-{#                <h3>Projects <small>Listing design</small></h3>#}
-{#              </div>#}
-
-{#              <div class="title_right">#}
-{#                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">#}
-{#                  <div class="input-group">#}
-{#                    <input type="text" class="form-control" placeholder="Search for...">#}
-{#                    <span class="input-group-btn">#}
-{#                      <button class="btn btn-default" type="button">Go!</button>#}
-{#                    </span>#}
-{#                  </div>#}
-{#                </div>#}
-{#              </div>#}
-        </div>
-
-        <div class="clearfix"></div>
-
         <div class="row">
           <div class="col-md-12">
             <div class="x_panel" style="border: none;">
@@ -73,9 +54,10 @@
                                     <small>Created {{ bplan.date_created }}</small>
                                   </td>
                                   <td>
-                                    <a href="/dashboard/view/business-plan?id={{ bplan.id }}" class="btn btn-primary btn-xs"><i class="fa fa-folder"></i> View / Edit </a>
-{#                                    <a href="dashboard/edit/business-plan?id={{ bplan.id }}" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>#}
+                                    <a href="/dashboard/business-plan/view?id={{ bplan.id }}" class="btn btn-info btn-xs"><i class="fa fa-folder"></i> View </a>
+                                    <a href="/dashboard/view/business-plan?id={{ bplan.id }}" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i> Edit </a>
                                     <a href="/dashboard/delete/business-plan?id={{ bplan.id }}" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
+                                    <a href="/dashboard/business-plan/download?id={{ bplan.id }}" target="_blank" class="btn btn-default btn-sm text-danger"><i class="fa fa-file-pdf-o text-danger"></i> download pdf</a>
                                   </td>
                                 </tr>
                               {% endfor %}

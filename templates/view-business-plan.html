@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load widget_tweaks %}
+
+{% block page_content %}
+    <!-- /page content -->
+
+    <div id="right_col" class="right_col" role="main" style="background-color:transparent; padding-top: 0px;align-content: center;" data-mode="{{ mode }}">
+        <div class="text-right" style="width:60%;padding: .9375rem; padding-right: 0px; margin: auto;">
+            {% if sample == None %}
+                <a href="/dashboard/view/business-plan?id={{ title_page.id }}" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i> Edit </a>
+                <a href="/dashboard/delete/business-plan?id={{ title_page.id }}" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
+            {% endif %}
+            <a href="/dashboard/business-plan/download?id={{ title_page.id }}" target="_blank" class="btn btn-default btn-sm text-danger"><i class="fa fa-file-pdf-o text-danger"></i> download pdf</a>
+        </div>
+        <div class="" style="width:60%;padding: .9375rem; padding-bottom: 40px; margin: auto; ">
+            <div class="row" style="margin-top: 0px;padding: 1rem 2.55rem; background-color: #fff; border-radius: 5px 5px 0 0;">
+                <div class="x_content">
+                        <!-- tabs -->
+{#                      <h1>Sample business plan goes here!!</h1>#}
+                        <!-- /tabs -->
+                    {% include 'html-pdf-template.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /page content -->
+{% endblock %}

@@ -2,8 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from bplanner.choices import  *
-
-# Create your models here.
+import os, settings
 
 class Profile(models.Model):
     user = models.ForeignKey(User,related_name='user_profile', verbose_name="User", null=True, on_delete=models.DO_NOTHING)
@@ -27,7 +26,7 @@ class BusinessPlanTitlePage(models.Model):
     email = models.CharField(verbose_name='Email', max_length=500, null=True, blank=True, default='')
     website = models.CharField(verbose_name='Website', max_length=500, null=True, blank=True, default='')
     presented_to = models.CharField(verbose_name='Presented to', max_length=500, null=True, blank=True, default='')
-    logo = models.ImageField(verbose_name='Logo', upload_to='imgs/', null=True, blank=True, default='logo_default.png')
+    logo = models.ImageField(verbose_name='Logo', upload_to='imgs/', null=True, blank=True, default='/imgs/logo_default.png')
 
     size = models.FloatField(verbose_name='Size', null=True, blank=True, default=0) # Store size of page
     bplan_size = models.FloatField(verbose_name='Size', null=True, blank=True, default=0) # Store size of the entire business plan
@@ -35,6 +34,10 @@ class BusinessPlanTitlePage(models.Model):
     date_created = models.DateTimeField(verbose_name='Date Created', blank=True, null=True)
     date_modified = models.DateTimeField(verbose_name='Date Modified', blank=True, null=True)
     owner = models.ForeignKey(User, verbose_name="Business Plan Owner", null=True, blank=True, on_delete=models.DO_NOTHING) # Ensure this is changed to False on deployment!!
+
+    def base_dir(self):
+        return settings.BASE_DIR;
+
 
     def save(self, *args, **kwargs):
         ''' On save, update timestamps '''
@@ -155,7 +158,6 @@ class BusinessPlanFinancialDataInput(models.Model):
         verbose_name_plural = "Business Plans Financial Data Input"
         ordering = ['-date_modified', '-date_created']
 
-
 class BusinessPlanSettings(models.Model):
     title_page = models.ForeignKey(BusinessPlanTitlePage, verbose_name="Business Plan Title Page", null=True, on_delete=models.CASCADE)
     step_monitor = models.TextField(verbose_name='Step Monitor', null=True, blank=True, default='')
@@ -199,6 +201,18 @@ class BusinessPlanSettings(models.Model):
         verbose_name = "Business Plan Settings"
         verbose_name_plural = "Business Plans Settings"
         ordering = ['-id']
+
+class BusinessPlanSample(models.Model):
+    title_page = models.ForeignKey(BusinessPlanTitlePage, verbose_name="Business Plan Title Page", null=True, on_delete=models.CASCADE)
+    display_name = models.CharField(verbose_name='Display Name', max_length=500, null=True, blank=True)
+    business_types = models.IntegerField(choices=BUSINESS_TYPES, verbose_name='Business Type', default=1)
+
+    def ___str__(self):
+        return self.display_name
+
+    class Meta:
+        verbose_name = "Business Plan Sample"
+        verbose_name_plural = "Business Plans Samples"
 
 class HelpSection(models.Model):
     ref_id = models.CharField(max_length=250, verbose_name='Ref Id', null=True, blank=True, default='')

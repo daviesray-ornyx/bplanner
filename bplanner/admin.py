@@ -6,7 +6,7 @@ from django_summernote.admin import SummernoteModelAdmin
 from .models import (
     Profile, HelpSection, HelpSubSection, HelpSubSectionExample,
     BusinessPlanTitlePage, BusinessPlanMainContent, BusinessPlanFinancialAssumptions, BusinessPlanFinancialDataInput,
-    BusinessPlanSettings,
+    BusinessPlanSettings, BusinessPlanSample,
     Currency, Month
 )
 
@@ -44,6 +44,10 @@ class BusinessPlanFinancialDataInputAdmin(SummernoteModelAdmin):
 class BusinessPlanSettingsAdmin(SummernoteModelAdmin):
     pass
 
+class BusinessPlanSampleAdmin(SummernoteModelAdmin):
+    pass
+
+
 # class HelpSubSectionExampleAdmin(admin.ModelAdmin):
 #     pass
 
@@ -62,5 +66,6 @@ admin.site.register(BusinessPlanMainContent, BusinessPlanMainContentAdmin)
 admin.site.register(BusinessPlanFinancialAssumptions, BusinessPlanFinancialAssumptionsAdmin)
 admin.site.register(BusinessPlanFinancialDataInput, BusinessPlanFinancialDataInputAdmin)
 admin.site.register(BusinessPlanSettings, BusinessPlanSettingsAdmin)
+admin.site.register(BusinessPlanSample, BusinessPlanSampleAdmin)
 admin.site.register(Currency, CurrencyAdmin)
 admin.site.register(Month, MonthAdmin)
