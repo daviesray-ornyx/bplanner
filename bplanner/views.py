@@ -379,15 +379,10 @@ class BusinessPlanDeleteView(View):
 
         return redirect('dashboard');
 
-
 def save_title_page(request):
     if request.method == 'GET':
         return JsonResponse({'status':500, 'message': 'Save action does not allow GET'})
     bplanner_id = request.POST.get('id', None) # Be careful about this while doing a post!!
-    print('Pringitn post')
-    print(request.POST)
-    print('Pringitn FILES')
-    print(request.FILES)
     if bplanner_id is not None and bplanner_id != '':
         # Update
         bplan = BusinessPlanTitlePage.objects.get(id=bplanner_id)
@@ -399,10 +394,6 @@ def save_title_page(request):
             bplan_size = get_size(model_instance)
             model_instance.bplan_size = bplan_size - bplan.size  # Overall change in size in Mbs # round to 2 dps..
             model_instance.size = bplan_size
-            print("After printing before edit")
-            print(model_instance.logo)
-            print("After printing after edit")
-
             model_instance.save()
             # get model size
             # update profile usage size
@@ -500,7 +491,6 @@ def save_financial_assumptions_page(request):
     if title_page_id is None or title_page_id == '':
         return JsonResponse({'status': 500, 'message': 'An error occurred while updating Business plan. Please try again or contact system admin.'})
     title_page = BusinessPlanTitlePage.objects.get(id=title_page_id)
-
     try:
         assumptions_page = BusinessPlanFinancialAssumptions.objects.get(title_page=title_page)
     except:
@@ -526,9 +516,13 @@ def save_financial_assumptions_page(request):
             model_instance.size = assumptions_page_size
             model_instance.save()
 
+
             # get model size
 
             return JsonResponse({'status': 200, 'message': 'Financial assumptions data updated successfully!', 'id': model_instance.id})
+        else:
+            print('Invalid: errors')
+            print(form.errors)
         return JsonResponse({'status': 500, 'message': 'An error occurred while updating Business plan. Please try again or contact system admin.'})
     else:
         form = BusinessPlanFinancialAssumptionsForm(request.POST)
@@ -550,10 +544,12 @@ def save_financial_assumptions_page(request):
             model_instance.size = assumptions_page_size
             model_instance.save()
             return JsonResponse({'status': 200, 'message': 'Financial assumptions data saved successfully!', 'id': model_instance.id})
+        else:
+            print('Errors')
+            print(form.errors)
         return JsonResponse({'status': 500, 'message': 'An error occurred while creating Business plan. Please try again or contact system admin.'})
 
 def save_financial_data_input_page(request):
-    print('Something is happening here')
     if request.method == 'GET':
         return JsonResponse({'status':500, 'message': 'Save action does not allow GET'})
 
@@ -563,14 +559,12 @@ def save_financial_data_input_page(request):
         return JsonResponse({'status': 500, 'message': 'An error occurred while updating Business plan. Please try again or contact system admin.'})
     title_page = BusinessPlanTitlePage.objects.filter(id=title_page_id).first()
 
-    print("Something here")
     try:
         data_input_page = BusinessPlanFinancialDataInput.objects.get(title_page=title_page)
     except:
         data_input_page = None
 
     if data_input_page is not None:
-        print('Not new')
         # Update
         form = BusinessPlanFinancialDataInputForm(request.POST, files=None, instance=data_input_page)
         if form.is_valid():
@@ -592,8 +586,10 @@ def save_financial_data_input_page(request):
             model_instance.save()
 
             # get model size
-
             return JsonResponse({'status': 200, 'message': 'Business plan updated successfully!', 'id': model_instance.id})
+        else:
+            print('BusinessPlanFinancialDataInputForm Errors')
+            print(form.errors)
         return JsonResponse({'status': 500, 'message': 'An error occurred while updating Business plan. Please try again or contact system admin.'})
     else:
         form = BusinessPlanFinancialDataInputForm(request.POST)
@@ -627,25 +623,16 @@ def save_bplanner_settings(request):
         return JsonResponse({'status': 500, 'message': 'An error occurred while updating Business plan. Please try again or contact system admin.'})
     title_page = BusinessPlanTitlePage.objects.filter(id=title_page_id).first()
 
-    print('Saving  business plan')
-    print(request.POST)
     month_initiated = request.POST.get('month_list_initiated', False) in ['true', '1']
     year_initiated = request.POST.get('year_list_initiated', False) in ['true', '1']
 
-    print(type(month_initiated))
-    print("Then")
-    print(type(year_initiated))
     try:
-        print("Instance already exists")
         bplanner_settings = BusinessPlanSettings.objects.get(title_page=title_page)
     except:
-        print("Creating an new instance")
         bplanner_settings = None
     if bplanner_settings is not None :
-        print("Not new")
         form = BusinessPlanSettingsForm(request.POST, files=None, instance=bplanner_settings)
         if form.is_valid():
-            print("Is valid")
             model_instance = form.save(commit=False)
             model_instance.title_page = title_page
             try:
@@ -710,7 +697,6 @@ def view_bplan(request):
             bplan_main_content_page = None
         return render(request, 'view-business-plan.html', {'sample': sample, 'bplan_samples': bplan_samples, 'view': True, 'sample': None, 'bplan_main_content_page': bplan_main_content_page, 'title_page': title_page})
 
-
 def link_callback(uri, rel):
     # use short variable names
     sUrl = settings.STATIC_URL      # Typically /static/
@@ -724,8 +710,6 @@ def link_callback(uri, rel):
     elif uri.startswith(sUrl):
         path = os.path.join(sRoot, uri.replace(sUrl, ""))
 
-    print("Resulting path")
-    print(path)
     # make sure that file exists
     if not os.path.isfile(path):
         raise Exception('media URI must start with %s or %s' % (sUrl, mUrl))

@@ -1524,7 +1524,7 @@
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Starting month</label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    <select class="form-control" id="id_first_financial_year_month" name="first_financial_year_month render_required" style="width:400px;" required="required">
+                                                    <select class="form-control render_required" id="id_first_financial_year_month" name="first_financial_year_month"  value="{{ bplan_financial_assumptions_page_form.first_financial_year_month.value }}" style="width:400px;" required="required">
                                                         {% for month in months %}
                                                             {{ month.id }}
                                                             <option value="{{ month.id }}" {% if bplan_financial_assumptions_page_form.first_financial_year_month.value == month.id %} selected {% endif %}>{{ month.code }}</option>
@@ -1721,7 +1721,7 @@
 
                                         {% if mode == 'new' %}
                                             <form id="frm_bplanner_financial_data_input_page" method="post" action="/dashboard/new/business-plan/financial_data_input_page" class="form-horizontal form-label-left" autocomplete="off" data-parsley-validate>
-{#                                          <h2>Financial data input</h2>#}
+{#                                              <h2>Financial data input</h2>#}
                                                 {% csrf_token %}
                                                 <input name="id" value="{{ frm_bplanner_financial_data_input_page.id }}" class="hidden id">
     {#                                            <div class="ln_solid"></div>#}

@@ -878,7 +878,7 @@ $(document).ready(function () {
                                 {
             strRowHtml +=           '<select class="form-control text-right" name="' + investmentMonth + '" required="required">'
             $.each(getMonthsListForYear(projectionYear, false), function (monthIndex, projectionMonth) {
-                strRowHtml +=             '<option value="'+ monthIndex +'">'+ projectionMonth['display'] +'</option>'
+                strRowHtml +=             '<option value="'+ monthIndex +'"  class="span-projection-month" data-projection_month_index="' + monthIndex + '">'+  projectionMonth['display'] +'</option>'
             })
             strRowHtml +=           '</select>'
                                 }
@@ -950,7 +950,7 @@ $(document).ready(function () {
                        +        '<td class="'+ projectionYear+' month_added td-input td-sm">'
                        +            '<select class="form-control text-center" name="' + investmentMonth + '" required="required">'
             $.each(getMonthsListForYear(projectionYear, false), function (monthIndex, projectionMonth) {
-                strRowHtml +=             '<option value="'+ monthIndex +'">'+ projectionMonth['display'] +'</option>'
+                strRowHtml +=             '<option value="'+ monthIndex +'" class="span-projection-month" data-projection_month_index="' + monthIndex + '">'+ projectionMonth['display'] +'</option>'
             })
             strRowHtml +=           '</select>'
                        +        '</td>'
@@ -1026,7 +1026,7 @@ $(document).ready(function () {
                        +        '<td class="'+ projectionYear + ' month_added td-input td-sm">'
                        +            '<select class="form-control text-center" name="' + investmentMonth + '" required="required">'
             $.each(getMonthsListForYear(projectionYear, false), function (monthIndex, projectionMonth) {
-                strRowHtml +=             '<option value="'+ monthIndex +'">'+ projectionMonth['display'] +'</option>'
+                strRowHtml +=             '<option value="'+ monthIndex +'" class="span-projection-month" data-projection_month_index="' + monthIndex + '">'+ projectionMonth['display'] +'</option>'
             })
             strRowHtml +=           '</select>'
                        +        '</td>'
@@ -1679,8 +1679,8 @@ $(document).ready(function () {
         // Moving to step 2 of input entry!
 
         // generate projectionYearsList
-        generatePrijectionYearsList();
-        generateProjectionMonthsList();
+        //generatePrijectionYearsList();
+        //generateProjectionMonthsList();
 
 
         generatePricePerProductTable();
@@ -1795,7 +1795,6 @@ $(document).ready(function () {
     });
     $('.action-delete-row').click(deleteRowEventHandler);
 
-
     $('#btn_pnl_test').click(function (event) {
         generatePNL_RevenuesTable();
         generateAmortizationSchedule();
@@ -1881,9 +1880,6 @@ $(document).ready(function () {
         return receivablePerMonthDict;
     }
 
-    /*
-    Payables functions
-     */
     function getDirectCostTotalsPerYear(directCostTotals){
         var directCostTotalsPerYearDict = {}
         $.each(directCostTotals, function (monthIndex, directCostAmount) {
@@ -1928,10 +1924,6 @@ $(document).ready(function () {
         })
         return payablesPerMonthDict;
     }
-
-    /*
-    Other Payables per month section
-     */
 
     function computeRevenueTotalsPerMonth(){
         var unitsPerProductPerMonth = getUnitsPerProductPerMonth()
@@ -2420,12 +2412,23 @@ $(document).ready(function () {
         return unitsPerProductPerMonthDict;
     }
 
-    function getEmployeeCostPerMonth(){
+    function getEmployeeCostPerMonth(category){
         var employeeCostPerMonthDict_Final = {}
         var employeeCostPerMonthDict = {}
         var numberOfEmployeesPerRoleTableRows = $('#tbl_assumptions_employee_roles_list tbody tr');
+        var excludedEmployeeRoleIds = [];
         $.each(numberOfEmployeesPerRoleTableRows, function (employeeRoleTRIndex, employeeRoleTR) {
             var employeeRoleId = $(employeeRoleTR).data('row_id')
+
+            // Check direct/indirect option
+            var costTypeTD = $(employeeRoleTR).children('td').last()
+            var costTypeSelect = $(costTypeTD).children('select')[0]
+            var costTypeId = parseInt($(costTypeSelect).val(), 10)
+            if(costTypeId != category){
+                excludedEmployeeRoleIds.push(employeeRoleId);
+                return; // This takes you to the next iteration if cost does not match
+            }
+
             employeeCostPerMonthDict[employeeRoleId] = {}
             employeeCostPerMonthDict[employeeRoleId]['hours'] = {}
             employeeCostPerMonthDict[employeeRoleId]['rates'] = {}
@@ -2455,6 +2458,11 @@ $(document).ready(function () {
             // get employeeRoleId from data
             var projectionYearIndex = 0;
             var employeeRoleId = $(workingHoursTR).data('row_id');
+
+            if(excludedEmployeeRoleIds.indexOf(employeeRoleId) >= 0){
+                return;
+            }
+
             var workingHoursTDs = $(workingHoursTR).children('.working_hours')
             $.each(workingHoursTDs, function (tdIndex, workingHoursTD) {
                 // get projection year
@@ -2474,6 +2482,9 @@ $(document).ready(function () {
             // Get employeeRoleId
             var projectionYearIndex = 0;
             var employeeRoleId = $(hourlyRatesTR).data('row_id');
+            if(excludedEmployeeRoleIds.indexOf(employeeRoleId) >= 0){
+                return;
+            }
             var hourlyRatesTDs = $(hourlyRatesTR).children('.hourly_rate');
             $.each(hourlyRatesTDs, function (tdIndex, hourlyRateTD) {
                 // get projection year
@@ -2488,6 +2499,10 @@ $(document).ready(function () {
 
         // Dividing this into monthly values for all the years
         $.each(employeeCostPerMonthDict, function (employeeRoleId, employeeRoleDetails) {
+            if(excludedEmployeeRoleIds.indexOf(employeeRoleId) >= 0){
+                return;
+            }
+
             employeeCostPerMonthDict_Final[employeeRoleId] = {}
             var name = employeeRoleDetails['name'];
 
@@ -2814,7 +2829,8 @@ $(document).ready(function () {
 
         var revenuePerProductPerMonth = {}
         var directCostPerProductPerYear = getDirectCostPerProductPerYear();
-        var employeeCostPerMonth = getEmployeeCostPerMonth();
+        var employeeCostPerMonth_Direct = getEmployeeCostPerMonth(1); // specify if direct, total or indirect
+        var employeeCostPerMonth_Indirect = getEmployeeCostPerMonth(2); // specify if direct, total or indirect
         var unitsPerProductPerMonth = getUnitsPerProductPerMonth();
         var operatingCostPerMonthList = getOperatingCostPerMonth();
 
@@ -2834,6 +2850,8 @@ $(document).ready(function () {
         var receivableTotalsPerYear = {}    // Receivable totals per year
         var receivablesPerMonth = {};       // Receivables appropriated per month
         var employeeCostTotals = {}
+        var employeeCostTotals_Indirect = {}
+
         var operatingCostPerMonthTotals = {} //Operating cost + BAd debts
         operatingCostTotalsPeryear = {}  // operatingCostPerMonthTotals aggregated per year
         var otherExpensesPayableTotalsPerYear = {}  // Other expensesPayable bit of operatingCostTotalsPeryear using payables formula
@@ -3005,14 +3023,14 @@ $(document).ready(function () {
         //  EMPLOYEE COSTS
         // Add other direct costs:- Employee cost
         // Add Employee cost header
-        strHtml = '<tr><td class="text-underline">Employee Cost</td>'
+        strHtml = '<tr><td class="text-underline">Employee Cost (Direct Cost)</td>'
                 $.each(projectionMonthsList, function(projectionMonthIndex, projectionMonth){
                     strHtml += '<td> </td>'
                 })
         strHtml += '</tr>'
         $('#tbl_pnl tbody').append(strHtml);
         // Add employee cost rows
-        $.each(employeeCostPerMonth, function (employeeRoleIndex, employeeRoleCost) {
+        $.each(employeeCostPerMonth_Direct, function (employeeRoleIndex, employeeRoleCost) {
             strHtml = '<tr>'
                     +     '<td>' + employeeRoleCost['name'] + '</td>'
             $.each(employeeRoleCost['projection_months'], function (monthIndex, employmentCost) {
@@ -3097,6 +3115,70 @@ $(document).ready(function () {
                 })
         strHtml += '</tr>'
         $('#tbl_pnl tbody').append(strHtml);
+
+        // check before adding
+        if(!$.isEmptyObject(employeeCostPerMonth_Indirect)){
+            strHtml = '<tr><td class="text-underline">Employee Cost (Indirect Cost)</td>'
+                    $.each(projectionMonthsList, function(projectionMonthIndex, projectionMonth){
+                        strHtml += '<td> </td>'
+                    })
+            strHtml += '</tr>'
+            $('#tbl_pnl tbody').append(strHtml);
+            // Add employee cost rows
+            $.each(employeeCostPerMonth_Indirect, function (employeeRoleIndex, employeeRoleCost) {
+                strHtml = '<tr>'
+                        +     '<td>' + employeeRoleCost['name'] + '</td>'
+                $.each(employeeRoleCost['projection_months'], function (monthIndex, employmentCost) {
+                    if(employeeCostTotals_Indirect[monthIndex] == null){
+                        employeeCostTotals_Indirect[monthIndex] = 0;
+                    }
+
+                    if(operatingCostPerMonthTotals[monthIndex] == null){
+                        operatingCostPerMonthTotals[monthIndex] = 0;
+                    }
+                    if(overallCost[monthIndex] == null){
+                        overallCost[monthIndex] = 0;
+                    }
+                    employeeCostTotals_Indirect[monthIndex] += employmentCost;
+                    operatingCostPerMonthTotals[monthIndex] += employmentCost;
+                    overallCost[monthIndex] += employmentCost;
+                    strHtml += '<td class="monthly td-input readonly ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
+                                + ' data-is_total_col="' + 'Showistotal' + '"'
+                                + ' data-projection_month_id="' + 'Addmonth' +'" '
+                                + ' data-projection_year="' + 'Addyear' +'" '
+                                + ' width="200">'
+                                + '<input name="" '
+                                + ' type="text"'
+                                + ' value="'+ employmentCost +'"'
+                                + ' class="form-control input-md text-right rpt_presentation" readonly></td>'
+                })
+                $('#tbl_pnl tbody').append(strHtml);
+            })
+        }
+
+
+        // Indirect Employee cost totals
+        // check before adding
+        if(!$.isEmptyObject(employeeCostTotals_Indirect)){
+            strHtml = '<tr class="tr-totals">'
+                    +   '<td>Employee Cost Totals (Indirect Costs)</td>'
+            $.each(employeeCostTotals_Indirect, function (monthIndex, amount) {
+                strHtml    += '<td class="monthly td-input readonly' + ' Addyear ' + ' ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
+                                            + ' data-is_total_col="' + 'Showistotal' + '"'
+                                            + ' data-projection_month_id="' + 'Addmonth' + '" '
+                                            + ' data-projection_year="' + 'Addyear' + '" '
+                                            + ' width="200">'
+                                            +   '<input name="" '
+                                            +       ' type="text"'
+                                            +       ' value="' + amount + '"'
+                                            +       ' class="form-control input-md text-right rpt_presentation" readonly></td>'
+                })
+                strHtml          +='</tr>'
+
+            $('#tbl_pnl tbody').append(strHtml);
+        }
+
+
         // Add operating cost rows
         // OPERATING COST ROWS
         $.each(operatingCostPerMonthList, function (operatingCostIndex, monthlyOperatingCost) {
@@ -3390,7 +3472,7 @@ $(document).ready(function () {
         // Generate Cashflow statements
 
         // This should return net cash flow per Month then converted to per year later
-        var cashFlowClosingCashBalancePerMonth = generateCashFlowStatement(revenuePerProductPerMonth, revenueTotals, directCostTotals,
+        var cashFlowClosingCashBalancePerMonth = generateCashFlowStatement(revenuePerProductPerMonth, revenueTotals, directCostTotals, employeeCostTotals_Indirect,
             employeeCostTotals, operatingCostPerMonthList, otherStartUpCostsPerMonthList,
             depositAmountPerMonthList, taxPerMonth, badDebtsPerMonthList,
             receivablesPerMonth, payablesPerMonth, otherExpensesPayablePerMonth,
@@ -3991,7 +4073,7 @@ $(document).ready(function () {
         return cashFlowClosingBalancePerYear;
     }
 
-    function generateCashFlowStatement(revenuePerProductPerMonth, revenueTotals, directCostTotals,
+    function generateCashFlowStatement(revenuePerProductPerMonth, revenueTotals, directCostTotals, employeeCostTotals_Indirect,
                                        employeeCostTotals, operatingCostPerMonthList, otherStartUpCostsPerMonthList,
                                        depositAmountPerMonthList, taxPerMonth, badDebtsPerMonthList,
                                        receivablesPerMonth, payablesPerMonth, otherExpensesPayablePerMonth,
@@ -4097,6 +4179,32 @@ $(document).ready(function () {
             })
             strHtml          +='</tr>'
         $('#tbl_cash_flow tbody').append(strHtml);
+
+        // Indirect Employee cost totals
+
+
+        // Check if available before adding
+        if(!$.isEmptyObject(employeeCostTotals_Indirect)){
+            strHtml = '<tr class="">'
+                +   '<td class="">In-Direct Employee Cost Totals</td>'
+            $.each(employeeCostTotals_Indirect, function (monthIndex, monthlyDirectCostTotal) {
+                if(totalOutFlowsFromOperatingActivities[monthIndex] == null){
+                    totalOutFlowsFromOperatingActivities[monthIndex] = 0;
+                }
+                totalOutFlowsFromOperatingActivities[monthIndex] += parseInt(monthlyDirectCostTotal || 0);
+                strHtml    += '<td class="monthly td-input readonly' + ' Addyear ' + ' ' + ' Addmonth ' + ' ' + ' Showistotal ' + '"'
+                                            + ' data-is_total_col="' + 'Showistotal' + '"'
+                                            + ' data-projection_month_id="' + 'Addmonth' + '" '
+                                            + ' data-projection_year="' + 'Addyear' + '" '
+                                            + ' width="200">'
+                                            +   '<input name="" '
+                                            +       ' type="text"'
+                                            +       ' value="' + monthlyDirectCostTotal + '"'
+                                            +       ' class="form-control text-right rpt_presentation" readonly></td>'
+                })
+                strHtml          +='</tr>'
+            $('#tbl_cash_flow tbody').append(strHtml);
+        }
 
         // Get operating costs... Already done in PNL
 
@@ -5283,17 +5391,25 @@ $(document).ready(function () {
         // Do any necessary auto-generations
         stepMonitor[clickedStep]['passed'] = true;
         if(currentStepId != clickedStep){
-            if(currentStepId == '#step-1'){
+            if(currentStepId == '#step-1')
+            {
                 saveTitlePage();
-            }else if(currentStepId == '#step-2'){
+            }
+            else if(currentStepId == '#step-2')
+            {
                 saveMainContent()
-            }else if(currentStepId == '#step-3'){
+            }
+            else if(currentStepId == '#step-3')
+            {
                 saveFinancialAssumptions()
-            }else if(currentStepId == '#step-4'){
+            }
+            else if(currentStepId == '#step-4')
+            {
                 saveFinancialDataInput()
                 stepMonitor['#step-4']['auto_generate'] = false
                 stepMonitor['#step-4']['passed'] = true
-            }else if(currentStepId == '#step-5'){
+            }
+            else if(currentStepId == '#step-5'){
                 // Nothing needs to be save for step 5
             }
 
@@ -5306,10 +5422,8 @@ $(document).ready(function () {
                     // Autogenerate if necessary
                     // generate projectionYearsList
                     toggleSpinner(true, 'Generating financial data input tables/fields!')
-                    generatePrijectionYearsList();
-                    generateProjectionMonthsList();
-
-
+                    //generatePrijectionYearsList();
+                    //generateProjectionMonthsList();
                     generatePricePerProductTable();
                     generateDirectCostPerProductTable();
                     generateUnitOfRevenueMeasurementTable();
@@ -5424,7 +5538,6 @@ $(document).ready(function () {
 
 
     })
-
 
     function toggleSpinner(show, message){
         if(show){
@@ -5606,8 +5719,12 @@ $(document).ready(function () {
 
     }
 
+    $('#financial_assumptions input,textarea,select').change(function(event){
+        $(this).attr('value', $(this).val());
+    })
+
     function saveFinancialAssumptions(){
-        $('#financial_assumptions input,textarea,select').change(function(event){
+        $('#financial_assumptions input,textarea,select').each(function(index){
             $(this).attr('value', $(this).val());
         })
         var data = $('#frm_bplanner_financial_assumptions_page').serializeArray();
@@ -5641,7 +5758,11 @@ $(document).ready(function () {
     function saveFinancialDataInput(){
         // For saving BusinessPlanSettingsModel
         // Ensure all input//select//values and attributes are set
-        syncValAttributes('#frm_bplanner_financial_data_input_page')
+        $('#financial_data_input input,textarea,select').each(function(index){
+            $(this).attr('value', $(this).val());
+        })
+
+        //syncValAttributes('#frm_bplanner_financial_data_input_page')
         var data = $('#frm_bplanner_financial_data_input_page').serializeArray();
         var titlePageId = $('#frm_bplanner_title_page .id').val()
         // add titlePageId to serialized data
@@ -5649,6 +5770,9 @@ $(document).ready(function () {
         // add frm_bplanner_financial_data_input_page // financial_input
         var financialInputHTML = $('#frm_bplanner_financial_data_input_page').html()
         data.push({name: "financial_input", value: financialInputHTML});
+        //csrfmiddlewaretoken
+        var token = getCookie('csrftoken')
+        data.push({name: "csrfmiddlewaretoken", value: token});
 
         $.ajax({
           type: "POST",
@@ -5682,6 +5806,7 @@ $(document).ready(function () {
         data.push({name: "last_financial_year", value: lastFinancialYear}) // int
         data.push({name: "count_of_months_in_financial_year", value: countOfMonthsInFinancialYear})// int
         data.push({name: "projection_years_list", value: JSON.stringify(projectionYearsList)});
+        data.push({name: "projection_years_list_display", value: JSON.stringify(projectionYearsList_Display)});
         data.push({name: "product_count", value: productCount}) // int
         data.push({name: "products", value: JSON.stringify(products)});
 
@@ -5723,7 +5848,6 @@ $(document).ready(function () {
           dataType: 'json'
         });
     }
-
 
     /* ECHRTS */
     function init_echarts_dboard() {
@@ -6234,8 +6358,8 @@ $(document).ready(function () {
 
         toggleSpinner(true, 'Regenerating page...')
         if(currentStepId == '#step-4'){
-            generatePrijectionYearsList();
-            generateProjectionMonthsList();
+            //generatePrijectionYearsList();
+            //generateProjectionMonthsList();
 
             //console.log(projectionYearsList);
             generatePricePerProductTable(true);
@@ -6311,21 +6435,6 @@ $(document).ready(function () {
         saveMainContent();
         saveFinancialDataInput()
         saveFinancialAssumptions();
-        //$.each(stepsMonitor, function(stepId, stepObject){
-        //    if(stepObject['passed']){
-        //        // save step
-        //        if(stepId == '#step-1'){
-        //            saveTitlePage();
-        //        }else if(stepId == '#step-2'){
-        //            saveMainContent();
-        //        }else if(stepId == '#step-3'){
-        //            saveFinancialAssumptions();
-        //        }else if(stepId == '#step-4'){
-        //            saveFinancialDataInput()
-        //        }
-        //
-        //    }
-        //})
         toggleSpinner(false, 'Done!')
         $('#btn_save_business_plan').removeClass('disabled')
     })
@@ -6676,11 +6785,36 @@ $(document).ready(function () {
 
 
     // clone projectionYearsList_Display on start
-    if((projectionYearsList_Display == null || projectionYearsList_Display.length == 0) && projectionYearsList.length > 0){
-        $.each(projectionYearsList, function (index, val) {
-            projectionYearsList_Display[index] = val
-        })
+    // regenerate display
+    if((projectionYearsList_Display == null || projectionYearsList_Display.length == 0)){
+        projectionYearsList_Display = returnProjectionYearsList();
     }
+
+    // update all selects...
+    $('select').change(function (index) {
+        var val = $(this).val();
+        $.each($(this).children('option'), function (index, obj) {
+            //console.log($(obj.val()))
+            if(val == obj.value){
+                $(obj).attr('selected', true);
+            }else{
+                $(obj).removeAttr('selected')
+            }
+        })
+    })
+
+    // Update select values on load
+    $('select').each(function (index) {
+        var val = $(this).val();
+        $.each($(this).children('option'), function (index, obj) {
+            //console.log($(obj.val()))
+            if(val == obj.value){
+                $(obj).attr('selected', true);
+            }else{
+                $(obj).removeAttr('selected')
+            }
+        })
+    })
 
 })
 
