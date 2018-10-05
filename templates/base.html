@@ -42,15 +42,18 @@
         var settingsId = {% if bplan_settings.id == None %} null {% else %} {{ bplan_settings.id }} {% endif %}
         var stepMonitor = {{ bplan_settings.step_monitor | safe }}
         var calendarMonths =  {{ bplan_settings.calendar_months | safe }}
+        var firstFinancialYearMonth = {{ bplan_financial_assumptions_page_form.first_financial_year_month.value }}
         var projectionMonthsList = {{bplan_settings.projection_months_list | safe }}
+        var monthListInitiated = {% if bplan_settings.month_list_initiated %} true {% else %} false {% endif %}
+        var yearListInitiated = {% if bplan_settings.year_list_initiated %} true {% else %} false {% endif %}
         var projectionYears = {% if bplan_settings.projection_years == None %} null {% else %} {{bplan_settings.projection_years | safe }} {% endif %};
         var firstFinancialYear = {% if bplan_settings.first_financial_year == None %} null {% else %} {{bplan_settings.first_financial_year | safe }} {% endif %};
         var lastFinancialYear = {% if bplan_settings.last_financial_year == None %} null {% else %} {{bplan_settings.last_financial_year | safe }} {% endif %};
         var countOfMonthsInFinancialYear = {{bplan_settings.count_of_months_in_financial_year | safe }}
         var projectionYearsList = {{bplan_settings.projection_years_list | safe }}
+        var projectionYearsList_Display = {{bplan_settings.projection_years_list_display | safe }}
         var productCount = {% if bplan_settings.product_count == None %} null {% else %} {{bplan_settings.product_count | safe }} {% endif %};
         var products = {{bplan_settings.products | safe }}
-
         var theme = {{bplan_settings.theme | safe }}
 
         var costAppropriationMethods = {{bplan_settings.cost_appropriation_methods | safe }}

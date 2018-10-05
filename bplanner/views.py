@@ -384,10 +384,14 @@ def save_title_page(request):
     if request.method == 'GET':
         return JsonResponse({'status':500, 'message': 'Save action does not allow GET'})
     bplanner_id = request.POST.get('id', None) # Be careful about this while doing a post!!
+    print('Pringitn post')
+    print(request.POST)
+    print('Pringitn FILES')
+    print(request.FILES)
     if bplanner_id is not None and bplanner_id != '':
         # Update
         bplan = BusinessPlanTitlePage.objects.get(id=bplanner_id)
-        form = BusinessPlanTitlePageForm(request.POST, files=None, instance=bplan)
+        form = BusinessPlanTitlePageForm(request.POST, request.FILES, instance=bplan)
         if form.is_valid():
             model_instance = form.save(commit=False)
             model_instance.owner = request.user
@@ -395,18 +399,24 @@ def save_title_page(request):
             bplan_size = get_size(model_instance)
             model_instance.bplan_size = bplan_size - bplan.size  # Overall change in size in Mbs # round to 2 dps..
             model_instance.size = bplan_size
+            print("After printing before edit")
+            print(model_instance.logo)
+            print("After printing after edit")
+
             model_instance.save()
             # get model size
             # update profile usage size
             user_profile = Profile.objects.get(user=request.user)
             user_profile.usage += bplan_size - bplan.size
             user_profile.save()
+
+            # form.save();
             return JsonResponse({'status': 200, 'message': 'Title page updated!', 'id': model_instance.id})
         else:
             pass
         return JsonResponse({'status': 500, 'message': 'An error occurred while updating Business plan. Please try again or contact system admin.'})
     else:
-        form = BusinessPlanTitlePageForm(request.POST)
+        form = BusinessPlanTitlePageForm(request.POST, request.FILES)
         if form.is_valid():
             model_instance = form.save(commit=False)
             model_instance.owner = request.user
@@ -415,7 +425,7 @@ def save_title_page(request):
             model_instance.bplan_size += (bplan_size - model_instance.size)
 
             model_instance.size = bplan_size
-
+            print("After printing new")
             model_instance.save()
             # update profile usage size
             user_profile = Profile.objects.get(user=request.user)
@@ -543,6 +553,7 @@ def save_financial_assumptions_page(request):
         return JsonResponse({'status': 500, 'message': 'An error occurred while creating Business plan. Please try again or contact system admin.'})
 
 def save_financial_data_input_page(request):
+    print('Something is happening here')
     if request.method == 'GET':
         return JsonResponse({'status':500, 'message': 'Save action does not allow GET'})
 
@@ -552,12 +563,14 @@ def save_financial_data_input_page(request):
         return JsonResponse({'status': 500, 'message': 'An error occurred while updating Business plan. Please try again or contact system admin.'})
     title_page = BusinessPlanTitlePage.objects.filter(id=title_page_id).first()
 
+    print("Something here")
     try:
         data_input_page = BusinessPlanFinancialDataInput.objects.get(title_page=title_page)
     except:
         data_input_page = None
 
     if data_input_page is not None:
+        print('Not new')
         # Update
         form = BusinessPlanFinancialDataInputForm(request.POST, files=None, instance=data_input_page)
         if form.is_valid():
@@ -614,23 +627,44 @@ def save_bplanner_settings(request):
         return JsonResponse({'status': 500, 'message': 'An error occurred while updating Business plan. Please try again or contact system admin.'})
     title_page = BusinessPlanTitlePage.objects.filter(id=title_page_id).first()
 
+    print('Saving  business plan')
+    print(request.POST)
+    month_initiated = request.POST.get('month_list_initiated', False) in ['true', '1']
+    year_initiated = request.POST.get('year_list_initiated', False) in ['true', '1']
+
+    print(type(month_initiated))
+    print("Then")
+    print(type(year_initiated))
     try:
+        print("Instance already exists")
         bplanner_settings = BusinessPlanSettings.objects.get(title_page=title_page)
     except:
+        print("Creating an new instance")
         bplanner_settings = None
     if bplanner_settings is not None :
+        print("Not new")
         form = BusinessPlanSettingsForm(request.POST, files=None, instance=bplanner_settings)
         if form.is_valid():
+            print("Is valid")
             model_instance = form.save(commit=False)
             model_instance.title_page = title_page
+            try:
+                model_instance.month_list_initiated = month_initiated
+                model_instance.year_list_initiated = year_initiated
+            except Exception  as err:
+                print(err)
             model_instance.save()
             return JsonResponse({'status': 200, 'message': 'Business plan updated successfully!', 'id': model_instance.id})
+        else:
+            print(form.errors)
         return JsonResponse({'status': 500, 'message': 'An error occurred while updating Business plan. Please try again or contact system admin.'})
     else:
         form = BusinessPlanSettingsForm(request.POST)
         if form.is_valid():
             model_instance = form.save(commit=False)
             model_instance.title_page = title_page
+            model_instance.month_list_initiated = month_initiated
+            model_instance.year_list_initiated = year_initiated
             model_instance.save()
             return JsonResponse({'status': 200, 'message': 'Business plan created successfully!', 'id': model_instance.id})
         return JsonResponse({'status': 500, 'message': 'An error occurred while creating Business plan. Please try again or contact system admin.'})
@@ -706,7 +740,10 @@ def download_pdf(request):
 
     # we have a valid id. get sample
     bplan = BusinessPlanTitlePage.objects.get(id=bplan_id);
-    bplan_main_content_page = BusinessPlanMainContent.objects.get(title_page=bplan)
+    try:
+        bplan_main_content_page = BusinessPlanMainContent.objects.get(title_page=bplan)
+    except:
+        bplan_main_content_page = BusinessPlanMainContent() # create a new instance
     # data = jsonpickle.encode(sample)
     context = {'view': False, 'sample': None, 'bplan_main_content_page': bplan_main_content_page, 'title_page': bplan}
 
@@ -715,7 +752,7 @@ def download_pdf(request):
     # print(html); # print pred before
     # return HttpResponse(html);
     response = BytesIO()
-    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), response, link_callback=link_callback)
+    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), response)
     if not pdf.err:
         return HttpResponse(response.getvalue(), content_type='application/pdf')
     else:
