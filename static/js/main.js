@@ -6289,11 +6289,20 @@ $(document).ready(function () {
 
     init_echarts_dboard();
 
-    function renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData){
+    function renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData, allowFloat){
         // containerId without
         if ($('#' + containerId).length ){
           var echartBar = echarts.init(document.getElementById(containerId), theme);
           echartBar.setOption({
+            label: {
+                normal: {
+                    show: true,
+                    position: 'top',
+                    formatter: function (data) {
+                        return formatNumber(data.value, allowFloat)
+                    }
+                }
+            },
             title: {
               text: title,
               subtext: subTitle
@@ -6329,7 +6338,7 @@ $(document).ready(function () {
         var data = [];
         var legendData = ['Capital',]
         $.each(totalAssets, function (projectionYear, amount) {
-            data.push(amount);
+            data.push(Math.ceil(amount));
         })
         var seriesData = [
             {
@@ -6338,7 +6347,7 @@ $(document).ready(function () {
               data: data
             },
         ]
-        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData);
+        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData, false);
     }
 
     // totalLiabilitiesBar
@@ -6350,7 +6359,7 @@ $(document).ready(function () {
         var data = [];
         var legendData = ['Capital',]
         $.each(totalLiabilities, function (projectionYear, amount) {
-            data.push(amount);
+            data.push(Math.ceil(amount));
         })
         var seriesData = [
             {
@@ -6359,7 +6368,7 @@ $(document).ready(function () {
               data: data
             },
         ]
-        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData);
+        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData, false);
     }
 
     // fixedAssetsClassifications
@@ -6372,10 +6381,10 @@ $(document).ready(function () {
         var dataInTangibleAssets = [];
         var legendData = ['Tangible Assets', 'Intangible Assets']
         $.each(tangibleAssetsBalanceTotal, function (projectionYear, amount) {
-            dataTangibleAssets.push(amount);
+            dataTangibleAssets.push(Math.ceil(amount));
         })
         $.each(intangibleAssetsBalanceTotal, function (projectionYear, amount) {
-            dataInTangibleAssets.push(amount);
+            dataInTangibleAssets.push(Math.ceil(amount));
         })
         var seriesData = [
             {
@@ -6389,7 +6398,7 @@ $(document).ready(function () {
               data: dataInTangibleAssets
             },
         ]
-        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData);
+        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData, false);
     }
 
     // cashFlowAnalysisBar
@@ -6405,11 +6414,11 @@ $(document).ready(function () {
 
         $.each(cashFlowChangesDuringTheYearPerMonth, function (projectionMonthIndex, amount) {
             if(projectionMonthIndex.indexOf('total') < 0)
-                dataCashGenerated.push(amount);
+                dataCashGenerated.push(Math.ceil(amount));
         })
         $.each(closingCashBalancePerMonth, function (projectionMonthIndex, amount) {
             if(projectionMonthIndex.indexOf('total') < 0)
-                dataClosingCashBalance.push(amount);
+                dataClosingCashBalance.push(Math.ceil(amount));
         })
         var seriesData = [
             {
@@ -6423,7 +6432,7 @@ $(document).ready(function () {
               data: dataCashGenerated
             },
         ]
-        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData);
+        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData, false);
     }
 
     // totalRevenueBar
@@ -6435,7 +6444,7 @@ $(document).ready(function () {
         var data = [];
         var legendData = []
         $.each(revenueTotalsPerYear, function (projectionYear, amount) {
-            data.push(amount);
+            data.push(Math.ceil(amount));
         })
         var seriesData = [
             {
@@ -6444,7 +6453,7 @@ $(document).ready(function () {
               data: data
             },
         ]
-        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData);
+        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData, false);
     }
 
     // totalDirectCostBar
@@ -6456,7 +6465,7 @@ $(document).ready(function () {
         var data = [];
         var legendData = []
         $.each(directCostTotalsPerYear, function (projectionYear, amount) {
-            data.push(amount);
+            data.push(Math.ceil(amount));
         })
         var seriesData = [
             {
@@ -6465,7 +6474,7 @@ $(document).ready(function () {
               data: data
             },
         ]
-        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData);
+        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData, false);
     }
 
     // grossProfitBar
@@ -6478,7 +6487,7 @@ $(document).ready(function () {
         var legendData = []
         $.each(grossProfit, function (projectionMonthIndex, amount) {
             if(projectionMonthIndex.indexOf('Total') > -1)
-                data.push(amount);
+                data.push(Math.ceil(amount));
         })
         var seriesData = [
             {
@@ -6487,7 +6496,7 @@ $(document).ready(function () {
               data: data
             },
         ]
-        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData);
+        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData, false);
     }
 
     // totalOperatingCostBars
@@ -6499,7 +6508,7 @@ $(document).ready(function () {
         var data = [];
         var legendData = []
         $.each(operatingCostTotalsPeryear, function (projectionYear, amount) {
-            data.push(amount);
+            data.push(Math.ceil(amount));
         })
         var seriesData = [
             {
@@ -6508,7 +6517,7 @@ $(document).ready(function () {
               data: data
             },
         ]
-        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData);
+        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData, false);
     }
 
     // earningsAfterTaxtBar
@@ -6521,7 +6530,7 @@ $(document).ready(function () {
         var legendData = []
         $.each(EAT, function (projectionMonthIndex, amount) {
             if(projectionMonthIndex.indexOf('Total') > -1)
-                data.push(amount);
+                data.push(Math.ceil(amount));
         })
         var seriesData = [
             {
@@ -6530,7 +6539,7 @@ $(document).ready(function () {
               data: data
             },
         ]
-        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData);
+        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData, false);
     }
 
     // netMarginBar  netMarginPerMonth
@@ -6552,7 +6561,7 @@ $(document).ready(function () {
               data: data
             },
         ]
-        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData);
+        renderBarChart(containerId, title, subTitle, dataX, seriesData, legendData, true);
     }
 
     function regenerateCurentPate(){
@@ -6738,7 +6747,20 @@ $(document).ready(function () {
         })    
     }
 
-    function formatNumber(num){
+    function formatNumber(num, allowFloat){
+        currVal = num + ''
+        var currVal = num + ''
+        if(currVal == ''){
+            return '0';
+        }
+        currVal = currVal.replace(/\,/g,'');
+        if(allowFloat){
+            var val = parseFloat(currVal, 10)
+            return val.toLocaleString('en', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }else{
+            var val = parseInt(currVal, 10)
+            return val.toLocaleString('en');
+        }
 
     }
 
