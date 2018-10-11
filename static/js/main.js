@@ -65,6 +65,117 @@ $(document).ready(function () {
         $('.span-currency').text(text);
     }
 
+    function deleteRowWithClass(tableId, productId){
+        console.log('productId')
+        console.log(productId)
+        $(tableId + ' .' + productId ).remove()
+    }
+
+    function addTableRow(tableId, productIndex){
+        var strBody = '';
+        if(tableId == '#tbl_assumptions_price_per_product')
+        {
+            strBody += '<tr data-product_id="' + productIndex + '" class="'+ productIndex +'">'
+                            + '<td class="td-label td-md" data-product_id="' + productIndex + '">'
+                            +    '<span class="input-label"></span>'
+                            + '</td>'
+                            + '<td class="td-label td-xs text-right" data-product_id="' + productIndex + '">'
+                            +   '<span class="input-label"></span>'
+                            + '</td>'
+                            // Add other td's depending on the projection years
+                            var firstYear = true;
+                            $.each(projectionYearsList, function(yearIndex, projectionYear){
+                                // Remember, only the first year is editable. The rest are auto-populated
+                                var readonlyText = ((!firstYear) ? 'readonly' : '');
+                                var priceChangetext = ((firstYear) ? 'price-change' : '');
+                                var autoFilledText = (!firstYear) ? 'auto-filled' : '';
+                                strBody += '<td class="yearly ' + projectionYear +' td-input td-sm' + readonlyText + ' ' + autoFilledText + '"'
+                                            +    ' data-projection_year="'+ projectionYear +'">'
+                                            + '<input data-product_id="' + productIndex + '" name="' + productIndex + '_price_' + projectionYear +'" '
+                                                    + 'type="text" data-projection_year="' + projectionYear +'" '
+                                                    + ' value=""'
+                                                    + ' class="form-control number-input-format input-md '+ priceChangetext +' text-right render_required" required="required " + ' + readonlyText + '></td>'
+                                firstYear = false;
+                            })
+                strBody += '</tr>'
+            $('#tbl_assumptions_price_per_product tbody').append(strBody)
+            // Update bindings
+            $('.price-change').unbind('change');
+            $('.price-change').change(productPriceChangeHandler);
+
+        }else if(tableId == '#tbl_assumptions_direct_cost_per_product')
+        {
+            strBody += '<tr data-product_id="' + productIndex + '" class="'+ productIndex +'">'
+                        + '<td class="td-label td-md " data-product_id="' + productIndex + '">'
+                        +    '<span class="input-label">' + '' + '</span>'
+                        + '</td>'
+                        // Add other td's depending on the projection years
+                        $.each(projectionYearsList, function(yearIndex, projectionYear){
+                            // Every input field is editable
+                            strBody += '<td class="yearly td-input td-sm"'
+                                        + ' data-projection_year="'+ projectionYear +'">'
+                                        + '<input data-product_id="' + productIndex + '" name="' + productIndex + '_direct_cost_' + projectionYear +'" '
+                                                + 'type="number" data-projection_year="' + projectionYear +'" '
+                                                + ' value=""'
+                                                + ' class="form-control input-md text-right render_required cost-change" required="required" >'
+                                        + '</td>'
+                        })
+            strBody += '</tr>';
+            $('#tbl_assumptions_direct_cost_per_product tbody').append(strBody)
+            // Update bindings
+            $('.cost-change').unbind('change');
+            $('.cost-change').change(productCostChangeHandler);
+        }else if(tableId == '#tbl_assumptions_units_of_measurement_per_product'){
+            strBody += '<tr data-product_id="' + productIndex + '" class="'+ productIndex +'">'
+                            + '<td class="td-label td-md " data-product_id="' + productIndex + '">'
+                            +    '<span class="input-label"></span>'
+                            + '</td>'
+                            + '<td class="td-label td-sm" data-product_id="' + productIndex + '">'
+                            +    '<span class="input-label text-left"></span>'
+                            + '</td>'
+                            + '<td class="td-label td-xs text-right growth_rate_per_month" data-product_id="' + productIndex + '">'
+                            +    '<span class="input-label text-right"></span>'
+                            + '</td>'
+                            // Add other td's depending on the projection years
+
+
+                            $.each(projectionMonthsList, function(projectionMonthIndex, projectionMonthYear){
+                                // Check if first year
+                                var yearTotalClass = projectionMonthYear['is_total'] ? 'unit_year-total' : ''
+                                var isReadonlyField = (projectionMonthYear['is_first_year'] == null || projectionMonthYear['is_first_year']) ? false : true;
+                                var readonlyText = (isReadonlyField) ? 'readonly' : '';
+                                var autoFilledText = (isReadonlyField) ? 'auto-filled' : '';
+                                var unitChangeText = (!isReadonlyField) ? 'unit-change' : '';
+
+                                strBody += '<td class="monthly td-input td-xs ' + readonlyText + ' ' + autoFilledText + ' '  + yearTotalClass + ' ' + projectionMonthYear['total_year'] + ' ' + projectionMonthIndex + '"'
+                                                + ' data-is_total_col="' + yearTotalClass + '"'
+                                                + ' data-projection_month_id="' + projectionMonthIndex +'" '
+                                                + ' data-projection_year="' + projectionMonthYear['year'] +'" '
+                                                + ' width="200">'
+                                                + '<input name="' + productIndex + '_units_of_measuring_revenue_' + projectionMonthIndex +'" '
+                                                    + ' type="text" '
+                                                    + ' data-product_id="' + productIndex + '" '
+                                                    + ' data-projection_month_id="' + projectionMonthIndex +'" '
+                                                    + ' data-projection_year="' + projectionMonthYear['year'] +'" '
+                                                    + ' data-value="'+ 0 +'" '
+                                                    + ' value=""'
+                                                    + ' class="form-control number-input-format input-md '+ unitChangeText +' text-right render_required" required="required " + ' + readonlyText + '></td>'
+
+                            })
+                strBody += '</tr>'
+            $('#tbl_assumptions_units_of_measurement_per_product tbody').append(strBody);
+            // Update bindings
+            // Unbind and bind change events
+            $('.unit-change').unbind('change');
+            $('.unit-change').change(measurementUnitChangeHandler);
+
+
+            // Unbind/ bind events
+            $('.number-input-format').unbind('keydown')
+            $('.number-input-format').keydown(numberFormatKeyDownHandler)
+        }
+    }
+
     $('#id_number_of_products_or_services').change(function(e){
         productCount = $(this).val(); // Product count updated
         // Creating table with these number of rows
@@ -88,6 +199,18 @@ $(document).ready(function () {
                     + '<td id="' + productOrServiceUnits + '" class="td-input"><input name="' + productOrServiceUnits +'" type="text" data-product_id="' + productOrServiceId +'" data-prop_affected="units"  class="form-control input-md product-change text-left render_required" placeholder="" required="required"></td>'
                     + '<td id="' + productOrServiceGrowthRate + '" class="td-input"><input name="' + productOrServiceGrowthRate +'" type="number" min="0" data-product_id="' + productOrServiceId +'" data-prop_affected="growth_rate"  class="form-control input-md product-change text-right render_required" placeholder="" required="required"></td>'
                     + '</tr>'
+
+                // add table rows for respective tables
+
+
+                addTableRow('#tbl_assumptions_price_per_product', productOrServiceId)
+
+
+                addTableRow('#tbl_assumptions_direct_cost_per_product', productOrServiceId)
+
+
+                addTableRow('#tbl_assumptions_units_of_measurement_per_product', productOrServiceId)
+
             }
             $('#tbl_assumptions_number_of_products_or_services').append(str);
             // Unbind change handler
@@ -96,6 +219,7 @@ $(document).ready(function () {
             $('.product-change').change(productDetailsChangeHandler)
             productRowsCount;
 
+            // add rows to affected tables
         }else{
             // difference # of rows need to be removed
             for(var k = 0; k < Math.abs(difference); k++){
@@ -103,10 +227,23 @@ $(document).ready(function () {
                     $("#tbl_assumptions_number_of_products_or_services_"+(productRowsCount)).remove();
                     // Remove product from list
                     delete products['tbl_assumptions_number_of_products_or_services_' + productRowsCount];
+
+
+                    // price per product
+                    deleteRowWithClass('#tbl_assumptions_price_per_product', 'tbl_assumptions_number_of_products_or_services_' + productRowsCount)
+
+                    // cost per product
+                    deleteRowWithClass('#tbl_assumptions_direct_cost_per_product' , 'tbl_assumptions_number_of_products_or_services_' + productRowsCount)
+
+                    // units of measurement
+                    deleteRowWithClass('#tbl_assumptions_units_of_measurement_per_product' , 'tbl_assumptions_number_of_products_or_services_' + productRowsCount)
+
                     productRowsCount--;
                 }
             }
             productRowsCount = productCount;
+
+            // remove row ffrom affected tables
         }
 
         // Update for the next 4 tables
@@ -394,6 +531,7 @@ $(document).ready(function () {
         $.each(projectionYearsList, function(index, projectionYear){
             strHead += '<th class="text-right">'
                         + '<span class="span-projection-year" data-projection_year_index="' + index + '">' + projectionYearsList_Display[index] + '</span>'
+                        + '<span class="span-currency">($)</span>'
                     +   '</th>'
         })
         // Complete hthead
@@ -402,7 +540,7 @@ $(document).ready(function () {
 
         var strBody = '<tbody>';
             $.each(products, function(productIndex, product){
-                strBody += '<tr data-product_id="' + productIndex + '">'
+                strBody += '<tr data-product_id="' + productIndex + '" class="'+ productIndex +'">'
                             + '<td class="td-label td-md" data-product_id="' + productIndex + '">'
                             +    '<span class="input-label">' + product['name'] + '</span>'
                             + '</td>'
@@ -463,7 +601,7 @@ $(document).ready(function () {
 
         var strBody = '<tbody>';
         $.each(products, function(productIndex, product){
-            strBody += '<tr data-product_id="' + productIndex + '">'
+            strBody += '<tr data-product_id="' + productIndex + '" class="'+ productIndex +'">'
                         + '<td class="td-label td-md " data-product_id="' + productIndex + '">'
                         +    '<span class="input-label">' + product['name'] + '</span>'
                         + '</td>'
@@ -522,7 +660,7 @@ $(document).ready(function () {
 
         var strBody = '<tbody>';
             $.each(products, function(productIndex, product){
-                strBody += '<tr data-product_id="' + productIndex + '">'
+                strBody += '<tr data-product_id="' + productIndex + '" class="'+ productIndex +'">'
                             + '<td class="td-label td-md " data-product_id="' + productIndex + '">'
                             +    '<span class="input-label">' +  product['name'] + '</span>'
                             + '</td>'
@@ -1529,8 +1667,13 @@ $(document).ready(function () {
         $(this).attr('value', $(this).val());
     }
 
+    function triggerChange(inputElement){
+        $(inputElement).trigger('change')
+    }
+
     function productDetailsChangeHandler(event){
         // Check if currentProductId is in products
+
         var propAffected = $(this).data('prop_affected');
         var productId = $(this).data('product_id');
         var newVal = $(this).val();
@@ -1539,6 +1682,77 @@ $(document).ready(function () {
         // Update value in products variable
         products[productId][propAffected] = newVal;
         $(this).attr('value', $(this).val());
+
+        // update price per product
+        var productsTableRows = $('#tbl_assumptions_price_per_product tr');
+        $.each(productsTableRows, function (index, TR) {
+            var affectedProductId = $(this).data('product_id')
+            if(affectedProductId == productId){
+                // Check for affected property
+                if(propAffected == 'name'){
+                    // update name
+                    var nameTD = $(this).children('td')[0];
+                    var nameSpan = $(nameTD).children('span')[0]
+                    $(nameSpan).text(newVal);
+                }else if(propAffected == 'units'){
+                    // units affected
+
+                }else if(propAffected == 'growth_rate'){
+                    // growth rate affected
+                    var growth_rateTD = $(this).children('td')[1];
+                    var growth_rateSpan = $(growth_rateTD).children('span')[0]
+                    $(growth_rateSpan).text(newVal);
+                    // trigger change for growth rate
+                    triggerChange($($($($(TR).children('td'))[2])).children('input')[0])
+                }
+            }
+        })
+
+        // update cost per product
+        var productCostTRs = $('#tbl_assumptions_direct_cost_per_product tr')
+        $.each(productCostTRs, function (index, TR) {
+            var affectedProductId = $(this).data('product_id')
+            if(affectedProductId == productId){
+                // Check for affected property
+                if(propAffected == 'name'){
+                    // update name
+                    var nameTD = $(this).children('td')[0];
+                    var nameSpan = $(nameTD).children('span')[0]
+                    $(nameSpan).text(newVal);
+                }
+
+            }
+        })
+
+        // update units of measurement
+        var measurementUnitsTRs = $('#tbl_assumptions_units_of_measurement_per_product tr')
+        $.each(measurementUnitsTRs, function (index, TR) {
+            var affectedProductId = $(this).data('product_id')
+            if(affectedProductId == productId){
+                // Check for affected property
+                if(propAffected == 'name'){
+                    // update name
+                    var nameTD = $(this).children('td')[0];
+                    var nameSpan = $(nameTD).children('span')[0]
+                    $(nameSpan).text(newVal);
+                }else if(propAffected == 'units'){
+                    // units affected
+                    var unitsTD = $(this).children('td')[1];
+                    var unitsTDSpan = $(unitsTD).children('span')[0]
+                    $(unitsTDSpan).text(newVal);
+
+                }else if(propAffected == 'growth_rate'){
+                    // growth rate affected
+                    var growth_rateTD = $(this).children('td')[2];
+                    var growth_rateSpan = $(growth_rateTD).children('span')[0]
+                    $(growth_rateSpan).text(newVal);
+                    // trigger change for growth rate
+                    triggerChange($($($($(TR).children('td'))[3])).children('input')[0])
+                }
+            }
+        })
+
+
     }
 
     function productPriceChangeHandler(event) {
@@ -1794,7 +2008,6 @@ $(document).ready(function () {
 
     });
     $('.action-delete-row').click(deleteRowEventHandler);
-
     $('#btn_pnl_test').click(function (event) {
         generatePNL_RevenuesTable();
         generateAmortizationSchedule();
@@ -3548,11 +3761,13 @@ $(document).ready(function () {
         var strHtml = '<tr class="tr-totals">'
                     +   '<td class="td-md"></td>'
         $.each(amortizationScheduleItem['monthly'], function (monthIndex, monthScheduleItem) {
+            if(projectionMonthsList[monthIndex] == null)
+                return;
             strHtml    += '<td class="td-input td-xs readonly text-right"'
                                 + ' data-projection_month_id="' + 'Addmonth' + '" '
                                 + ' data-projection_year="' + 'Addyear' + '" '
                                 + ' width="200">'
-                                + '<span class="span-projection-month" data-projection_month_index="' + monthIndex + '">' + monthIndex + '</span>' + '<span class="span-currency"> </span> '
+                                + '<span class="span-projection-month" data-projection_month_index="' + monthIndex + '">' + projectionMonthsList[monthIndex]['display'] + '</span>' + '<span class="span-currency"> </span> '
                                 + '</td>'
 
         })
@@ -5457,7 +5672,7 @@ $(document).ready(function () {
                 }
             }else if(clickedStep == '#step-5' ){
                 $('#btn_regenerate_page').removeClass('hidden')
-                if(!reportsGenerated) {
+                if(autogenerateReports) {
                     toggleSpinner(true, 'Generating reports!')
                     generatePNL_RevenuesTable();
 
@@ -5478,7 +5693,7 @@ $(document).ready(function () {
 
                     stepMonitor[clickedStep]['auto_generate'] = false
                     stepMonitor[clickedStep]['passed'] = true
-                    reportsGenerated = true
+                    autogenerateReports = false;
                     toggleSpinner(false, 'Done!')
                 }
             }else{
@@ -5721,6 +5936,13 @@ $(document).ready(function () {
 
     $('#financial_assumptions input,textarea,select').change(function(event){
         $(this).attr('value', $(this).val());
+        autogenerateReports = true;
+    })
+
+    $('#financial_data_input input,textarea,select').change(function(event){
+        $(this).attr('value', $(this).val());
+        autogenerateReports = true;
+        console.log("Autogenerate flag changed!!")
     })
 
     function saveFinancialAssumptions(){
@@ -5854,12 +6076,12 @@ $(document).ready(function () {
         if( typeof (echarts) === 'undefined'){ return; }
           theme = {
           color: [
-              '#26B99A', '#34495E', '#BDC3C7', '#3498DB',
+              '#3a7fd5', '#f0ad4e', '#26B99A', '#34495E', '#BDC3C7', '#3498DB',
               '#9B59B6', '#8abb6f', '#759c6a', '#bfd3b7'
           ],
 
           title: {
-              itemGap: 8,
+              itemGap: 4,
               textStyle: {
                   fontWeight: 'normal',
                   color: '#408829'
@@ -5896,8 +6118,8 @@ $(document).ready(function () {
               fillerColor: 'rgba(64,136,41,0.2)',
               handleColor: '#408829'
           },
-          grid: {
-              borderWidth: 0
+              grid: {
+              borderWidth: 1
           },
 
           categoryAxis: {
@@ -6255,7 +6477,7 @@ $(document).ready(function () {
         var data = [];
         var legendData = []
         $.each(grossProfit, function (projectionMonthIndex, amount) {
-            if(projectionMonthIndex.indexOf('total') > -1)
+            if(projectionMonthIndex.indexOf('Total') > -1)
                 data.push(amount);
         })
         var seriesData = [
@@ -6298,7 +6520,7 @@ $(document).ready(function () {
         var data = [];
         var legendData = []
         $.each(EAT, function (projectionMonthIndex, amount) {
-            if(projectionMonthIndex.indexOf('total') > -1)
+            if(projectionMonthIndex.indexOf('Total') > -1)
                 data.push(amount);
         })
         var seriesData = [
@@ -6320,7 +6542,7 @@ $(document).ready(function () {
         var data = [];
         var legendData = []
         $.each(netMarginPerMonth, function (projectionMonthIndex, amount) {
-            if(projectionMonthIndex.indexOf('total') > -1)
+            if(projectionMonthIndex.indexOf('Total') > -1)
                 data.push(amount);
         })
         var seriesData = [
@@ -6762,7 +6984,6 @@ $(document).ready(function () {
                 if(newMonth['order'] == oldMonth['order']){
                     // this is our month of interest
                     projectionMonthsList[oldIndex]['display'] = newMonth['display'];
-                    return true; // Exit from loop
                 }
             })
         })
@@ -6775,9 +6996,7 @@ $(document).ready(function () {
             var projectionMonth_old = projectionMonthsList[projectionMonthIndex];
             $.each(newProjectionMonthsList, function (index, newMonth) {
                 if(newMonth['order'] == projectionMonth_old['order']){
-
                     $(spanItem).text(newMonth['display']);
-                    return true; // Exit from loop
                 }
             })
         })

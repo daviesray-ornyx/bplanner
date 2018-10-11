@@ -1657,7 +1657,13 @@
                                                         <caption style="color: #73879C;"><label class="control-label">Tax Slabs</label></caption>
                                                         <thead>
                                                             <tr>
-                                                                <th></th>
+                                                                <th class="td-action td-input">
+                                                                    <button id="btn-add_tax_slab_placeholder" type="button" class="btn btn-sm btn-footer btn-transparent action-danger disabled" style="color: transparent!important;width: 37px!important;"
+                                                                            data-action="add-row"
+                                                                            data-row_html="Some thing that contains row html" title="Complete current tax slab before adding a new one.">
+                                                                        <i class="fa fa-plus " aria-hidden=" true"></i>
+                                                                    </button>
+                                                                </th>
                                                                 <th class="td-sm text-right"><span class="table-heading">Over</span> <span class="table-heading span-currency"></span></th>
                                                                 <th class="td-sm text-right"><span class="table-heading">But not Over</span> <span class="table-heading span-currency"></span></th>
                                                                 <th class="td-sm text-right"><span class="table-heading">Tax Rate (%)</span></th>
@@ -1668,7 +1674,7 @@
                                                         </thead>
                                                         <tbody>
                                                             <tr id="tbl_assumptions_tax_slabs_1">
-                                                                <td class="td-action td-input"></td>
+                                                                <td class="td-action td-input" style="width: 45px!important;"></td>
                                                                 <td class="td-input readonly lower-limit">
                                                                     <input type="number" class="form-control text-right input-tax-lower-limit" name="tbl_assumptions_tax_slabs_1_lower" placeholder="" min="0" value="0" readonly>
                                                                 </td>
@@ -1694,11 +1700,10 @@
                                                     {% endif %}
                                                 </table>
                                                 <div class="table-footer" data-table="#tbl_assumptions_tax_slabs">
-                                                <button id="btn-add_tax_slab" type="button" class="btn btn-sm btn-info btn-footer disabled"
+                                                <button id="btn-add_tax_slab" type="button" class="btn btn-sm btn-footer btn-transparent action-danger disabled"
                                                         data-action="add-row"
                                                         data-row_html="Some thing that contains row html" title="Complete current tax slab before adding a new one.">
                                                     <i class="fa fa-plus" aria-hidden=" true"></i>
-                                                    Add Row
                                                 </button>
                                                 <span id="span-add_tax_slab_help" class="span-help ">(You can only add a tax slab when current slab is completed.)</span>
                                                 <div class="clearfix"></div>
@@ -1741,11 +1746,10 @@
                                                     <table id="tbl_assumptions_operating_costs" class="table table-bordered table-hover" >
                                                     </table>
                                                     <div class="table-footer" data-table="#tbl_assumptions_operating_costs">
-                                                        <button type="button" class="btn btn-sm btn-info btn-footer"
+                                                        <button type="button" class="btn btn-sm btn-footer btn btn-transparent"
                                                                 data-action="add-row"
                                                                 data-row_html="Some thing that contains row html" title="Add row to table">
                                                             <i class="fa fa-plus" aria-hidden="true"></i>
-                                                            Add Row
                                                         </button>
                                                     </div>
                                                 </div>
@@ -1760,7 +1764,6 @@
                                                                 data-action="add-row"
                                                                 data-row_html="Some thing that contains row html" title="Add row to table">
                                                             <i class="fa fa-plus" aria-hidden="true"></i>
-                                                            Add Row
                                                         </button>
                                                     </div>
                                                 </div>
@@ -1794,7 +1797,6 @@
                                                                 data-action="add-row"
                                                                 data-row_html="Some thing that contains row html" title="Add row to table">
                                                             <i class="fa fa-plus" aria-hidden="true"></i>
-                                                            Add Row
                                                         </button>
                                                     </div>
                     {#                                End -- Tangible assets#}
@@ -1807,7 +1809,6 @@
                                                                 data-action="add-row"
                                                                 data-row_html="Some thing that contains row html" title="Add row to table">
                                                             <i class="fa fa-plus" aria-hidden="true"></i>
-                                                            Add Row
                                                         </button>
                                                     </div>
                     {#                                End -- Intangible assets#}
@@ -1820,7 +1821,6 @@
                                                                 data-action="add-row"
                                                                 data-row_html="Some thing that contains row html" title="Add row to table">
                                                             <i class="fa fa-plus" aria-hidden="true"></i>
-                                                            Add Row
                                                         </button>
                                                     </div>
                     {#                                End -- Deposits table#}
@@ -1833,7 +1833,6 @@
                                                                 data-action="add-row"
                                                                 data-row_html="Some thing that contains row html" title="Add row to table">
                                                             <i class="fa fa-plus" aria-hidden="true"></i>
-                                                            Add Row
                                                         </button>
                                                     </div>
                     {#                                End -- Other Startup Costs table#}
@@ -1878,64 +1877,58 @@
                                     <div class="col-md-6 col-sm-6 col-xs-12">
                                         <div class="x_panel">
                                           <div class="x_content">
-                                            <div id="totalAssetsBar" style="height:250px;width: 500px;"></div>
+                                            <div id="totalAssetsBar" class="bar-div" style="height:250px;width: 700px;"></div>
                                           </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-6 col-xs-12">
                                         <div class="x_panel">
                                           <div class="x_content">
-                                            <div id="totalLiabilitiesBar" style="height:250px;width: 500px;"></div>
+                                            <div id="totalLiabilitiesBar" class="bar-div" style="height:250px;width: 700px;"></div>
+                                          </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12 col-xs-12">
+                                        <div class="x_panel">
+                                          <div class="x_content">
+                                            <div id="fixedAssetsClassificationsBar" class="bar-div" style="height:250px;width: 700px;"></div>
+                                          </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12 col-xs-12">
+                                        <div class="x_panel">
+                                          <div class="x_content">
+                                            <div id="cashFlowAnalysisBar" class="bar-div" style="height:250px;width: 780px;"></div>
                                           </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-12 col-sm-12 col-xs-12">
-                                        <div class="x_panel">
-                                          <div class="x_content">
-                                            <div id="fixedAssetsClassificationsBar" style="height:250px;width: 1000px;"></div>
-                                          </div>
-                                        </div>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <div class="x_panel">
+                                      <div class="x_content">
+                                        <div id="totalRevenueBar" class="bar-div" style="height:250px;width: 750px;"></div>
+                                      </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-12 col-sm-12 col-xs-12">
-                                        <div class="x_panel">
-                                          <div class="x_content">
-                                            <div id="cashFlowAnalysisBar" style="height:250px;width: 1000px;"></div>
-                                          </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 col-sm-6 col-xs-12">
-                                        <div class="x_panel">
-                                          <div class="x_content">
-                                            <div id="totalRevenueBar" style="height:250px;width: 500px;"></div>
-                                          </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-sm-6 col-xs-12">
-                                        <div class="x_panel">
-                                          <div class="x_content">
-                                            <div id="totalDirectCostBar" style="height:250px;width: 500px;"></div>
-                                          </div>
-                                        </div>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <div class="x_panel">
+                                      <div class="x_content">
+                                        <div id="totalDirectCostBar" class="bar-div" style="height:250px;width: 750px;"></div>
+                                      </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 col-sm-6 col-xs-12">
                                         <div class="x_panel">
                                           <div class="x_content">
-                                            <div id="grossProfitBar" style="height:250px;width: 500px;"></div>
+                                            <div id="grossProfitBar" class="bar-div" style="height:250px;width: 750px;"></div>
                                           </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
                                         <div class="x_panel">
                                           <div class="x_content">
-                                            <div id="totalOperatingCostBar" style="height:250px;width: 500px;"></div>
+                                            <div id="totalOperatingCostBar" class="bar-div" style="height:250px;width: 750px;"></div>
                                           </div>
                                         </div>
                                     </div>
@@ -1944,14 +1937,14 @@
                                     <div class="col-md-6 col-sm-6 col-xs-12">
                                         <div class="x_panel">
                                           <div class="x_content">
-                                            <div id="earningsAfterTaxtBar" style="height:250px;width: 500px;"></div>
+                                            <div id="earningsAfterTaxtBar" class="bar-div" style="height:250px;width: 750px;"></div>
                                           </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
                                         <div class="x_panel">
                                           <div class="x_content">
-                                            <div id="netMarginBar" style="height:250px;width: 500px;"></div>
+                                            <div id="netMarginBar" class="bar-div" style="height:250px;width: 750px;"></div>
                                           </div>
                                         </div>
                                     </div>

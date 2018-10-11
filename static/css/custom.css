@@ -771,3 +771,37 @@ Scrollable tab
 .alert-info-help{
     margin-top: 15px;
 }
+
+/*
+    Table footer styling
+*/
+.table-footer{
+    background-color: transparent;
+    margin-top: -20px;
+}
+
+.table-footer button{
+    background: rgba(52,73,94,.94);
+    color: #ECF0F1;
+    border-radius: 0px;
+    width: 44px;
+}
+
+.table-footer button:hover, button:active{
+    background: rgba(52,73,94,.94);
+    color: #ECF0F1;
+    border-radius: 0px;
+}
+
+/*
+    Canvas class="bar-div" styling
+*/
+
+/*.bar-div div{*/
+    /*overflow: visible!important;*/
+/*}*/
+
+/*.bar-div canvas{*/
+    /*padding: 20px!important;*/
+    /*overflow: visible!important;*/
+/*}*/
