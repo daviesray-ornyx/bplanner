@@ -6790,11 +6790,15 @@ $(document).ready(function () {
         // Handle allowing only integers and 1 .
         var keyCode = window.event ? ev.keyCode : ev.which;
         //codes for 0-9
-        console.log(keyCode)
 
         if (keyCode > 64 && keyCode < 91){
             //codes for backspace, delete, tab, enter
-            ev.preventDefault();
+            if((keyCode == 86 || keyCode == 88 || keyCode == 65 || keyCode == 67) && ev.ctrlKey){
+
+            }else{
+                ev.preventDefault();
+            }
+
         }else if (keyCode == 46 || keyCode == 190) {
             // point typed..
             // Check if input has a point already
