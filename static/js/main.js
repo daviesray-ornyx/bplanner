@@ -6793,7 +6793,7 @@ $(document).ready(function () {
 
         if (keyCode > 64 && keyCode < 91){
             //codes for backspace, delete, tab, enter
-            if((keyCode == 86 || keyCode == 88 || keyCode == 65 || keyCode == 67) && ev.ctrlKey){
+            if((keyCode == 86 || keyCode == 88 || keyCode == 90 || keyCode == 65 || keyCode == 67) && ev.ctrlKey){
 
             }else{
                 ev.preventDefault();
