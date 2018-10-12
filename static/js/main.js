@@ -409,6 +409,17 @@ $(document).ready(function () {
         return monthsList;
     }
 
+    function getProjectionMonthIndex(projectionMonth){
+        var retrievedIndex = ''
+        $.each(projectionMonthsList, function (index, month) {
+            if(month['display'] == projectionMonth['display']){
+                retrievedIndex = index;
+                return false
+            }
+        })
+        return retrievedIndex;
+    }
+
     function generateProjectionMonthsList(){
         // Handle start month value
         // Handle # of months in a year
@@ -422,7 +433,6 @@ $(document).ready(function () {
         }
 
         if(monthListInitiated == true){
-            console.log("Already initiaded in projection years")
             return false;
         }
 
@@ -1618,7 +1628,7 @@ $(document).ready(function () {
             }
         })
 
-        var pivotTD = $currTR.children('.' + pivotMonth['display'])[0]; // Get td with correspoding class
+        var pivotTD = $currTR.children('.' + getProjectionMonthIndex(pivotMonth))[0]; // Get td with correspoding class
         var pivotInput = $(pivotTD).children('input')[0];
         var principalVal = removeCommas($(pivotInput).val());
         principalVal = principalVal != '' ? parseInt(principalVal) : 0;
@@ -1657,6 +1667,7 @@ $(document).ready(function () {
                 if(!principalVal || principalVal == '' || principalVal == 0 ){
                     return; // This is a simple continue to the next iteration command
                 }
+
 
                 var newVal = Math.ceil(calculateCompoundedGrowth(principalVal, growthRate/100, 1, t));
                 $(autoFillTDInput).val(newVal.toLocaleString('en'));
@@ -6779,22 +6790,18 @@ $(document).ready(function () {
         // Handle allowing only integers and 1 .
         var keyCode = window.event ? ev.keyCode : ev.which;
         //codes for 0-9
-        if (keyCode < 48 || keyCode > 57) {
-            if (keyCode == 46 || keyCode == 190) {
-                // point typed..
-                // Check if input has a point already
-                if (currVal.indexOf('.') > -1) {
-                    // Input has a decimal already.. prevent entry
-                    ev.preventDefault();
-                    direction = 0;
-                }
-            }
-            //codes for backspace, delete, tab, enter
-            else if (keyCode != 0 && keyCode != 8 && keyCode != 13 && keyCode != 9 && !ev.ctrlKey) {
-                ev.preventDefault();
-            }
+        console.log(keyCode)
 
-            if( keyCode != 9){
+        if (keyCode > 64 && keyCode < 91){
+            //codes for backspace, delete, tab, enter
+            ev.preventDefault();
+        }else if (keyCode == 46 || keyCode == 190) {
+            // point typed..
+            // Check if input has a point already
+            if (currVal.indexOf('.') > -1) {
+                // Input has a decimal already.. prevent entry
+                ev.preventDefault();
+                direction = 0;
             }
         }
 
@@ -6804,7 +6811,7 @@ $(document).ready(function () {
             if(currVal == ''){
                 return;
             }
-            currVal = currVal.replace(/\,/g,'');
+            currVal = currVal.replace(/([,.€$!# _()%^&*~])+/g,'');
             var val = parseFloat(currVal, 10)
             $(ev.target).val(val.toLocaleString('en'));
         }, 10)
