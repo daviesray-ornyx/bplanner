@@ -4,60 +4,91 @@
 {% block page_content %}
 
     <!-- page content -->
-    <div class="right_col" role="main"  style="background-color: #ecedef;">
+    <div class="right_col" role="main"  style="background-color: #fff;">
       <section class="section-fluid" style="padding-left: 0px;">
-          <div class="col-xs-12 heading-container ">
-            <h1 id="job-listing-heading" class="heading__seo-heading" style="width: 100%;">
-                <span class="heading--inline results-wording" data-id="page-heading">
-                    Business Plans —
-                </span>
-                <span id="job-listing-count" class="heading--inline results-count">
-                    <span>{{ bplans.count }}  </span>
-                </span>
-                <span class="btn" style="margin-left:10px; font-size: 1.5rem;color: #ff7300;background-color: #fff;">Space used: {{ user_profile.get_usage }} Mbs</span>
-            </h1>
+          <div class="clearfix"></div>
+          <div class="clearfix"></div>
+          <div class="row" style="display: flex;padding-top: 20px;">
+              <div class="col-md-8">
+                <div class="job-listing-container" style="width: 100%!important;padding: 0rem 5px;background-color: #fff; box-shadow: 0 5px 15px 0 rgba(0,0,0,0.15);margin-bottom: 2px;">
+                    {% if bplans.count < 1 %}
+                        <h3>You don't have any business plans.  </h3><a href="/dashboard/new/business-plan" style="text-decoration: underline;"><i class="fa fa-plus"></i> Create business plan</a>
+                    {% else %}
+                        <!-- start project list -->
+                        <table class="table" style="width:100%;">
+                          <tbody>
+                            {% for bplan in bplans %}
+                            <tr >
+                                <div class="item-container" style="box-shadow: 0 5px 15px 0 rgba(0,0,0,0.15);margin-bottom: 2px;">
+                                    <td style="width: 50px; height: 50px;">
+                                        <img style="" width="50" height="50" src="{{ bplan.logo }}">
+                                    </td>
+                                    <td style="border-bottom: 1px;padding-top: 2rem; padding-left: 1.3rem;">
+                                      <div style="margin-bottom: 10px;">
+                                        <a href="/dashboard/business-plan/view?id={{ bplan.id }}" style="color: #4774b7; font-size: 17px;font-weight: 700;" title="View {{ bplan.company_name }}">{{ bplan.company_name }}</a>
+                                      </div>
+                                      <div style="margin-bottom: 10px;">
+                                        <span style="color: #707276;font-size: 14px;"><span class="fa fa-clock-o"></span> Created {{ bplan.date_created }} </span>
+                                      </div>
+                                      <div style="margin-bottom: 10px;">
+                                          <a style="color: #707276!important; font-size: 14px!important;" href="/dashboard/view/business-plan?id={{ bplan.id }}" class="btn-xs"><i class="fa fa-pencil"></i> Edit </a>
+                                          <a style="color: #707276!important; font-size: 14px!important;" href="/dashboard/delete/business-plan?id={{ bplan.id }}" class="btn-xs" data-toggle="confirmation" data-popout="true"><i class="fa fa-trash-o"></i> Delete </a>
+                                      </div>
+                                    </td>
+                                    <td style="border-bottom: 1px;width: 260px;">
+                                      <div style="margin-bottom: 10px;">
+                                          <br/><br/><br/>
+                                          <a style="color: #707276!important; font-size: 14px!important; float: right;margin-right: 5px;" href="/dashboard/business-plan/download?id={{ bplan.id }}" target="_blank" class=""><i class="fa fa-file-pdf-o"></i> download pdf</a>
+                                      </div>
+                                    </td>
+                                </div>
+                            </tr>
+                          {% endfor %}
+                          </tbody>
+                        </table>
+                        <!-- end project list -->
+                    {% endif %}
+                </div>
+              </div>
+              <div class="col-md-4" style="background-color: #f8f9fc; height: inherit;box-shadow: 0 5px 15px 0 rgba(0,0,0,0.15);">
+                <div class="x_title">
+                  <h2>Account Summary</h2>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="panel-body">
+                  <h3 class="green"><i class="fa fa-paint-brush"></i> BPlanner</h3>
+                  <p>Hello {{ user.first_name }} {{ user.last_name }}, here's a summary of your BPlanner account.</p>
+                  <div class="project_detail">
 
+                    <p class="title">Number of Business plans </p>
+                    <p>{{ bplans.count }}</p>
+                    <p class="title">Space used:</p>
+                    <p> {{ user_profile.get_usage }} Mbs</p>
+                  </div>
+
+                  <br />
+                  <h5>Project files</h5>
+                  <ul class="list-unstyled project_files">
+                    <li><a href=""><i class="fa fa-file-word-o"></i> Functional-requirements.docx</a>
+                    </li>
+                    <li><a href=""><i class="fa fa-file-pdf-o"></i> UAT.pdf</a>
+                    </li>
+                    <li><a href=""><i class="fa fa-mail-forward"></i> Email-from-flatbal.mln</a>
+                    </li>
+                    <li><a href=""><i class="fa fa-picture-o"></i> Logo.png</a>
+                    </li>
+                    <li><a href=""><i class="fa fa-file-word-o"></i> Contract-10_12_2014.docx</a>
+                    </li>
+                  </ul>
+                  <br />
+{##}
+{#                              <div class="text-center mtop20">#}
+{#                                <a href="#" class="btn btn-sm btn-primary">Add files</a>#}
+{#                                <a href="#" class="btn btn-sm btn-warning">Report contact</a>#}
+{#                              </div>#}
+                </div>
+              </div>
           </div>
-
-            <div class="clearfix"></div>
-          <div class="job-listing-container" style="width: 100%!important;padding: 0rem 0px;background-color: #fff;">
-            {% if bplans.count < 1 %}
-                <h3>You don't have any business plans.  </h3><a href="/dashboard/new/business-plan" style="text-decoration: underline;"><i class="fa fa-plus"></i> Create business plan</a>
-            {% else %}
-                <!-- start project list -->
-                <table class="table" style="width:100%;">
-                  <tbody>
-                    {% for bplan in bplans %}
-                    <tr style="">
-                        <td style="width: 50px; height: 50px;">
-                            <img style="" width="50" height="50" src="{{ bplan.logo }}">
-                        </td>
-                      <td style="border-bottom: 1px;padding-top: 2rem; padding-left: 1.3rem;">
-                          <div style="margin-bottom: 10px;">
-                            <a href="/dashboard/business-plan/view?id={{ bplan.id }}" style="color: #4774b7; font-size: 17px;font-weight: 700;">{{ bplan.company_name }}</a>
-                          </div>
-                          <div style="margin-bottom: 30px;">
-                            <span style="color: #707276;font-size: 14px;"><span class="fa fa-clock-o"></span> Created {{ bplan.date_created }} </span>
-                          </div>
-                      </td>
-                      <td style="border-bottom: 1px;width: 260px;">
-                        <div style="margin-bottom: 10px;">
-                              <a style="color: #707276!important; font-size: 14px!important;float: right;" href="/dashboard/delete/business-plan?id={{ bplan.id }}" class="btn-xs" data-toggle="confirmation" data-popout="true"><i class="fa fa-trash-o"></i> Delete </a>
-                              <a style="color: #707276!important; font-size: 14px!important;float: right;" href="/dashboard/view/business-plan?id={{ bplan.id }}" class="btn-xs"><i class="fa fa-pencil"></i> Edit </a>
-                              <br/><br/><br/>
-                              <a style="color: #707276!important; font-size: 14px!important; float: right;margin-right: 5px;" href="/dashboard/business-plan/download?id={{ bplan.id }}" target="_blank" class=""><i class="fa fa-file-pdf-o"></i> download PDF</a>
-                          </div>
-
-                      </td>
-                    </tr>
-                  {% endfor %}
-                  </tbody>
-                </table>
-                <!-- end project list -->
-            {% endif %}
-        </div>
-
-
       </section>
     </div>
     <!-- /page content -->

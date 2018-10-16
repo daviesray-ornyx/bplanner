@@ -1,6 +1,6 @@
 {% load static from staticfiles %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="overflow: visible;">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- Meta, title, CSS, favicons, etc. -->
@@ -254,7 +254,8 @@
                     <a href="/dashboard"  class="">DASHBOARD</a>
                 </li>
                 <li style="padding-left: 0px;margin-left: -14px;margin-bottom: 10px;">
-                    <button href="/dashboard/new/business-plan" class="btn-new-businesplan btn marketing-button marketing-nav__button " onclick="window.location.href='/dashboard/new/business-plan';" style="left: 0px;background-color: #ff7300; color: #fff!important;margin-top: 10px;padding-top: 10px; padding-bottom: 10px; "><i class="fa fa-plus"></i> NEW BUSINESS PLAN</button>
+                    <a href="/dashboard/new/business-plan" class=""><i class="fa fa-plus"></i> NEW BUSINESS PLAN</a>
+{#                    <button href="/dashboard/new/business-plan" class="btn-new-businesplan btn marketing-button marketing-nav__button " onclick="window.location.href='/dashboard/new/business-plan';" style="left: 0px;background-color: #fff; color: #333!important;margin-top: 11px;padding-top: 10px; padding-bottom: 7px; "><i class="fa fa-plus"></i> NEW BUSINESS PLAN</button>#}
                 </li>
                 {% else %}
                     {% if page_type != 'auth' %}
