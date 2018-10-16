@@ -117,14 +117,17 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-2 col-sm-2 col-xs-12" for="cover-company_name" >Company Name</label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                            {% render_field  bplan_title_page_form.company_name class="form-control col-md-5 col-xs-12 render_required" placeholder="Company / Business / Project name"  required='required' %}
+                                            {% render_field  bplan_title_page_form.company_name class="form-control col-md-5 col-xs-12 render_required" data-validate_span_id="#span_id_company_name" placeholder="Company / Business / Project name"  required='required' %}
+                                            <span id="span_id_company_name" class="span-validate-message text-danger" data-message="Please enter a valid name."></span>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label col-md-2 col-sm-2 col-xs-12" for="cover-tagline" >Your Tagline</label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                            {% render_field bplan_title_page_form.tagline class="form-control col-md-5 col-xs-12 render_required" placeholder="Tagline"  required='required' %}
+                                            {% render_field bplan_title_page_form.tagline class="form-control col-md-5 col-xs-12 render_required" data-validate_span_id="#span_id_tagline" placeholder="Tagline"  required='required' %}
                                             <span class="span-help">(A short phrase closely allied with your company name)</span>
+                                            <br/>
+                                            <span id="span_id_tagline" class="span-validate-message text-danger" data-message="Please enter a valid tagline."></span>
                                         </div>
                                     </div>
                                     <div class="form-group ">
@@ -168,7 +171,6 @@
                                 </form>
                             </div>
                             <div class="tab-pane container-fluid" id="page_main_content"  data-friendly_name="Main business plan content page">
-
                                 <form id="frm_bplanner_main_content_page" method="post" action="/dashboard/new/business-plan/main_content_page" class="form-horizontal form-label-left" autocomplete="off" data-parsley-validate>
                                     {% csrf_token %}
                                     <input name="id" value="{{ bplan_main_content_page_form.id }}" class="hidden id">
@@ -1512,51 +1514,61 @@
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Currency </label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.currency class="form-control render_required" style="width:400px;" required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.currency class="form-control render_required" style="width:400px;" data-validate_span_id="#span_id_currency" required="required" %}
+                                                    <span id="span_id_currency" class="span-validate-message text-danger" data-message="Please select a valid currency."></span>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Starting year </label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.first_financial_year class="form-control render_required" style="width:400px;" placeholder="Year e.g 2018" min="2000" max="3000" required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.first_financial_year class="form-control render_required" style="width:400px;" data-validate_span_id="#span_id_first_financial_year" placeholder="Year e.g 2018" min="2000" max="3000" required="required" %}
                                                     <span class="span-help">(Year of starting operations)</span>
+                                                    <br/>
+                                                    <span id="span_id_first_financial_year" class="span-validate-message text-danger" data-message="Please enter a valid year"></span>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Starting month</label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    <select class="form-control render_required" id="id_first_financial_year_month" name="first_financial_year_month"  value="{{ bplan_financial_assumptions_page_form.first_financial_year_month.value }}" style="width:400px;" required="required">
+                                                    <select class="form-control render_required" id="id_first_financial_year_month" name="first_financial_year_month"  data-validate_span_id="#span_id_first_financial_year_month" value="{{ bplan_financial_assumptions_page_form.first_financial_year_month.value }}" style="width:400px;" required="required">
                                                         {% for month in months %}
                                                             {{ month.id }}
                                                             <option value="{{ month.id }}" {% if bplan_financial_assumptions_page_form.first_financial_year_month.value == month.id %} selected {% endif %}>{{ month.code }}</option>
                                                         {% endfor %}
                                                     </select>
                                                     <span class="span-help">(Month of starting operations)</span>
+                                                    <br/>
+                                                    <span id="span_id_first_financial_year_month" class="span-validate-message text-danger" data-message="Please enter a valid month."></span>
                                                 </div>
                                             </div>
             {#                                        Period of projections in years#}
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Projections Years</label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.projection_years class="form-control render_required" style="width:400px;" placeholder="Number of Years" min="1" max="5" required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.projection_years class="form-control render_required" style="width:400px;" data-validate_span_id="#span_id_projection_years" placeholder="Number of Years" min="1" max="5" required="required" %}
+                                                    <span id="span_id_projection_years" class="span-validate-message text-danger" data-message="Please enter a valid number."></span>
+                                                    <br/>
+                                                    <span id="span_id_projection_years" class="span-validate-message text-danger" data-message="Please enter a valid number."></span>
                                                 </div>
                                             </div>
             {#                                        Products or Services Offered#}
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Products or Services? </label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.offerings_products_or_services class="form-control render_required" style="width:400px;" required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.offerings_products_or_services class="form-control render_required" style="width:400px;" data-validate_span_id="#span_id_offerings_products_or_services" required="required" %}
+                                                    <span id="span_id_offerings_products_or_services" class="span-validate-message text-danger" data-message="Please select a valid offering type."></span>
                                                 </div>
                                             </div>
             {#                                        Number of product or services offered#}
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Number of <span class="span-item_offered_plural">Products</span> Offered</label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.number_of_products_or_services class="form-control render_required" style="width:400px;" placeholder="Number of Products or Services Offered" min="1" max="5" value="1"  required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.number_of_products_or_services class="form-control render_required" style="width:400px;" data-validate_span_id="#span_id_number_of_products_or_services" placeholder="Number of Products or Services Offered" min="1" max="5" value="1"  required="required" %}
+                                                    <span id="span_id_number_of_products_or_services" class="span-validate-message text-danger" data-message="Please enter a valid number."></span>
                                                 </div>
                                             </div>
             {#                                        Number of Months in a year#}
-                                            <table id="tbl_assumptions_number_of_products_or_services" class="table table-bordered table-hover " >
+                                            <table id="tbl_assumptions_number_of_products_or_services" class="table table-bordered table-hover " style="margin-bottom: 5px;">
                                                 {% if mode == 'new' %}
                                                     <thead>
                                                         <tr >
@@ -1574,13 +1586,13 @@
                                                     <tbody>
                                                         <tr id="tbl_assumptions_number_of_products_or_services_1" class="">
                                                             <td id="tbl_assumptions_number_of_products_or_services_1_name" class="td-input">
-                                                                <input type="text" name='product_or_service_1_name' data-product_id="tbl_assumptions_number_of_products_or_services_1" data-prop_affected="name"  placeholder='Name' class="form-control product-change text-left render_required" required="required"/>
+                                                                <input type="text" name='product_or_service_1_name' data-product_id="tbl_assumptions_number_of_products_or_services_1" data-prop_affected="name" data-validate_span_id="#span_tbl_assumptions_number_of_products_or_services"  placeholder='Name' class="form-control product-change text-left render_required" required="required"/>
                                                             </td>
                                                             <td id="tbl_assumptions_number_of_products_or_services_1_units" class="td-input">
-                                                                <input type="text" name='product_or_service_1_units' data-product_id="tbl_assumptions_number_of_products_or_services_1" data-prop_affected="units"  placeholder='E.g Numer of hours' class="form-control product-change text-left render_required" required="required"/>
+                                                                <input type="text" name='product_or_service_1_units' data-product_id="tbl_assumptions_number_of_products_or_services_1" data-prop_affected="units" data-validate_span_id="#span_tbl_assumptions_number_of_products_or_services" placeholder='E.g Numer of hours' class="form-control product-change text-left render_required" required="required"/>
                                                             </td>
                                                             <td id="tbl_assumptions_number_of_products_or_services_1_growth_rate" class="td-input">
-                                                                <input type="number" name='product_or_service_1_growth_rate' data-product_id="tbl_assumptions_number_of_products_or_services_1" data-prop_affected="growth_rate"  placeholder='E.g 5' class="form-control product-change text-right render_required" required="required"/>
+                                                                <input type="number" name='product_or_service_1_growth_rate' data-product_id="tbl_assumptions_number_of_products_or_services_1" data-prop_affected="growth_rate" data-validate_span_id="#span_tbl_assumptions_number_of_products_or_services" placeholder='E.g 5' class="form-control product-change text-right render_required" required="required"/>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -1588,28 +1600,35 @@
                                                     {{ bplan_financial_assumptions_page_form.product_services_table.value | safe }}
                                                 {% endif %}
                                             </table>
+                                            <span id="span_tbl_assumptions_number_of_products_or_services" class="span-validate-message is-table-span-validate-message text-danger" data-message="Please enter all required fields."></span>
+
+
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Number of Months in Projection Year</label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.count_of_months_in_financial_year class="form-control render_required" style="width:400px;" placeholder="Number of Months in a Year" min="1" value="12" required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.count_of_months_in_financial_year class="form-control render_required" style="width:400px;" data-validate_span_id="#span_id_count_of_months_in_financial_year"  placeholder="Number of Months in a Year" min="1" value="12" required="required" %}
+                                                    <span id="span_id_count_of_months_in_financial_year" class="span-validate-message text-danger" data-message="Please enter a valid number."></span>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Inflation Rate (Per Annum)</label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.inflation_rate class="form-control render_required" placeholder="% Growth" style="width:400px;" min="0" required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.inflation_rate class="form-control render_required" data-validate_span_id="#span_id_inflation_rate" placeholder="% Growth" style="width:400px;" min="0" required="required" %}
+                                                    <span id="span_id_inflation_rate" class="span-validate-message text-danger" data-message="Please enter a valid number."></span>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Salary Growth Rate (Per Annum)</label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.salary_growth_rate class="form-control render_required" placeholder="% Growth" style="width:400px;" min="0" required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.salary_growth_rate class="form-control render_required" placeholder="% Growth" data-validate_span_id="#span_id_salary_growth_rate" style="width:400px;" min="0" required="required" %}
+                                                    <span id="span_id_salary_growth_rate" class="span-validate-message text-danger" data-message="Please enter a valid number."></span>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Startup Cost Amortization Period (in Years)</label>
                                                 <div class="col-md-7 col-sm-7 col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.amortization_period class="form-control render_required" style="width:400px;" placeholder="Amortization Period (in Years)" min="0" required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.amortization_period class="form-control render_required" data-validate_span_id="#span_id_amortization_period" style="width:400px;" placeholder="Amortization Period (in Years)" min="0" required="required" %}
+                                                    <span id="span_id_amortization_period" class="span-validate-message text-danger" data-message="Please enter a valid number."></span>
                                                 </div>
                                             </div>
 
@@ -1617,31 +1636,36 @@
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Trade Receivables</label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.trade_receivables class="form-control render_required" placeholder="Period in Months" style="width:400px;" min="0" max="24" required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.trade_receivables class="form-control render_required" data-validate_span_id="#span_id_trade_receivables" placeholder="Period in Months" style="width:400px;" min="0" max="24" required="required" %}
+                                                    <span id="span_id_trade_receivables" class="span-validate-message text-danger" data-message="Please enter a valid number."></span>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Trade Payables</label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.trade_payables class="form-control render_required" placeholder="Period in Months" style="width:400px;" min="0" max="25" required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.trade_payables class="form-control render_required" data-validate_span_id="#span_id_trade_payables" placeholder="Period in Months" style="width:400px;" min="0" max="25" required="required" %}
+                                                    <span id="span_id_trade_payables" class="span-validate-message text-danger" data-message="Please enter a valid number."></span>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Other Expenses Payable</label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.other_expenses_payables class="form-control render_required" placeholder="Period in Months" style="width:400px;" min="0" max="24" required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.other_expenses_payables class="form-control render_required" data-validate_span_id="#span_id_other_expenses_payables" placeholder="Period in Months" style="width:400px;" min="0" max="24" required="required" %}
+                                                    <span id="span_id_other_expenses_payables" class="span-validate-message text-danger" data-message="Please enter a valid number."></span>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Bad Debts</label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.bad_debts class="form-control render_required" placeholder="% of Revenue" style="width:400px;" min="0" max="100" required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.bad_debts class="form-control render_required" data-validate_span_id="#span_id_bad_debts" placeholder="% of Revenue" style="width:400px;" min="0" max="100" required="required" %}
+                                                    <span id="span_id_other_expenses_payables" class="span-validate-message text-danger" data-message="Please enter a valid number."></span>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Taxation System</label>
                                                 <div class="col-md-7 col-sm-7  col-xs-12">
-                                                    {% render_field bplan_financial_assumptions_page_form.taxation_system class="form-control render_required tax-system" style="width:400px;" required="required" %}
+                                                    {% render_field bplan_financial_assumptions_page_form.taxation_system class="form-control render_required tax-system"  data-validate_span_id="#span_id_taxation_system" style="width:400px;" required="required" %}
+                                                    <span id="span_id_taxation_system" class="span-validate-message text-danger" data-message="Please enter a valid taxation system."></span>
                                                 </div>
                                             </div>
                                             <div id="div_corporate_tax_rate" class="form-group {% if bplan_financial_assumptions_page_form.taxation_system.value == 0 %} hidden {% endif %}">
@@ -1725,131 +1749,152 @@
                                     {% csrf_token %}
                                 </form>
 
-                                        {% if mode == 'new' %}
-                                            <form id="frm_bplanner_financial_data_input_page" method="post" action="/dashboard/new/business-plan/financial_data_input_page" class="form-horizontal form-label-left" autocomplete="off" data-parsley-validate>
+                                    {% if mode == 'new' %}
+                                        <form id="frm_bplanner_financial_data_input_page" method="post" action="/dashboard/new/business-plan/financial_data_input_page" class="form-horizontal form-label-left" autocomplete="off" data-parsley-validate>
 {#                                              <h2>Financial data input</h2>#}
-                                                {% csrf_token %}
-                                                <input name="id" value="{{ frm_bplanner_financial_data_input_page.id }}" class="hidden id">
-    {#                                            <div class="ln_solid"></div>#}
-                                                <table id="tbl_assumptions_price_per_product" class="table table-bordered table-hover table-dynamic margin-15">
+                                            {% csrf_token %}
+                                            <input name="id" value="{{ frm_bplanner_financial_data_input_page.id }}" class="hidden id">
+{#                                            <div class="ln_solid"></div>#}
+                                            <table id="tbl_assumptions_price_per_product" class="table table-bordered table-hover table-dynamic margin-15">
+                                            </table>
+                                            <span id="span_tbl_assumptions_price_per_product" class="span-validate-message is-table-span-validate-message text-danger" data-message="Please enter all required fields."></span>
+                                            <br/>
+                {#                          End of Price Per Product table #}
+                {#                          Beginning of Direct Cost Per Product table #}
+                                            <table id="tbl_assumptions_direct_cost_per_product" class="table table-bordered table-hover table-dynamic margin-15">
+                                            </table>
+                                            <span id="span_tbl_assumptions_direct_cost_per_product" class="span-validate-message is-table-span-validate-message text-danger" data-message="Please enter all required fields."></span>
+                                            <br/>
+            {#                              End of Price Per Product table #}
+            {#                              Beginning of Units of Measurement Per Product table #}
+                                            <table id="tbl_assumptions_units_of_measurement_per_product" class="table table-bordered table-hover table-dynamic margin-15 ">
+                                            </table>
+                                            <span id="span_tbl_assumptions_units_of_measurement_per_product" class="span-validate-message is-table-span-validate-message text-danger" data-message="Please enter all required fields."></span>
+                                            <br/>
+                {#                         End of Price Per Product table #}
+                {#                          Operating costs  #}
+                                            <div id="div_assumptions_operating_costs" class="content-bordered ">
+                                                <table id="tbl_assumptions_operating_costs" class="table table-bordered table-hover" >
                                                 </table>
-                    {#                          End of Price Per Product table #}
-                    {#                          Beginning of Direct Cost Per Product table #}
-                                                <table id="tbl_assumptions_direct_cost_per_product" class="table table-bordered table-hover table-dynamic margin-15">
+                                                <div class="table-footer" data-table="#tbl_assumptions_operating_costs">
+                                                    <button type="button" class="btn btn-sm btn-footer btn btn-transparent"
+                                                            data-action="add-row"
+                                                            data-row_html="Some thing that contains row html" title="Add row to table">
+                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                    </button>
+                                                </div>
+                                                <span id="span_tbl_assumptions_operating_costs" class="span-validate-message is-table-span-validate-message text-danger" data-message="Please enter all required fields."></span>
+                                            </div>
+                                            <br/>
+                {#                          End--- Operating costs  #}
+                {#                         Employee details tables #}
+                                            <div id="div_assumptions_employee_roles_list" class="content-bordered">
+                                                <table id="tbl_assumptions_employee_roles_list" class="table table-bordered table-hover" >
                                                 </table>
-                {#                              End of Price Per Product table #}
-                {#                              Beginning of Units of Measurement Per Product table #}
-                                                <table id="tbl_assumptions_units_of_measurement_per_product" class="table table-bordered table-hover table-dynamic margin-15 ">
+                                                <div class="table-footer" data-table="#tbl_assumptions_employees_details_cost">
+                                                    <button type="button" class="btn btn-sm btn-info btn-footer"
+                                                            data-action="add-row"
+                                                            data-row_html="Some thing that contains row html" title="Add row to table">
+                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                    </button>
+                                                </div>
+                                                <span id="span_tbl_assumptions_employee_roles_list" class="span-validate-message is-table-span-validate-message text-danger" data-message="Please enter all required fields."></span>
+                                                <br/>
+                                            </div>
+                                            <br/>
+
+                                            <div id="div_assumptions_employees_working_hours" class="content-bordered">
+                {#                                Number of working hours#}
+                                                <table id="tbl_assumptions_employees_working_hours" class="table table-bordered table-hover" >
                                                 </table>
-                    {#                         End of Price Per Product table #}
-                    {#                          Operating costs  #}
-                                                <div id="div_assumptions_operating_costs" class="content-bordered ">
-                                                    <table id="tbl_assumptions_operating_costs" class="table table-bordered table-hover" >
-                                                    </table>
-                                                    <div class="table-footer" data-table="#tbl_assumptions_operating_costs">
-                                                        <button type="button" class="btn btn-sm btn-footer btn btn-transparent"
-                                                                data-action="add-row"
-                                                                data-row_html="Some thing that contains row html" title="Add row to table">
-                                                            <i class="fa fa-plus" aria-hidden="true"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
+                                                <span id="span_tbl_assumptions_employees_working_hours" class="span-validate-message is-table-span-validate-message text-danger" data-message="Please enter all required fields."></span>
+                                            </div>
+                                            <br/>
 
-                    {#                          End--- Operating costs  #}
-                    {#                         Employee details tables #}
-                                                <div id="div_assumptions_employee_roles_list" class="content-bordered">
-                                                    <table id="tbl_assumptions_employee_roles_list" class="table table-bordered table-hover" >
-                                                    </table>
-                                                    <div class="table-footer" data-table="#tbl_assumptions_employees_details_cost">
-                                                        <button type="button" class="btn btn-sm btn-info btn-footer"
-                                                                data-action="add-row"
-                                                                data-row_html="Some thing that contains row html" title="Add row to table">
-                                                            <i class="fa fa-plus" aria-hidden="true"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                <div id="div_assumptions_employees_working_hours" class="content-bordered">
-                    {#                                Number of working hours#}
-                                                    <table id="tbl_assumptions_employees_working_hours" class="table table-bordered table-hover" >
-                                                    </table>
-                                                </div>
-                                                <div id="div_assumptions_employees_hourly_rates" class="content-bordered">
-                    {#                                Hourly rate#}
-                                                    <table id="tbl_assumptions_employees_hourly_rates" class="table table-bordered table-hover" >
-                                                        <caption style="color: #73879C;"><label class="control-label">Rate per Hour</label></caption>
-                                                    </table>
-                                                </div>
+                                            <div id="div_assumptions_employees_hourly_rates" class="content-bordered">
+                {#                                Hourly rate#}
+                                                <table id="tbl_assumptions_employees_hourly_rates" class="table table-bordered table-hover" >
+                                                    <caption style="color: #73879C;"><label class="control-label">Rate per Hour</label></caption>
+                                                </table>
+                                                <span id="span_tbl_assumptions_employees_hourly_rates" class="span-validate-message is-table-span-validate-message text-danger" data-message="Please enter all required fields."></span>
+                                            </div>
+                                            <br/>
 
-                    {#                          End---- Employee details tables#}
-                    {#                        Sources tables #}
-                                                <div id="div_assumptions_capital" class="content-bordered">
-                    {#                                Number of working hours#}
-                                                    <table id="tbl_assumptions_capital" class="table table-bordered table-hover " >
-                                                    </table>
+                {#                          End---- Employee details tables#}
+                {#                        Sources tables #}
+                                            <div id="div_assumptions_capital" class="content-bordered">
+                {#                                Number of working hours#}
+                                                <table id="tbl_assumptions_capital" class="table table-bordered table-hover " >
+                                                </table>
+                                                <span id="span_tbl_assumptions_capital" class="span-validate-message is-table-span-validate-message text-danger" data-message="Please enter all required fields."></span>
+                                            </div>
+                                            <br/>
+                {#                        End--- Sources #}
+                {#                        Usage Tables#}
+                                            <div id="div_assumptions_usage_tangible_assets" class="content-bordered">
+                {#                                Tangible assets#}
+                                                <table id="tbl_assumptions_usage_tangible_assets" class="table table-bordered table-hover" >
+                                                </table>
+                                                <div class="table-footer" data-table="#tbl_assumptions_usage_tangible_assets">
+                                                    <button type="button" class="btn btn-sm btn-info btn-footer"
+                                                            data-action="add-row"
+                                                            data-row_html="Some thing that contains row html" title="Add row to table">
+                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                    </button>
                                                 </div>
-                    {#                        End--- Sources #}
-                    {#                        Usage Tables#}
-                                                <div id="div_assumptions_usage_tangible_assets" class="content-bordered">
-                    {#                                Tangible assets#}
-                                                    <table id="tbl_assumptions_usage_tangible_assets" class="table table-bordered table-hover" >
-                                                    </table>
-                                                    <div class="table-footer" data-table="#tbl_assumptions_usage_tangible_assets">
-                                                        <button type="button" class="btn btn-sm btn-info btn-footer"
-                                                                data-action="add-row"
-                                                                data-row_html="Some thing that contains row html" title="Add row to table">
-                                                            <i class="fa fa-plus" aria-hidden="true"></i>
-                                                        </button>
-                                                    </div>
-                    {#                                End -- Tangible assets#}
-                                                    <br/>
-                    {#                                Intangible assets#}
-                                                    <table id="tbl_assumptions_usage_intangible_assets" class="table table-bordered table-hover" >
-                                                    </table>
-                                                    <div class="table-footer" data-table="#tbl_assumptions_usage_intangible_assets">
-                                                        <button type="button" class="btn btn-sm btn-info btn-footer"
-                                                                data-action="add-row"
-                                                                data-row_html="Some thing that contains row html" title="Add row to table">
-                                                            <i class="fa fa-plus" aria-hidden="true"></i>
-                                                        </button>
-                                                    </div>
-                    {#                                End -- Intangible assets#}
-                                                    <br/>
-                    {#                                Deposits Table#}
-                                                    <table id="tbl_assumptions_usage_deposits" class="table table-bordered table-hover" >
-                                                    </table>
-                                                    <div class="table-footer" data-table="#tbl_assumptions_usage_deposits">
-                                                        <button type="button" class="btn btn-sm btn-info btn-footer"
-                                                                data-action="add-row"
-                                                                data-row_html="Some thing that contains row html" title="Add row to table">
-                                                            <i class="fa fa-plus" aria-hidden="true"></i>
-                                                        </button>
-                                                    </div>
-                    {#                                End -- Deposits table#}
-                                                    <br/>
-                    {#                                Other Startup Costs Table#}
-                                                    <table id="tbl_assumptions_usage_other_startup_costs" class="table table-bordered table-hover" >
-                                                    </table>
-                                                    <div class="table-footer" data-table="#tbl_assumptions_usage_other_startup_costs">
-                                                        <button type="button" class="btn btn-sm btn-info btn-footer"
-                                                                data-action="add-row"
-                                                                data-row_html="Some thing that contains row html" title="Add row to table">
-                                                            <i class="fa fa-plus" aria-hidden="true"></i>
-                                                        </button>
-                                                    </div>
-                    {#                                End -- Other Startup Costs table#}
+                                                <span id="span_tbl_assumptions_usage_tangible_assets" class="span-validate-message is-table-span-validate-message text-danger" data-message="Please enter all required fields."></span>
+                {#                                End -- Tangible assets#}
+                                                <br/>
+                {#                                Intangible assets#}
+                                                <table id="tbl_assumptions_usage_intangible_assets" class="table table-bordered table-hover" >
+                                                </table>
+                                                <div class="table-footer" data-table="#tbl_assumptions_usage_intangible_assets">
+                                                    <button type="button" class="btn btn-sm btn-info btn-footer"
+                                                            data-action="add-row"
+                                                            data-row_html="Some thing that contains row html" title="Add row to table">
+                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                    </button>
                                                 </div>
-                    {#                        End-- Uses Tables#}
-                                            </form>
+                                                <span id="span_tbl_assumptions_usage_intangible_assets" class="span-validate-message is-table-span-validate-message text-danger" data-message="Please enter all required fields."></span>
+                {#                                End -- Intangible assets#}
+                                                <br/>
+                {#                                Deposits Table#}
+                                                <table id="tbl_assumptions_usage_deposits" class="table table-bordered table-hover" >
+                                                </table>
+                                                <div class="table-footer" data-table="#tbl_assumptions_usage_deposits">
+                                                    <button type="button" class="btn btn-sm btn-info btn-footer"
+                                                            data-action="add-row"
+                                                            data-row_html="Some thing that contains row html" title="Add row to table">
+                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                    </button>
+                                                </div>
+                                                <span id="span_tbl_assumptions_usage_deposits" class="span-validate-message is-table-span-validate-message text-danger" data-message="Please enter all required fields."></span>
+                {#                                End -- Deposits table#}
+                                                <br/>
+                {#                                Other Startup Costs Table#}
+                                                <table id="tbl_assumptions_usage_other_startup_costs" class="table table-bordered table-hover" >
+                                                </table>
+                                                <div class="table-footer" data-table="#tbl_assumptions_usage_other_startup_costs">
+                                                    <button type="button" class="btn btn-sm btn-info btn-footer"
+                                                            data-action="add-row"
+                                                            data-row_html="Some thing that contains row html" title="Add row to table">
+                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                    </button>
+                                                </div>
+                                                <span id="span_tbl_assumptions_usage_other_startup_costs" class="span-validate-message is-table-span-validate-message text-danger" data-message="Please enter all required fields."></span>
+                {#                                End -- Other Startup Costs table#}
+                                            </div>
+                                            <br/>
+                {#                        End-- Uses Tables#}
+                                        </form>
 
-                                     {% else %}
-                                            <form id="frm_bplanner_financial_data_input_page" method="post" action="/dashboard/new/business-plan/financial_data_input_page" class="form-horizontal form-label-left" autocomplete="off" data-parsley-validate>
-                                                {{ csrftoken }}
-        {#                                        <h2>Financial data input</h2>#}
-                                                {{ bplan_financial_data_input_page_form.financial_input.value | safe }}
-                                            </form>
-                                     {% endif %}
-
-
+                                 {% else %}
+                                        <form id="frm_bplanner_financial_data_input_page" method="post" action="/dashboard/new/business-plan/financial_data_input_page" class="form-horizontal form-label-left" autocomplete="off" data-parsley-validate>
+                                            {{ csrftoken }}
+    {#                                        <h2>Financial data input</h2>#}
+                                            {{ bplan_financial_data_input_page_form.financial_input.value | safe }}
+                                        </form>
+                                 {% endif %}
                             </div>
                             <div class="tab-pane step-5" id="rpt_pnl"  data-friendly_name="Monthly Summary P&L" >
                                 <table id="tbl_pnl" class="table table-bordered ">
@@ -1861,12 +1906,12 @@
                                     <caption style="color: #73879C;"><label class="control-label">Amortization Schedule</label></caption>
                                 </table>
                             </div>
-                            <div class="tab-pane step-5" id="rpt_cash_flow"  data-friendly_name="Cash Flow">
+                            <div class="tab-pane step-5" id="rpt_cash_flow"  data-friendly_name="Cash Flow" >
                                 <table id="tbl_cash_flow" class="table table-bordered ">
                                     <caption style="color: #73879C;"><label class="control-label">Cash Flow</label></caption>
                                 </table>
                             </div>
-                            <div class="tab-pane step-5" id="rpt_balance_sheet" data-friendly_name="Balance Sheet">
+                            <div class="tab-pane step-5" id="rpt_balance_sheet" data-friendly_name="Balance Sheet" style="padding-left: 20px!important;">
                                 <table id="tbl_balance_sheet" class="table table-bordered">
                                     <caption style="color: #73879C;"><label class="control-label">Balance Sheet</label></caption>
                                 </table>

@@ -66,8 +66,6 @@ $(document).ready(function () {
     }
 
     function deleteRowWithClass(tableId, productId){
-        console.log('productId')
-        console.log(productId)
         $(tableId + ' .' + productId ).remove()
     }
 
@@ -94,7 +92,7 @@ $(document).ready(function () {
                                             + '<input data-product_id="' + productIndex + '" name="' + productIndex + '_price_' + projectionYear +'" '
                                                     + 'type="text" data-projection_year="' + projectionYear +'" '
                                                     + ' value=""'
-                                                    + ' class="form-control number-input-format input-md '+ priceChangetext +' text-right render_required" required="required " + ' + readonlyText + '></td>'
+                                                    + ' class="form-control number-input-format input-md '+ priceChangetext +' text-right render_required" data-validate_span_id="#span_tbl_assumptions_price_per_product" required="required " + ' + readonlyText + '></td>'
                                 firstYear = false;
                             })
                 strBody += '</tr>'
@@ -117,7 +115,7 @@ $(document).ready(function () {
                                         + '<input data-product_id="' + productIndex + '" name="' + productIndex + '_direct_cost_' + projectionYear +'" '
                                                 + 'type="number" data-projection_year="' + projectionYear +'" '
                                                 + ' value=""'
-                                                + ' class="form-control input-md text-right render_required cost-change" required="required" >'
+                                                + ' class="form-control input-md text-right render_required cost-change" data-validate_span_id="#span_tbl_assumptions_direct_cost_per_product" required="required" >'
                                         + '</td>'
                         })
             strBody += '</tr>';
@@ -159,7 +157,7 @@ $(document).ready(function () {
                                                     + ' data-projection_year="' + projectionMonthYear['year'] +'" '
                                                     + ' data-value="'+ 0 +'" '
                                                     + ' value=""'
-                                                    + ' class="form-control number-input-format input-md '+ unitChangeText +' text-right render_required" required="required " + ' + readonlyText + '></td>'
+                                                    + ' class="form-control number-input-format input-md '+ unitChangeText +' text-right render_required" data-validate_span_id="#span_tbl_assumptions_units_of_measurement_per_product" required="required " + ' + readonlyText + '></td>'
 
                             })
                 strBody += '</tr>'
@@ -195,9 +193,9 @@ $(document).ready(function () {
                 var productOrServiceGrowthRate = productOrServiceId + '_growth_rate'
                 str +=
                     '<tr id="' + productOrServiceId + '">'
-                    + '<td id="' + productOrServiceName + '" class="td-input"><input name="' + productOrServiceName +'" type="text" data-product_id="' + productOrServiceId +'" data-prop_affected="name"  class="form-control input-md product-change text-left render_required" placeholder="" required="required"></td>'
-                    + '<td id="' + productOrServiceUnits + '" class="td-input"><input name="' + productOrServiceUnits +'" type="text" data-product_id="' + productOrServiceId +'" data-prop_affected="units"  class="form-control input-md product-change text-left render_required" placeholder="" required="required"></td>'
-                    + '<td id="' + productOrServiceGrowthRate + '" class="td-input"><input name="' + productOrServiceGrowthRate +'" type="number" min="0" data-product_id="' + productOrServiceId +'" data-prop_affected="growth_rate"  class="form-control input-md product-change text-right render_required" placeholder="" required="required"></td>'
+                    + '<td id="' + productOrServiceName + '" class="td-input"><input name="' + productOrServiceName +'" type="text" data-product_id="' + productOrServiceId +'" data-prop_affected="name"  class="form-control input-md product-change text-left render_required" data-validate_span_id="#span_tbl_assumptions_number_of_products_or_services" placeholder="" required="required"></td>'
+                    + '<td id="' + productOrServiceUnits + '" class="td-input"><input name="' + productOrServiceUnits +'" type="text" data-product_id="' + productOrServiceId +'" data-prop_affected="units"  class="form-control input-md product-change text-left render_required" data-validate_span_id="#span_tbl_assumptions_number_of_products_or_services" placeholder="" required="required"></td>'
+                    + '<td id="' + productOrServiceGrowthRate + '" class="td-input"><input name="' + productOrServiceGrowthRate +'" type="number" min="0" data-product_id="' + productOrServiceId +'" data-prop_affected="growth_rate"  class="form-control input-md product-change text-right render_required" data-validate_span_id="#span_tbl_assumptions_number_of_products_or_services" placeholder="" required="required"></td>'
                     + '</tr>'
 
                 // add table rows for respective tables
@@ -255,7 +253,6 @@ $(document).ready(function () {
 
         // table 4
     })
-
 
     $('#id_projection_years').change(function (event) {
         if($('#id_projection_years').val() != null && $('#id_projection_years').val() != ''){
@@ -569,7 +566,7 @@ $(document).ready(function () {
                                             + '<input data-product_id="' + productIndex + '" name="' + productIndex + '_price_' + projectionYear +'" '
                                                     + 'type="text" data-projection_year="' + projectionYear +'" '
                                                     + ' value=""'
-                                                    + ' class="form-control number-input-format input-md '+ priceChangetext +' text-right render_required" required="required " + ' + readonlyText + '></td>'
+                                                    + ' class="form-control number-input-format input-md '+ priceChangetext +' text-right render_required" data-validate_span_id="#span_tbl_assumptions_price_per_product" required="required " + ' + readonlyText + '></td>'
                                 firstYear = false;
                             })
                 strBody += '</tr>'
@@ -623,7 +620,7 @@ $(document).ready(function () {
                                         + '<input data-product_id="' + productIndex + '" name="' + productIndex + '_direct_cost_' + projectionYear +'" '
                                                 + 'type="number" data-projection_year="' + projectionYear +'" '
                                                 + ' value=""'
-                                                + ' class="form-control input-md text-right render_required cost-change" required="required" >'
+                                                + ' class="form-control input-md text-right render_required cost-change" data-validate_span_id="#span_tbl_assumptions_direct_cost_per_product" required="required" >'
                                         + '</td>'
                         })
             strBody += '</tr>';
@@ -703,7 +700,7 @@ $(document).ready(function () {
                                                     + ' data-projection_year="' + projectionMonthYear['year'] +'" '
                                                     + ' data-value="'+ 0 +'" '
                                                     + ' value=""'
-                                                    + ' class="form-control number-input-format input-md '+ unitChangeText +' text-right render_required" required="required " + ' + readonlyText + '></td>'
+                                                    + ' class="form-control number-input-format input-md '+ unitChangeText +' text-right render_required" data-validate_span_id="#span_tbl_assumptions_units_of_measurement_per_product" required="required " + ' + readonlyText + '></td>'
 
                             })
                 strBody += '</tr>'
@@ -746,7 +743,7 @@ $(document).ready(function () {
                       +          '<input type="text" class="form-control" name="' + operatingCostId +'" value="' + costName +'" placeholder="" required="required"  >'
                       +      '</td>'
                       +      '<td class="costing_period td-input td-sm">'
-                      +          '<select class="form-control render_required" required="required">'
+                      +          '<select class="form-control render_required" data-validate_span_id="#span_tbl_assumptions_operating_costs" required="required">'
                                     $.each(costAppropriationMethods, function(appMethodIndex, appMethod){
             strRow    +=                '<option value="' + appMethodIndex + '">' + appMethod + '</option>'
                                     })
@@ -762,7 +759,7 @@ $(document).ready(function () {
                                  var operatingCostChange = (colOrder == 0) ? 'operating-cost-change' : '';
              strRow +=       '<td class="cost td-input td-sm ' + readonlyText + ' ' + autoFilledText + '" '
                       +             ' data-projection_year= "'+ projectionYear +'">'
-                      +          '<input type="text" class="form-control number-input-format input-md text-right render_required ' + operatingCostChange + '" name="' + inputName + '" value="" required="required" ' + readonlyText + '>'
+                      +          '<input type="text" class="form-control number-input-format input-md text-right render_required ' + operatingCostChange + '" data-validate_span_id="#span_tbl_assumptions_operating_costs" name="' + inputName + '" value="" required="required" ' + readonlyText + '>'
                       +      '</td>'
                                  colOrder++;
                              })
@@ -837,11 +834,11 @@ $(document).ready(function () {
             var inputName = employeeRoleId + '_' + projectionYear
           strRowHtml += '<td class="number_of_employees td-input td-sm"'
                      +      'data-projection_year="'+ projectionYear +'">'
-                     +       '<input type="text" name="' + inputName + '" class="form-control number-input-format text-right render_required" placeholder="" value="" required="required" >'
+                     +       '<input type="text" name="' + inputName + '" class="form-control number-input-format text-right render_required" data-validate_span_id="#span_tbl_assumptions_employee_roles_list" placeholder="" value="" required="required" >'
                      +   '</td>'
         });
           strRowHtml +=   '<td class="td-input td-sm">'
-                     +       '<select class="form-control text-center render_required" name="cost_type" required="required">'
+                     +       '<select class="form-control text-center render_required" data-validate_span_id="#span_tbl_assumptions_employee_roles_list" name="cost_type" required="required">'
                      +           '<option value="1">Direct Cost</option>'
                      +           '<option value="2">Indirect Cost</option>'
                      +       '</select>'
@@ -898,7 +895,7 @@ $(document).ready(function () {
             var inputName = employeeRoleId + '_' + projectionYear
             strRowHtml +=       '<td class="working_hours td-input td-sm '
                        +            'data-projection_year="'+ projectionYear + '">'
-                       +            '<input type="text" name="' + inputName + '" class="form-control number-input-format text-right render_required" placeholder="" value="" required="required" >'
+                       +            '<input type="text" name="' + inputName + '" class="form-control number-input-format text-right render_required" data-validate_span_id="#span_tbl_assumptions_employees_working_hours" placeholder="" value="" required="required" >'
                        +        '</td>'
         });
 
@@ -957,7 +954,7 @@ $(document).ready(function () {
              var autoFilledText = (isReadonlyField) ? 'auto-filled' : '';
              var hourlyRateChangeText = (!isReadonlyField) ? 'hourly-rate-change' : '';
             strRowHtml +=       '<td class="hourly_rate td-input td-sm ' + readonlyText + ' ' + autoFilledText + '">'
-                       +            '<input type="text" name="' + inputName + '" class="form-control number-input-format text-right render_required ' + hourlyRateChangeText +' " placeholder="" value="" required="required" ' + readonlyText + '>'
+                       +            '<input type="text" name="' + inputName + '" class="form-control number-input-format text-right render_required ' + hourlyRateChangeText +' " data-validate_span_id="#span_tbl_assumptions_employees_hourly_rates" placeholder="" value="" required="required" ' + readonlyText + '>'
                        +        '</td>'
             colOrder++;
         });
@@ -1019,12 +1016,12 @@ $(document).ready(function () {
             var investmentMonth = inputName + '_investment_month'
             var capitalChangedClassText = ' capital-changed ';
             strRowHtml +=       '<td class="td-input td-sm ' + capitalChangedClassText + ' ' + projectionYear + ' investment ">'
-                       +            '<input type="text" name="' + inputName + '" class="form-control number-input-format text-right render_required" placeholder="" value="" required="required">'
+                       +            '<input type="text" name="' + inputName + '" class="form-control number-input-format text-right render_required" data-validate_span_id="#span_tbl_assumptions_capital" placeholder="" value="" required="required">'
                        +        '</td>'
                        +        '<td class="td-input text-right td-md ' + projectionYear +' month_of_investment">'
                                 if(rowCount <= 1)
                                 {
-            strRowHtml +=           '<select class="form-control text-right" name="' + investmentMonth + '" required="required">'
+            strRowHtml +=           '<select class="form-control text-right" name="' + investmentMonth + '" data-validate_span_id="#span_tbl_assumptions_capital" required="required">'
             $.each(getMonthsListForYear(projectionYear, false), function (monthIndex, projectionMonth) {
                 strRowHtml +=             '<option value="'+ monthIndex +'"  class="span-projection-month" data-projection_month_index="' + monthIndex + '">'+  projectionMonth['display'] +'</option>'
             })
@@ -1093,10 +1090,10 @@ $(document).ready(function () {
 
             var tangibleAssetUsageChangedClassText = ' tangible-assets-changed ';
             strRowHtml +=       '<td class=" '+ projectionYear +' amount_added td-input td-sm ' + tangibleAssetUsageChangedClassText +'">'
-                       +            '<input type="text" name="' + inputName + '" class="form-control number-input-format text-right" placeholder="" value="" required="required">'
+                       +            '<input type="text" name="' + inputName + '" class="form-control number-input-format text-right" data-validate_span_id="#span_tbl_assumptions_usage_tangible_assets" placeholder="" value="" required="required">'
                        +        '</td>'
                        +        '<td class="'+ projectionYear+' month_added td-input td-sm">'
-                       +            '<select class="form-control text-center" name="' + investmentMonth + '" required="required">'
+                       +            '<select class="form-control text-center" name="' + investmentMonth + '" data-validate_span_id="#span_tbl_assumptions_usage_tangible_assets" required="required">'
             $.each(getMonthsListForYear(projectionYear, false), function (monthIndex, projectionMonth) {
                 strRowHtml +=             '<option value="'+ monthIndex +'" class="span-projection-month" data-projection_month_index="' + monthIndex + '">'+ projectionMonth['display'] +'</option>'
             })
@@ -1104,7 +1101,7 @@ $(document).ready(function () {
                        +        '</td>'
         });
             strRowHtml +=       '<td class="td-input td-sm">'
-                       +            '<input type="number" max="100" min="0" name="' + depreciationRate + '" class="form-control number-input-format text-right render_required" placeholder="" required="required">'
+                       +            '<input type="number" max="100" min="0" name="' + depreciationRate + '" class="form-control number-input-format text-right render_required" data-validate_span_id="#span_tbl_assumptions_usage_tangible_assets" placeholder="" required="required">'
                        +        '</td>'
                        +    '</tr>'
         return strRowHtml;
@@ -1169,10 +1166,10 @@ $(document).ready(function () {
 
             var intangibleAssetUsageChangedClassText = ' intangible-assets-changed ';
             strRowHtml +=       '<td class="'+ projectionYear +' amount_added td-input td-sm ' + intangibleAssetUsageChangedClassText +'">'
-                       +            '<input type="text" name="' + inputName + '" class="form-control number-input-format text-right render_required" placeholder="" required="required">'
+                       +            '<input type="text" name="' + inputName + '" class="form-control number-input-format text-right render_required" data-validate_span_id="#span_tbl_assumptions_usage_intangible_assets" placeholder="" required="required">'
                        +        '</td>'
                        +        '<td class="'+ projectionYear + ' month_added td-input td-sm">'
-                       +            '<select class="form-control text-center" name="' + investmentMonth + '" required="required">'
+                       +            '<select class="form-control text-center" name="' + investmentMonth + '" data-validate_span_id="#span_tbl_assumptions_usage_intangible_assets" required="required">'
             $.each(getMonthsListForYear(projectionYear, false), function (monthIndex, projectionMonth) {
                 strRowHtml +=             '<option value="'+ monthIndex +'" class="span-projection-month" data-projection_month_index="' + monthIndex + '">'+ projectionMonth['display'] +'</option>'
             })
@@ -1232,10 +1229,10 @@ $(document).ready(function () {
                         +           '</button>'
                         +       '</td>'
                         +       '<td class="td-input td-md">'
-                        +            '<input type="text" class="form-control" name="' + depositItemNameId + '" value="' + depositItemName + '" placeholder="" required="required" >'
+                        +            '<input type="text" class="form-control" name="' + depositItemNameId + '" value="' + depositItemName + '"  placeholder="" required="required" >'
                         +        '</td>'
                         +       '<td class="td-input td-md">'
-                        +            '<input type="text" class="form-control number-input-format text-right render_required" name="' + inputName + '" placeholder="" value="" required="required" >'
+                        +            '<input type="text" class="form-control number-input-format text-right render_required" name="' + inputName + '" data-validate_span_id="#span_tbl_assumptions_usage_deposits" placeholder="" value="" required="required" >'
                         +        '</td>'
                         +   '</tr>'
         return strRowHtml;
@@ -1289,7 +1286,7 @@ $(document).ready(function () {
                         +            '<input type="text" class="form-control" name="' + costItemNameId + '" value="' + costName + '" placeholder="" required="required" >'
                         +        '</td>'
                         +       '<td class="td-input td-sm">'
-                        +            '<input type="text" class="form-control text-right number-input-format render_required" name="' + inputName + '" placeholder="" value="" required="required" >'
+                        +            '<input type="text" class="form-control text-right number-input-format render_required" name="' + inputName + '" data-validate_span_id="#span_tbl_assumptions_usage_other_startup_costs"  placeholder="" value="" required="required" >'
                         +        '</td>'
                         +   '</tr>'
         return strRowHtml;
@@ -5547,11 +5544,16 @@ $(document).ready(function () {
     function markAsInvalid(val){
         $(val).css('border', '1px solid #E85445');
         $(val).css('background-color', '#FAEDEC');
+        var validateSpanId = $(val).data('validate_span_id')
+        console.log('validateSpanId: ' + validateSpanId)
+        $(validateSpanId).text($(validateSpanId).data('message'))
     }
 
     function markAsValid(val){
         $(val).css('border', '1px solid #ccc');
         $(val).css('background-color', '#fff');
+        var validateSpanId = $(val).data('validate_span_id')
+        $(validateSpanId).text('')
     }
 
     function validateRequired(stepId){
@@ -5580,12 +5582,26 @@ $(document).ready(function () {
     }
 
     // Ensure everything is update when changed
-    $('#page_title input,textarea,select').change(function(event){
+    $('input,textarea,select').change(function(event){
         $(this).attr('value', $(this).val());
-    })
+        // validate
+        var validationMessageSpanId = $(this).data('validate_span_id');
+        if(validationMessageSpanId != null && validationMessageSpanId != ''){
+            if($(validationMessageSpanId).hasClass('is-table-span-validate-message')){
+                // not validating tables at this stage
+            }else{
+                //Validate
+                if($(this).val() == ''){
+                    markAsInvalid($(this))
+                    $(validationMessageSpanId).text($(validationMessageSpanId).data('message'))
+                }else{
+                    markAsValid($(this))
+                    $(validationMessageSpanId).text('');
+                }
 
-    $('#financial_assumptions input,textarea,select').change(function(event){
-        $(this).attr('value', $(this).val());
+            }
+        }
+
     })
 
     $('.tabbable .nav-tabs li a').click(function (event) {
@@ -6685,8 +6701,6 @@ $(document).ready(function () {
       content: 'Note: This action will make changes that cannot be undone.'
     });
 
-
-    
     $('#btn_save_business_plan').click(function (event) {
         // Saving all passed business plan sections
         // disable save button
