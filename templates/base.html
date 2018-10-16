@@ -185,38 +185,40 @@
 
   </head>
 
-  <body class="nav-md footer_fixed" style="background-color: #ecedef;">
-    <div class="container body">
+  <body class="nav-md footer_fixed" style="background-color: #fff;">
+    <div class="container body" style="margin-top: -10px;">
       <div class="main_container">
-        <!-- top navigation -->
-        <div id="top_nav" class="top_nav sticky-top" style="z-index: 100000;">
-          <div class="nav_menu" style="background-color: #3a7fd5; color: #f3f3f3;">
-            <nav>
-                <ul class="nav navbar-nav navbar-left">
-                    <li><a href="/"><h3>SME Business Planner |</h3></a></li>
-                    {% if user.username != '' %}
-                    <li style="margin-top: 10px;"><a href="/dashboard/new/business-plan" class="collapse-link scalable" ><i class="fa fa-plus"></i> New Business Plan</a></li>
-                    {% else %}
 
-                    {% endif %}
+
+        <!-- top navigation -->
+        <div id="top_nav" class="top_nav sticky-top " style="z-index: 100000;width: calc(100vw - 0px);">
+          <div id="main-nav" class="nav_menu section" style="background-color: #3a7fd5;">
+            <nav style="padding: 0px;">
+                <ul class="nav navbar-nav navbar-left" style="padding: 0px;">
+                    <li style="padding: 0px;">
+                        <a href="/" style="padding-left: 0px;">
+                            <h2 style="padding: 0px;color: #fff;">
+                                BPlanner
+{#                                <sup class="" style="font-weight: 600;font-size: 14px;color: #f0ad4e;">Pro</sup>#}
+                            </h2></a></li>
                 </ul>
 
               <ul class="nav navbar-nav navbar-right" style="margin-top: 8px;">
 
                 {% if user.username != '' %}
-                <li class="">
+                <li>
                   <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                     <img src="{% static 'imgs/img.jpg' %}" alt="">{{ user.username }}
                     <span class=" fa fa-angle-down"></span>
                   </a>
 
                   <ul class="dropdown-menu dropdown-usermenu pull-right">
-                    <li><a href="/-/logout"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                    <li><a href="/-/logout"><i class="fa fa-sign-out pull-right"></i> LOGOUT</a></li>
                   </ul>
                 </li>
                 <li class="">
                   <a href="javascript:;" class="user-profile dropdown-toggle scalable" data-toggle="dropdown" aria-expanded="false">
-                    Samples
+                    SAMPLES
                   </a>
                   <ul class="dropdown-menu dropdown-usermenu pull-right">
                       {% if bplan_samples.count > 0 %}
@@ -230,7 +232,7 @@
                 </li>
                 <li class="">
                   <a href="javascript:;" class="user-profile dropdown-toggle scalable" data-toggle="dropdown" aria-expanded="false">
-                    Guide <span class=" fa fa-question-circle"></span>
+                    GUIDES <span class=" fa fa-question-circle"></span>
                   </a>
                   <ul class="dropdown-menu dropdown-usermenu pull-right">
                       <li><a href="/-/help?section=01" target="_blank" >Title page</a></li>
@@ -249,17 +251,20 @@
                   </ul>
                 </li>
                 <li class="">
-                    <a href="/dashboard"  class="nav-link scalable">Dashboard</a>
+                    <a href="/dashboard"  class="">DASHBOARD</a>
+                </li>
+                <li style="padding-left: 0px;margin-left: -14px;margin-bottom: 10px;">
+                    <button href="/dashboard/new/business-plan" class="btn-new-businesplan btn marketing-button marketing-nav__button " onclick="window.location.href='/dashboard/new/business-plan';" style="left: 0px;background-color: #ff7300; color: #fff!important;margin-top: 10px;padding-top: 10px; padding-bottom: 10px; "><i class="fa fa-plus"></i> NEW BUSINESS PLAN</button>
                 </li>
                 {% else %}
-
+                    {% if page_type != 'auth' %}
                     <li class="">
-                        <a href="#" class="nav-link scalable" data-toggle="modal" data-target="#signup">Register</a>
+                        <a href="#" class="btn marketing-button marketing-nav__button" data-toggle="modal" data-target="#signup" style="margin-top: 8px; padding: 5px 30px;left: 0px; background-color: #ff7300;color: #fff!important; ">GET STARTED</a>
                     </li>
                     <li class="">
-                        <a href="#" class="nav-link scalable" data-toggle="modal" data-target="#signin">Login</a>
+                        <a href="#" class="" data-toggle="modal" data-target="#signin">LOGIN</a>
                     </li>
-
+                    {% endif %}
                 {% endif %}
 
               </ul>
@@ -274,16 +279,7 @@
         {% endblock %}
         <!-- /page content -->
 
-        <!-- footer content -->
-{#        <footer id="footer">#}
-{#          <div class="pull-right">#}
-{#            <span id="step_toggle" class="btn btn-warning">Show Steps</span>#}
-{#            <span id="step_finish" class="btn btn-default">Finish</span>#}
-{#            <span id="step_next" class="btn btn-success">Next</span>#}
-{#            <span id="step_previous" class="btn btn-primary">Previous</span>#}
-{#          </div>#}
-{#          <div class="clearfix"></div>#}
-{#        </footer>#}
+
         <!-- /footer content -->
             <div class="modal fade" id="signup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered modal-lg" role="document">

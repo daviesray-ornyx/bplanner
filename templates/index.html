@@ -2,65 +2,28 @@
 {% load static from staticfiles %}
 
 {% block page_content %}
-    <div class="right_col" role="main"  style="background-color: #ffffff; min-height: calc(100vh + 100px);">
-      <div class="container-fluid section-builder">
-
+    <div class="right_col bg-white" role="main"  style="min-height: calc(100vh + 100px);padding: 0px;">
         <div class="clearfix"></div>
-
-          <div class="row -spacing-3 ">
-            <div class="col-md-12">
-              <div class="textStack" style="text-align: center;">
-                <h4 class="-h3">
-                  Spend less time on guesswork. <br/>And do more great work.
-                </h4>
-                <p class="-large">
-                  Asana helps you coordinate all the work your team does together. So everyone knows what needs to get done, who’s responsible for doing it, and when it’s due.
-                </p>
-              </div>
-            </div>
+        <section class="section-fluid">
+            <br/>
+          <div class="textStack" style="text-align: center;">
+            <h1 class="header--heading">
+              Quit spending time on guesswork and build great business plans quickly and effortlessly!
+            </h1>
           </div>
+        </section>
+
+        <div class="container" style=";padding-bottom: 50px;padding-top: 30px;">
+
           {% if user.username == None or user.username == '' %}
-          <div class="row -small-center">
-            <div class="col-xsmall-12 col-small-8 col-large-6 col-xlarge-4">
-              <button class="signupForm-submit submit button -large" tabindex="" title="Sign Up" data-toggle="modal" data-target="#signup">
-                    Get Started
-                </button>
-            </div>
+          <div class="-small-center">
+              <div class="col-xsmall-12 col-small-8 col-large-6 col-xlarge-4">
+                  <button class="signupForm-submit submit button -large" tabindex="" title="Sign Up" data-toggle="modal" data-target="#signup">
+                        Get Started
+                    </button>
+                </div>
           </div>
           {% endif %}
       </div>
-
-
-
-      <div class="modal fade" id="signup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                  {% include "sign-up-form.html" %}
-                </div>
-            </div>
-          </div>
-      </div>
-
-      <div class="modal fade" id="signin" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                  {% include "sign-in-form.html" %}
-                </div>
-            </div>
-          </div>
-      </div>
-
-      <div class="modal fade" id="reset-password" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                  {% include "password-reset-form.html" %}
-                </div>
-            </div>
-          </div>
-      </div>
-
   </div>
 {% endblock %}

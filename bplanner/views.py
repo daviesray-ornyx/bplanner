@@ -1,4 +1,5 @@
 import sys, os
+import settings
 from io import BytesIO
 import xhtml2pdf.pisa as pisa
 from django.template.loader import get_template
@@ -128,11 +129,16 @@ class LandingPageView(View):
     """docstring for LandingPageView."""
 
     def get(self, request):
-        return render(request, 'index.html', {'name': "Davies Ray"})
-
+        if settings.LANGING_PAGE_ENABLED:
+            return render(request, 'index.html', {'name': "Davies Ray", 'page': 'landing', 'page_type': 'anonymous'})
+        else:
+           return redirect('dashboard')
 
     def post(self, request):
-        return render(request, 'index.html', {'name': "Post action"})
+        if settings.LANGING_PAGE_ENABLED:
+            return render(request, 'index.html', {'name': "Davies Ray", 'page': 'landing', 'page_type': 'anonymous'})
+        else:
+           return redirect('dashboard')
 
 class RegisterView(View):
     """docstring for Register."""
@@ -141,42 +147,49 @@ class RegisterView(View):
         return val is None or val == ''
 
     def get(self, request):
-        return render(request, 'sign-up.html', {'name': "Davies Ray"})
+        if request.user.is_authenticated:
+            return redirect('dashboard')
+        return render(request, 'sign-up.html', {'name': "Davies Ray", 'page_type': 'auth'})
 
 
     def post(self, request):
+        if request.user.is_authenticated:
+            return redirect('dashboard')
         email = request.POST.get('email', None)
         password = request.POST.get('password', None)
         confirm_password = request.POST.get('confirmPasswordInput', None)
         if self.is_null_or_empty(email) or self.is_null_or_empty(password) or self.is_null_or_empty(confirm_password):
-            return render(request, 'sign-up.html', {'status': 'ERR', 'message': 'Missing required sign up details.'})
+            return render(request, 'sign-up.html', {'status': 'ERR', 'message': 'Missing required sign up details.', 'page_type': 'auth'})
         if password != confirm_password:
-            return render(request, 'sign-up.html', {'status': 'ERR', 'message': 'Passwords provided do not match.'})
+            return render(request, 'sign-up.html', {'status': 'ERR', 'message': 'Passwords provided do not match.', 'page_type': 'auth'})
         # everything is good so far.
         # create user
         user, created = User.objects.get_or_create(username=email, email=email)
         if not created: #user exists... show message
-            return render(request, 'sign-up.html', {'status': 'ERR', 'message': 'User with {} exists. Login or use a different email.'.format(email)})
+            return render(request, 'sign-up.html', {'status': 'ERR', 'message': 'User with {} exists. Login or use a different email.'.format(email), 'page_type': 'auth'})
         else: # user created.. Set password, remember to use a hashing function
             user.set_password(password) # This line will hash the password
             user.save() #DO NOT FORGET THIS LINE
-        return render(request, 'sign-in.html', {'status': 'SUCCESS', 'message': 'Sign in to your account using email: {} and the password used for registration'.format(email)})
+        return render(request, 'sign-in.html', {'status': 'SUCCESS', 'message': 'Sign in to your account using email: {} and the password used for registration'.format(email), 'page_type': 'auth'})
 
 class LoginView(View):
     """docstring for LandingPageView."""
 
     def get(self, request):
-        return render(request, 'sign-in.html', {'status': 'NEW', 'message': 'Enter email and password to sign in.'})
-
+        if request.user.is_authenticated:
+            return redirect('dashboard')
+        return render(request, 'sign-in.html', {'status': 'NEW', 'message': 'Enter email and password to sign in.', 'page_type': 'auth'})
 
     def post(self, request):
+        if request.user.is_authenticated:
+            return redirect('dashboard')
         # retrieve email and password
         #email = request.data.get('email');
         email = request.POST.get('email', None)
         password = request.POST.get('password', None)
 
         if email is None  or password is None: # confirm all details passed
-            return render(request, 'sign-in.html', {'status': 'ERR', 'message': 'Missing details'})
+            return render(request, 'sign-in.html', {'status': 'ERR', 'message': 'Missing details', 'page_type': 'auth'})
 
         # check if user matches these details
         user = authenticate(request, username=email, password=password)
@@ -192,57 +205,58 @@ class LoginView(View):
             # Redirect to a success page.
         else:
             # Return an 'invalid login' error message.
-            return render(request, 'sign-in.html', {'status': 'ERR', 'message': 'Invalid username/password.'})
+            return render(request, 'sign-in.html', {'status': 'ERR', 'message': 'Invalid username/password.', 'page_type': 'auth'})
 
 class LogoutView(View):
     """docstring for LandingPageView."""
 
     def get(self, request):
         logout(request);
-        return redirect('landing-page')
+        return redirect('login-page')
 
 
     def post(self, request):
         logout(request);
-        return redirect('landing-page')
+        return redirect('login-page')
 
 class PasswordResetView(View):
     """docstring for LandingPageView."""
 
     def get(self, request):
-        return render(request, 'reset-password.html', {'name': "Davies Ray"})
+        return render(request, 'reset-password.html', {'name': "Davies Ray", 'page_type': 'auth'})
 
 
     def post(self, request):
-        return render(request, 'reset-password.html', {'name': "Post action"})
+        return render(request, 'reset-password.html', {'name': "Post action", 'page_type': 'auth'})
 
 class PasswordChangeView(View):
     """docstring for LandingPageView."""
 
     def get(self, request):
-        return render(request, 'index.html', {'name': "Davies Ray"})
+        return render(request, 'index.html', {'name': "Davies Ray", 'page_type': 'auth'})
 
 
     def post(self, request):
-        return render(request, 'index.html', {'name': "Post action"})
+        return render(request, 'index.html', {'name': "Post action", 'page_type': 'auth'})
 
 class DashboardView(View):
     """docstring for DashboardView."""
 
     def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login-page')
         # get business plans
         # get current user
         if not request.user.is_authenticated: # check if user is authenticated
-            return redirect('landing-page');
+            return redirect('login-page');
         bplans = BusinessPlanTitlePage.objects.filter(owner=request.user).order_by('-date_created') # order by date_created desc
         user_profile = Profile.objects.get(user=request.user)
         bplan_samples =  BusinessPlanSample.objects.all();  # get's all business plan samples
-        return render(request, 'dashboard.html', {'user': request.user, 'user_profile': user_profile, 'bplans': bplans, 'bplan_samples': bplan_samples })
-
+        return render(request, 'dashboard.html', {'user': request.user, 'user_profile': user_profile, 'bplans': bplans, 'bplan_samples': bplan_samples, 'menu_width': 'full' })
 
     def post(self, request):
         if not request.user.is_authenticated: # check if user is authenticated
-            return redirect('landing-page');
+            return redirect('login-page');
         return render(request, 'dashboard.html', {'user': request.user})
 
 class BusinessPlanDetailView(View):
@@ -267,9 +281,9 @@ class BusinessPlanDetailView(View):
             size += sum([self.get_size(i, seen) for i in obj])
         return size
 
-
-
     def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login-page')
         id = request.GET.get('id', None)
         mode = 'edit' if id else 'new'
         bplan_title_page = None
@@ -333,11 +347,14 @@ class BusinessPlanDetailView(View):
             'currencies': currencies,
             'months': months,
             'mode': mode,
-            'bplan_samples': bplan_samples
+            'bplan_samples': bplan_samples,
+            'menu_width': 'full'
         })
 
 class BusinessPlanDeleteView(View):
     def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login-page')
         # determine if new or edit form
         # check if id is set
         id = request.GET.get('id', None)
@@ -380,6 +397,8 @@ class BusinessPlanDeleteView(View):
         return redirect('dashboard');
 
 def save_title_page(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'status':401, 'message': 'Authentication Error'})
     if request.method == 'GET':
         return JsonResponse({'status':500, 'message': 'Save action does not allow GET'})
     bplanner_id = request.POST.get('id', None) # Be careful about this while doing a post!!
@@ -426,6 +445,9 @@ def save_title_page(request):
         return JsonResponse({'status': 500, 'message': 'An error occurred while creating Business plan. Please try again or contact system admin.'})
 
 def save_main_content_page(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'status':401, 'message': 'Authentication Error'})
+
     if request.method == 'GET':
         return JsonResponse({'status':500, 'message': 'Save action does not allow GET'})
 
@@ -483,6 +505,9 @@ def save_main_content_page(request):
         return JsonResponse({'status': 500, 'message': 'An error occurred while creating Business plan. Please try again or contact system admin.'})
 
 def save_financial_assumptions_page(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'status':401, 'message': 'Authentication Error'})
+
     if request.method == 'GET':
         return JsonResponse({'status':500, 'message': 'Save action does not allow GET'})
 
@@ -550,6 +575,9 @@ def save_financial_assumptions_page(request):
         return JsonResponse({'status': 500, 'message': 'An error occurred while creating Business plan. Please try again or contact system admin.'})
 
 def save_financial_data_input_page(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'status':401, 'message': 'Authentication Error'})
+
     if request.method == 'GET':
         return JsonResponse({'status':500, 'message': 'Save action does not allow GET'})
 
@@ -660,18 +688,25 @@ class BusinessPlanHelpView(View):
     """docstring for BusinessPlanHelpView."""
 
     def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login-page')
         section = request.GET.get('section', None)
         # get find help model
         help_section = HelpSection.objects.get(ref_id=section) if section is not None else HelpSection.objects.first()
         bplan_samples =  BusinessPlanSample.objects.all();  # get's all business plan samples
-        return render(request, 'help.html', {'help_section': help_section, 'bplan_samples': bplan_samples})
+        return render(request, 'help.html', {'help_section': help_section, 'bplan_samples': bplan_samples, 'menu_width': 'fluid'})
 
 
     def post(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login-page')
         bplan_samples =  BusinessPlanSample.objects.all();  # get's all business plan samples
-        return render(request, 'help.html', {'name': "Post action", 'bplan_samples': bplan_samples})
+        return render(request, 'help.html', {'name': "Post action", 'bplan_samples': bplan_samples, 'menu_width': 'fluid'})
 
 def view_bplan(request):
+    if not request.user.is_authenticated:
+        return redirect('login-page')
+
     if request.method == 'POST':
         return JsonResponse({'status':500, 'message': 'Get action does not allow POST'})
     # check if sample
@@ -716,6 +751,9 @@ def link_callback(uri, rel):
     return path
 
 def download_pdf(request):
+    if not request.user.is_authenticated:
+        return redirect('login-page')
+
     if request.method == 'POST':
         return JsonResponse({'status':500, 'message': 'Get action does not allow POST'})
     bplan_id = request.GET.get('id', None)

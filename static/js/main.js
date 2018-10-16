@@ -1104,7 +1104,7 @@ $(document).ready(function () {
                        +        '</td>'
         });
             strRowHtml +=       '<td class="td-input td-sm">'
-                       +            '<input type="text" name="' + depreciationRate + '" class="form-control number-input-format text-right render_required" placeholder="" required="required">'
+                       +            '<input type="number" max="100" min="0" name="' + depreciationRate + '" class="form-control number-input-format text-right render_required" placeholder="" required="required">'
                        +        '</td>'
                        +    '</tr>'
         return strRowHtml;
@@ -2842,6 +2842,7 @@ $(document).ready(function () {
                 var amountAdded = depreciationSetting['amount_added'];
                 var monthAdded =  projectionMonthsList[depreciationSetting['month_added']];
                 var depreciationPerMonth = amountAdded * (depreciationRate/100) / countOfMonthsInFinancialYear;
+                depreciationPerMonth = depreciationPerMonth > amountAdded ? amountAdded : depreciationPerMonth;
 
                 var totalDepreciation = 0;
                 var financialYearTotals = 0;
@@ -2940,6 +2941,7 @@ $(document).ready(function () {
                 depreciationTotalPerMonthDict[monthIndex] += depreciationAmountPerMonth
             })
         })
+
         return depreciationTotalPerMonthDict;
     }
 
@@ -5641,6 +5643,15 @@ $(document).ready(function () {
 
 
             // Check if clicked step requires generation
+            //if(['#step-3', '#step-4', '#step-5'].indexOf(clickedStep) > -1){
+            //    $('#main-nav').removeClass('section-fluid')
+            //    $('#main-nav').addClass('section')
+            //    console.log("Removing")
+            //}else{
+            //    $('#main-nav').removeClass('section')
+            //    $('#main-nav').addClass('section-fluid')
+            //    console.log('Adding ')
+            //}
 
             if(clickedStep == '#step-4'){
                 $('#btn_regenerate_page').removeClass('hidden')
@@ -6649,24 +6660,32 @@ $(document).ready(function () {
       onConfirm: function(value) {
         // Proceed to regenerate page...
           // disable regenerate button
-          $('#btn_regenerate_page').addClass('disabled')
-          regenerateCurentPate();
+          // Check if delete business plan $(this) represents what was clicked
+          var id = $(this).attr('id')
+          if(id == 'btn_regenerate_page'){
+              // This is special for page regeneration
+              $('#btn_regenerate_page').addClass('disabled')
+              regenerateCurentPate();
 
-          // Unbind/ bind events
-        $('.number-input-format').unbind('keydown')
-        $('.number-input-format').keydown(numberFormatKeyDownHandler)
+              // Unbind/ bind events
+              $('.number-input-format').unbind('keydown')
+              $('.number-input-format').keydown(numberFormatKeyDownHandler)
 
-         // enable regenerate button
-        $('#btn_regenerate_page').removeClass('disabled')
+              // enable regenerate button
+              $('#btn_regenerate_page').removeClass('disabled')
+          }
+
       },
       onCancel: function() {
         // page not regenerated... Don't do anything
 
       },
       placement: 'bottom',
-      title: 'Sure to regenerate page?',
-      content: 'Note: This action will clear all initial table data and require data entry.'
+      title: 'Sure to Proceed with this action?',
+      content: 'Note: This action will make changes that cannot be undone.'
     });
+
+
     
     $('#btn_save_business_plan').click(function (event) {
         // Saving all passed business plan sections
@@ -7067,6 +7086,8 @@ $(document).ready(function () {
             }
         })
     })
+
+
 
 })
 
