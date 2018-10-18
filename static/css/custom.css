@@ -33,20 +33,25 @@ body{
     background-color: #3a7fd5!important;
 }
 
+.top_nav .nav.navbar-nav>li {
+    margin: auto 3px;
+}
+
 .top_nav .nav.navbar-nav>li>a {
     color: #fff!important;
 }
 
 .top_nav .nav.navbar-nav>li>a:active,
 .top_nav .nav.navbar-nav>li>a:focus,
-.top_nav .nav.navbar-nav>li>a:hover {
+.top_nav .nav.navbar-nav>li>a:hover,
+.top_nav .nav.navbar-nav>li>a.active {
     /*font-size: x-large;*/
-    font-weight: bolder;
     text-decoration: none;
     color: #fff!important;
     background-color: #3a7fd5!important;
-
+    border-bottom: 2px solid #fff;
 }
+
 
 
 .top_nav .nav.navbar-nav>li>button.marketing-button:hover{
@@ -659,7 +664,7 @@ Reporting tabs
 }
 
 #top-tab-container{
-    flex: 0 0 calc(100% - 115px);
+    flex: 0 0 calc(100% - 170px);
 }
 
 #action-conainer{

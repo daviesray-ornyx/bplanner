@@ -252,12 +252,12 @@ class DashboardView(View):
         bplans = BusinessPlanTitlePage.objects.filter(owner=request.user).order_by('-date_created') # order by date_created desc
         user_profile = Profile.objects.get(user=request.user)
         bplan_samples =  BusinessPlanSample.objects.all();  # get's all business plan samples
-        return render(request, 'dashboard.html', {'user': request.user, 'user_profile': user_profile, 'bplans': bplans, 'bplan_samples': bplan_samples, 'menu_width': 'full' })
+        return render(request, 'dashboard.html', {'page': 'dashboard', 'user': request.user, 'user_profile': user_profile, 'bplans': bplans, 'bplan_samples': bplan_samples, 'menu_width': 'full' })
 
     def post(self, request):
         if not request.user.is_authenticated: # check if user is authenticated
             return redirect('login-page');
-        return render(request, 'dashboard.html', {'user': request.user})
+        return render(request, 'dashboard.html', {'page': 'dashboard', 'user': request.user})
 
 class BusinessPlanDetailView(View):
     """docstring for BusinessPlanDetailView."""
@@ -338,6 +338,7 @@ class BusinessPlanDetailView(View):
         months = Month.objects.all()
         bplan_samples =  BusinessPlanSample.objects.all();  # get's all business plan samples
         return render(request, 'business-plan.html', {
+            'page': 'bplan',
             'id': id,
             'bplan_title_page_form': bplan_title_page_form,
             'bplan_main_content_page_form': bplan_main_content_page_form,
@@ -694,14 +695,14 @@ class BusinessPlanHelpView(View):
         # get find help model
         help_section = HelpSection.objects.get(ref_id=section) if section is not None else HelpSection.objects.first()
         bplan_samples =  BusinessPlanSample.objects.all();  # get's all business plan samples
-        return render(request, 'help.html', {'help_section': help_section, 'bplan_samples': bplan_samples, 'menu_width': 'fluid'})
+        return render(request, 'help.html', {'page': 'guide', 'help_section': help_section, 'bplan_samples': bplan_samples, 'menu_width': 'fluid'})
 
 
     def post(self, request):
         if not request.user.is_authenticated:
             return redirect('login-page')
         bplan_samples =  BusinessPlanSample.objects.all();  # get's all business plan samples
-        return render(request, 'help.html', {'name': "Post action", 'bplan_samples': bplan_samples, 'menu_width': 'fluid'})
+        return render(request, 'help.html', {'page': 'guide', 'name': "Post action", 'bplan_samples': bplan_samples, 'menu_width': 'fluid'})
 
 def view_bplan(request):
     if not request.user.is_authenticated:

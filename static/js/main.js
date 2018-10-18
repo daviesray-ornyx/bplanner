@@ -5,10 +5,10 @@
 $(document).ready(function () {
 
     // Set window sizing
-    $('#right_col').height($(window).height() - $('#top_nav').height() - 15);
-    $('.tabbable').height($('#right_col').height() - $('.smart_nav').height() - 130);
-    $('.tab-content').height($('#right_col').height() - $('.smart_nav').height() - 130);
-    $('#editor-one').height($('#right_col').height() - $('.smart_nav').height() - 230);
+    $('#right_col').height($(window).height() - $('#top_nav').height() - 65);
+    $('.tabbable').height($('#right_col').height() - $('#main-nav').height());
+    $('.tab-content').height($('#right_col').height() - $('#main-nav').height());
+    $('#editor-one').height($('#right_col').height() - $('#main-nav').height());
     //$('#steps-nav').css('bottom', '0');
     var taxSlabs = {
         'totalTaxSlabTableCumulativeTax' : 0,
@@ -123,7 +123,8 @@ $(document).ready(function () {
             // Update bindings
             $('.cost-change').unbind('change');
             $('.cost-change').change(productCostChangeHandler);
-        }else if(tableId == '#tbl_assumptions_units_of_measurement_per_product'){
+        }else if(tableId == '#tbl_assumptions_units_of_measurement_per_product')
+        {
             strBody += '<tr data-product_id="' + productIndex + '" class="'+ productIndex +'">'
                             + '<td class="td-label td-md " data-product_id="' + productIndex + '">'
                             +    '<span class="input-label"></span>'
@@ -1330,15 +1331,15 @@ $(document).ready(function () {
         // Check if upper limit is greater than lower limit
         var upperLimitTD = $(this).parent();
         var upperLimitInput =$(upperLimitTD).children('input').first();
-        var upperLimit = parseInt($(upperLimitInput).val(), 0);
+        var upperLimit = parseInt(removeCommas($(upperLimitInput).val()), 0);
 
         var lowerLimitTD = $($(upperLimitTD).siblings('.lower-limit'))[0];
         var lowerLimitInput =$(lowerLimitTD).children('input').first();
-        var lowerLimit =  parseInt($(lowerLimitInput).val(), 0);
+        var lowerLimit =  parseInt(removeCommas($(lowerLimitInput).val()), 0);
 
         var taxRateTD = $($(upperLimitTD).siblings('.tax-rate'))[0];
         var taxRateInput =$(taxRateTD).children('input').first();
-        var taxRate = parseInt($(taxRateInput).val(),0)
+        var taxRate = parseInt(removeCommas($(taxRateInput).val()),0)
         if(taxRate == null || taxRate == 0){
             isValidStatus = false;
         }
@@ -1351,13 +1352,13 @@ $(document).ready(function () {
         var taxInput =$(taxTD).children('input').first();
         var oldTaxValue = 0;
         if($(taxInput).val() != null  && $(taxInput).val() != ''){
-            oldTaxValue = parseInt($(taxInput).val(), 0);
+            oldTaxValue = parseInt(removeCommas($(taxInput).val()), 0);
         }
 
 
         var cumulativeTaxTD = $($(upperLimitTD).siblings('.cumulative_tax'))[0];
         var cumulativeTaxInput =$(cumulativeTaxTD).children('input').first();
-        var currentCumulativeTaxVal = $(cumulativeTaxInput).val() != '' ? parseInt($(cumulativeTaxInput).val()) : 0
+        var currentCumulativeTaxVal = $(cumulativeTaxInput).val() != '' ? parseInt(removeCommas($(cumulativeTaxInput).val())) : 0
         // reset all the computed values
             //1. difference
         $(differenceInput).val('')
@@ -1405,7 +1406,7 @@ $(document).ready(function () {
         var difference = upperLimit - lowerLimit;
         taxSlabs[currentSlabKey]['difference'] = difference
         taxSlabs[currentSlabKey]['taxRate'] = taxRate
-        $(differenceInput).val(difference);
+        $(differenceInput).val(difference.toLocaleString('en'));
         // check if tax rate is set
         if(taxRate == null || isNaN(taxRate) || taxRate == '' || taxRate == 0){
             // set focus to taxrate input
@@ -1417,7 +1418,7 @@ $(document).ready(function () {
         }
         // new tax
         var newTax = differenceInput * taxRate / 100 ; // Tax rate is in percentage
-        $(taxInput).val(newTax);
+        $(taxInput).val(newTax.toLocaleString('en'));
         taxSlabs[currentSlabKey]['tax'] = newTax;
 
         // Update cumulative tax val
@@ -1426,7 +1427,7 @@ $(document).ready(function () {
             taxSlabs['totalTaxSlabTableCumulativeTax'] = 0;
         }
         taxSlabs['totalTaxSlabTableCumulativeTax'] += taxDifference;
-        $(cumulativeTaxInput).val(taxSlabs['totalTaxSlabTableCumulativeTax'])
+        $(cumulativeTaxInput).val(taxSlabs['totalTaxSlabTableCumulativeTax'].toLocaleString('en'))
         taxSlabs[currentSlabKey]['cumulativeTax'] = taxSlabs['totalTaxSlabTableCumulativeTax']
 
         $('#btn-add_tax_slab').removeClass('disabled');
@@ -1446,7 +1447,7 @@ $(document).ready(function () {
         // Tax rate has chaged.
         var taxRateTD = $(this).parent();
         var taxRateInput =  $(taxRateTD).children('input').first();
-        var taxRate = parseInt($(taxRateInput).val(),0)
+        var taxRate = parseInt(removeCommas($(taxRateInput).val()), 0)
 
         if (taxRate == null){
             markAsInvalid(taxRateInput);
@@ -1459,12 +1460,12 @@ $(document).ready(function () {
 
         var upperLimitTD = $($(taxRateTD).siblings('.upper-limit'))[0];
         var upperLimitInput =$(upperLimitTD).children('input').first();
-        var upperLimit = parseInt($(upperLimitInput).val(), 0);
+        var upperLimit = parseInt(removeCommas($(upperLimitInput).val()), 0);
 
 
         var lowerLimitTD = $($(taxRateTD).siblings('.lower-limit'))[0];
         var lowerLimitInput =$(lowerLimitTD).children('input').first();
-        var lowerLimit =  parseInt($(lowerLimitInput).val(), 0);
+        var lowerLimit =  parseInt(removeCommas($(lowerLimitInput).val()), 0);
 
 
         var differenceTD = $($(taxRateTD).siblings('.difference'))[0];
@@ -1473,12 +1474,12 @@ $(document).ready(function () {
 
         var taxTD = $($(taxRateTD).siblings('.tax'))[0];
         var taxInput =$(taxTD).children('input').first();
-        var oldTaxValue = $(taxInput).val() != '' ? parseInt($(taxInput).val(), 0) : 0;
+        var oldTaxValue = $(taxInput).val() != '' ? parseInt(removeCommas($(taxInput).val()), 0) : 0;
 
 
         var cumulativeTaxTD = $($(upperLimitTD).siblings('.cumulative_tax'))[0];
         var cumulativeTaxInput =$(cumulativeTaxTD).children('input').first();
-        var currentCumulativeTaxVal = $(cumulativeTaxInput).val() != '' ? parseInt($(cumulativeTaxInput).val()) : 0
+        var currentCumulativeTaxVal = $(cumulativeTaxInput).val() != '' ? parseInt(removeCommas($(cumulativeTaxInput).val())) : 0
 
         // reset all the computed values
         //2. tax
@@ -1513,7 +1514,7 @@ $(document).ready(function () {
         taxSlabs[currentSlabKey]['difference'] = difference
         taxSlabs[currentSlabKey]
         var newTax = difference * taxRate / 100; // Tax rate is in percentage
-        $(taxInput).val(newTax);
+        $(taxInput).val(newTax.toLocaleString('en'));
         taxSlabs[currentSlabKey]['tax'] = newTax;
 
 
@@ -1526,7 +1527,7 @@ $(document).ready(function () {
         taxSlabs['totalTaxSlabTableCumulativeTax'] += taxDifference;
         taxSlabs[currentSlabKey]['cumulativeTax'] = taxSlabs['totalTaxSlabTableCumulativeTax']
 
-        $(cumulativeTaxInput).val(taxSlabs['totalTaxSlabTableCumulativeTax'])
+        $(cumulativeTaxInput).val(taxSlabs['totalTaxSlabTableCumulativeTax'].toLocaleString('en'))
 
         $('#btn-add_tax_slab').removeClass('disabled');
         $('#span-add_tax_slab_help').text('(You can now add a tax slab.)')
@@ -1550,7 +1551,7 @@ $(document).ready(function () {
         $(currentTaxRateInput).attr('readonly', 'true')
         // End of disabling input in previous row field
 
-        var currentUpperLimit = $($($('#tbl_assumptions_tax_slabs_' + rowCount).children('td')[2]).children('input')[0]).val()
+        var currentUpperLimit = removeCommas($($($('#tbl_assumptions_tax_slabs_' + rowCount).children('td')[2]).children('input')[0]).val())
         if(currentUpperLimit == null || currentUpperLimit == ''){
             return -1;
         }
@@ -1575,27 +1576,29 @@ $(document).ready(function () {
                        +           '</button>'
                        +       '</td>'
                        +     '<td class="td-input readonly lower-limit">'
-                       +         '<input type="number" class="form-control text-right input-tax-lower-limit"  placeholder="" min="0" value="'+ newLowerLimit +'" readonly>'
+                       +         '<input type="text" class="form-control number-input-format text-right input-tax-lower-limit"  placeholder="" min="0" value="'+ newLowerLimit.toLocaleString('en') +'" readonly>'
                        +     '</td>'
                        +     '<td class="td-input upper-limit">'
-                       +         '<input type="number" class="form-control text-right input-tax-upper-limit" placeholder="" min="'+ newLowerLimit +'">'
+                       +         '<input type="text" class="form-control number-input-format text-right input-tax-upper-limit" placeholder="" min="'+ newLowerLimit.toLocaleString('en') +'">'
                        +     '</td>'
                        +     '<td class="td-input tax-rate">'
-                       +         '<input type="number" class="form-control text-right input-tax-rate" placeholder="" min="0">'
+                       +         '<input type="text" class="form-control number-input-format text-right input-tax-rate" placeholder="" min="0">'
                        +     '</td>'
                        +     '<td class="td-input readonly difference">'
-                       +         '<input type="number" class="form-control input-md text-right" min="0" readonly>'
+                       +         '<input type="text" class="form-control number-input-format input-md text-right" min="0" readonly>'
                        +     '</td>'
                        +     '<td class="td-input readonly tax">'
-                       +         '<input type="number" class="form-control input-md text-right" min="0" readonly>'
+                       +         '<input type="text" class="form-control number-input-format input-md text-right" min="0" readonly>'
                        +     '</td>'
                        +     '<td class="td-input readonly cumulative_tax">'
-                       +         '<input type="number" class="form-control input-md text-right" name="'+ taxCumulativeTD +'" min="0" readonly>'
+                       +         '<input type="text" class="form-control number-input-format input-md text-right" name="'+ taxCumulativeTD +'" min="0" readonly>'
                        +     '</td>'
                        + '</tr>'
 
         $('#btn-add_tax_slab').addClass('disabled');
         $('#span-add_tax_slab_help').text('(You can only add a tax slab when current slab is completed.)')
+
+
 
         // Update tax slab object
         var newSlabCount = taxSlabs['slabCount'] + 1;
@@ -1830,19 +1833,22 @@ $(document).ready(function () {
         // Check table id
         var row = $(this).closest('tr');
         var tableId = $(this).closest('table').attr('id');
-        if(tableId == 'tbl_assumptions_employee_roles_list'){
+        if(tableId == 'tbl_assumptions_employee_roles_list')
+        {
             // cascade delete corresponding trs for
             // 1. tbl_assumptions_employees_working_hours
             // 2. tbl_assumptions_employees_hourly_rates
             var roleId = $(row).attr('id');
             $('#tbl_assumptions_employees_working_hours tr.' + roleId).remove();
             $('#tbl_assumptions_employees_hourly_rates tr.' + roleId).remove();
-        }else if(tableId == 'tbl_assumptions_tax_slabs'){
+        }
+        else if(tableId == 'tbl_assumptions_tax_slabs')
+        {
             // adjust totalCumulativeTaxValue by the amount of tax
             var rowCount = $('#tbl_assumptions_tax_slabs tbody').children('tr').length;
             var taxTD = $($('#tbl_assumptions_tax_slabs_' + rowCount).children('.tax'))[0];
             var taxInput = $($(taxTD).children('input'))[0]
-            var currentTax = $(taxInput).val() != '' ? parseInt($(taxInput).val(), 0) : 0
+            var currentTax = $(taxInput).val() != '' ? parseInt(removeCommas($(taxInput).val()), 0) : 0
             // get current tax slab and remove
             var currentTaxSlabKey = taxSlabs['slabCount'];
             delete taxSlabs[currentTaxSlabKey]; // does the deletion
@@ -1853,7 +1859,8 @@ $(document).ready(function () {
         $(row).remove();
 
         //Look for any other necessary action after that!!
-        if(tableId == 'tbl_assumptions_tax_slabs'){
+        if(tableId == 'tbl_assumptions_tax_slabs')
+        {
             // Need to enable what was disabled after removing
             var rowCount = $('#tbl_assumptions_tax_slabs tbody').children('tr').length;
             var currentUpperLimitTD = $($('#tbl_assumptions_tax_slabs_' + rowCount).children('.upper-limit'))[0];
@@ -2000,6 +2007,10 @@ $(document).ready(function () {
             if(rowHtml == -1)
                 return;
             $('#tbl_assumptions_tax_slabs tbody').append($(rowHtml));
+
+            //number-input-format
+            $('.number-input-format').unbind('keydown')
+            $('.number-input-format').keydown(numberFormatKeyDownHandler)
 
             // Unbind and bind click event
             $('#tbl_assumptions_tax_slabs .action-delete-row').unbind('click');
@@ -7100,8 +7111,6 @@ $(document).ready(function () {
             }
         })
     })
-
-
 
 })
 

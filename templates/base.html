@@ -1,6 +1,6 @@
 {% load static from staticfiles %}
 <!DOCTYPE html>
-<html lang="en" style="overflow: visible;">
+<html lang="en" style="overflow: {% if page == 'bplan' %}hidden{% else %}visible{% endif %};height: auto">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- Meta, title, CSS, favicons, etc. -->
@@ -217,7 +217,7 @@
                   </ul>
                 </li>
                 <li class="">
-                  <a href="javascript:;" class="user-profile dropdown-toggle scalable" data-toggle="dropdown" aria-expanded="false">
+                  <a href="javascript:;" class="user-profile dropdown-toggle scalable {% if sample != None %}active{% endif %}" data-toggle="dropdown" aria-expanded="false">
                     SAMPLES
                   </a>
                   <ul class="dropdown-menu dropdown-usermenu pull-right">
@@ -231,7 +231,7 @@
                   </ul>
                 </li>
                 <li class="">
-                  <a href="javascript:;" class="user-profile dropdown-toggle scalable" data-toggle="dropdown" aria-expanded="false">
+                  <a href="javascript:;" class="user-profile dropdown-toggle scalable {% if page == 'guide' %}active{% endif %}" data-toggle="dropdown" aria-expanded="false">
                     GUIDES <span class=" fa fa-question-circle"></span>
                   </a>
                   <ul class="dropdown-menu dropdown-usermenu pull-right">
@@ -251,7 +251,7 @@
                   </ul>
                 </li>
                 <li class="">
-                    <a href="/dashboard"  class="">DASHBOARD</a>
+                    <a href="/dashboard"  class="{% if page == 'dashboard' %}active{% endif %}">DASHBOARD</a>
                 </li>
                 <li style="padding-left: 0px;margin-left: -14px;margin-bottom: 10px;">
                     <a href="/dashboard/new/business-plan" class=""><i class="fa fa-plus"></i> NEW BUSINESS PLAN</a>

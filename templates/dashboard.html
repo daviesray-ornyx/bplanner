@@ -27,10 +27,10 @@
                                       <div style="margin-bottom: 10px;">
                                         <a href="/dashboard/business-plan/view?id={{ bplan.id }}" style="color: #4774b7; font-size: 17px;font-weight: 700;" title="View {{ bplan.company_name }}">{{ bplan.company_name }}</a>
                                       </div>
-                                      <div style="margin-bottom: 10px;">
-                                        <span style="color: #707276;font-size: 14px;"><span class="fa fa-clock-o"></span> Created {{ bplan.date_created }} </span>
+                                      <div style="margin-bottom: 20px;">
+                                        <span style="color: #707276;font-size: 12px;"><span class="fa fa-clock-o"></span> Created {{ bplan.date_created }} </span>
                                       </div>
-                                      <div style="margin-bottom: 10px;">
+                                      <div style="margin-bottom: 5px;">
                                           <a style="color: #707276!important; font-size: 14px!important;" href="/dashboard/view/business-plan?id={{ bplan.id }}" class="btn-xs"><i class="fa fa-pencil"></i> Edit </a>
                                           <a style="color: #707276!important; font-size: 14px!important;" href="/dashboard/delete/business-plan?id={{ bplan.id }}" class="btn-xs" data-toggle="confirmation" data-popout="true"><i class="fa fa-trash-o"></i> Delete </a>
                                       </div>
@@ -50,7 +50,8 @@
                     {% endif %}
                 </div>
               </div>
-              <div class="col-md-4" style="background-color: #f8f9fc; height: inherit;box-shadow: 0 5px 15px 0 rgba(0,0,0,0.15);">
+{#              <div class="col-md-4" style="background-color: #f8f9fc; height: inherit;box-shadow: 0 5px 15px 0 rgba(0,0,0,0.15);">#}
+              <div class="col-md-4" style="background-color: #fff; height: inherit;box-shadow: 0 5px 15px 0 rgba(0,0,0,0.15); border-top: 1px solid #ddd;">
                 <div class="x_title">
                   <h2>Account Summary</h2>
                   <div class="clearfix"></div>
