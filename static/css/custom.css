@@ -661,6 +661,8 @@ Reporting tabs
 #top-conatiner{
     display: flex;
     width: calc(100vw - 0);
+    background-color:  #f8f9fc;
+    border-bottom: 1px solid #ddd;
 }
 
 #top-tab-container{

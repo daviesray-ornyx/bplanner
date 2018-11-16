@@ -584,6 +584,7 @@ def save_financial_data_input_page(request):
 
     # get business plan id:- you cannot proceed if this is not retrieved
     title_page_id = request.POST.get('title_page_id', None)
+
     if title_page_id is None or title_page_id == '':
         return JsonResponse({'status': 500, 'message': 'An error occurred while updating Business plan. Please try again or contact system admin.'})
     title_page = BusinessPlanTitlePage.objects.filter(id=title_page_id).first()
@@ -592,7 +593,6 @@ def save_financial_data_input_page(request):
         data_input_page = BusinessPlanFinancialDataInput.objects.get(title_page=title_page)
     except:
         data_input_page = None
-
     if data_input_page is not None:
         # Update
         form = BusinessPlanFinancialDataInputForm(request.POST, files=None, instance=data_input_page)
@@ -613,7 +613,6 @@ def save_financial_data_input_page(request):
 
             model_instance.size = data_input_page_size
             model_instance.save()
-
             # get model size
             return JsonResponse({'status': 200, 'message': 'Business plan updated successfully!', 'id': model_instance.id})
         else:

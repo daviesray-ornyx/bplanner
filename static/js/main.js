@@ -38,8 +38,7 @@ $(document).ready(function () {
         }
         return cookieValue;
     }
-
-    $('#id_currency').change(function(event){
+    bindChangeEventHandler('#id_currency', function(event){
         // get currency.
         updateCurrency(getCurrency());
     })
@@ -99,7 +98,8 @@ $(document).ready(function () {
             $('#tbl_assumptions_price_per_product tbody').append(strBody)
             // Update bindings
             $('.price-change').unbind('change');
-            $('.price-change').change(productPriceChangeHandler);
+            bindChangeEventHandler('.price-change', productPriceChangeHandler)
+
 
         }else if(tableId == '#tbl_assumptions_direct_cost_per_product')
         {
@@ -122,7 +122,7 @@ $(document).ready(function () {
             $('#tbl_assumptions_direct_cost_per_product tbody').append(strBody)
             // Update bindings
             $('.cost-change').unbind('change');
-            $('.cost-change').change(productCostChangeHandler);
+            bindChangeEventHandler('.cost-change', productCostChangeHandler)
         }else if(tableId == '#tbl_assumptions_units_of_measurement_per_product')
         {
             strBody += '<tr data-product_id="' + productIndex + '" class="'+ productIndex +'">'
@@ -166,8 +166,7 @@ $(document).ready(function () {
             // Update bindings
             // Unbind and bind change events
             $('.unit-change').unbind('change');
-            $('.unit-change').change(measurementUnitChangeHandler);
-
+            bindChangeEventHandler('.unit-change', measurementUnitChangeHandler);
 
             // Unbind/ bind events
             $('.number-input-format').unbind('keydown')
@@ -175,7 +174,7 @@ $(document).ready(function () {
         }
     }
 
-    $('#id_number_of_products_or_services').change(function(e){
+    bindChangeEventHandler('#id_number_of_products_or_services',  function(e){
         productCount = $(this).val(); // Product count updated
         // Creating table with these number of rows
         // Get count of tr in table
@@ -215,8 +214,8 @@ $(document).ready(function () {
             // Unbind change handler
             $('.product-change').unbind('change');
             // Bind event handler again
-            $('.product-change').change(productDetailsChangeHandler)
-            productRowsCount;
+            bindChangeEventHandler('.product-change', productDetailsChangeHandler);
+            productRowsCount++;
 
             // add rows to affected tables
         }else{
@@ -241,27 +240,16 @@ $(document).ready(function () {
                 }
             }
             productRowsCount = productCount;
-
-            // remove row ffrom affected tables
         }
+    });
 
-        // Update for the next 4 tables
-        // Table 1:- Price Per Product Table
-
-        // Table 2
-
-        // table 3
-
-        // table 4
-    })
-
-    $('#id_projection_years').change(function (event) {
+    bindChangeEventHandler('#id_projection_years', function (event) {
         if($('#id_projection_years').val() != null && $('#id_projection_years').val() != ''){
             projectionYears = parseInt($('#id_projection_years').val(), 0)
             generatePrijectionYearsList();
         }
         //console.log(projectionYearsList);
-    })
+    });
 
     function returnProjectionYearsList(){
         var newFirstFinancialYear = parseInt($('#id_first_financial_year').val());
@@ -578,7 +566,7 @@ $(document).ready(function () {
         $('#tbl_assumptions_price_per_product').append(strBody);
 
         $('.price-change').unbind('change');
-        $('.price-change').change(productPriceChangeHandler);
+        bindChangeEventHandler('.price-change', productPriceChangeHandler)
 
         // Show parent content
         $('#tbl_assumptions_price_per_product').parent('.content-bordered').css('display', 'block');
@@ -636,7 +624,7 @@ $(document).ready(function () {
         // Bind and unbind change handlers whennever necessary
         // Unbind and bind change events
         $('.cost-change').unbind('change');
-        $('.cost-change').change(productCostChangeHandler);
+        bindChangeEventHandler('.cost-change', productCostChangeHandler);
     }
 
     function generateUnitOfRevenueMeasurementTable(){
@@ -714,8 +702,7 @@ $(document).ready(function () {
 
         // Unbind and bind change events
         $('.unit-change').unbind('change');
-        $('.unit-change').change(measurementUnitChangeHandler);
-
+        bindChangeEventHandler('.unit-change', measurementUnitChangeHandler);
 
         // Unbind/ bind events
         $('.number-input-format').unbind('keydown')
@@ -769,6 +756,14 @@ $(document).ready(function () {
 
     }
 
+    function bindChangeEventHandler(idOrClass, handler){
+        if (navigator.appName == 'Microsoft Internet Explorer' || navigator.appName == "Netscape"){
+            $(idOrClass).focusout(handler);
+        }else{
+            $(idOrClass).change(handler);
+        }
+    }
+
     function generateOperatingCostsTable(){
         if(!$('#tbl_assumptions_operating_costs').length){
             $('#frm_bplanner_financial_data_input_page').append('<table id="tbl_assumptions_operating_costs" class="table table-bordered table-hover table-dynamic margin-15"></table>')
@@ -804,9 +799,7 @@ $(document).ready(function () {
 
         // Unbind bind change events
         $('.operating-cost-change').unbind('change');
-        $('.operating-cost-change').change(operatingCostChangeHandler);
-
-
+        bindChangeEventHandler('.operating-cost-change', operatingCostChangeHandler)
 
         // Show div section
         $('#div_assumptions_operating_costs').css('display','block');
@@ -997,7 +990,7 @@ $(document).ready(function () {
 
         // Unbind and bind events again
         $('.hourly-rate-change').unbind('change');
-        $('.hourly-rate-change').change(employeeHourlyRateChangeHandler);
+        bindChangeEventHandler('.hourly-rate-change', employeeHourlyRateChangeHandler);
 
         // Show div section
         $('#div_assumptions_employees_hourly_rates').css('display','block');
@@ -1435,7 +1428,7 @@ $(document).ready(function () {
     }
 
     // Handling change in upper liumit
-    $('.input-tax-upper-limit').change(inputTaxUpperLimitChangeHandler)
+    bindChangeEventHandler('.input-tax-upper-limit', inputTaxUpperLimitChangeHandler);
 
     function inputTaxRateChangeHandler(event){
         var isValidStatus = true;
@@ -1534,7 +1527,7 @@ $(document).ready(function () {
 
     }
 
-    $('.input-tax-rate').change(inputTaxRateChangeHandler)
+    bindChangeEventHandler('.input-tax-rate', inputTaxRateChangeHandler)
 
     function generateTaxSlabTableRow(){
         var rowCount = $('#tbl_assumptions_tax_slabs tbody').children('tr').length;
@@ -1934,11 +1927,13 @@ $(document).ready(function () {
         generateUsageOtherStartupCostsTable();
 
     })
-    $('.product-change').change(productDetailsChangeHandler);
-    $('.price-change').change(productPriceChangeHandler);
-    $('.cost-change').change(productCostChangeHandler);
-    $('.operating-cost-change').change(operatingCostChangeHandler);
-    $('.hourly-rate-change').change(employeeHourlyRateChangeHandler);
+    bindChangeEventHandler('.product-change', productDetailsChangeHandler);
+    bindChangeEventHandler('.price-change', productPriceChangeHandler);
+
+
+    bindChangeEventHandler('.cost-change', productCostChangeHandler);
+    bindChangeEventHandler('.operating-cost-change', operatingCostChangeHandler);
+    bindChangeEventHandler('.hourly-rate-change', employeeHourlyRateChangeHandler)
     $('.table-footer button').click(function(event){
         // Get nearest table
         var tableFooter = $(this).closest('.table-footer');
@@ -1952,7 +1947,7 @@ $(document).ready(function () {
 
             // Unbind bind change events
             $('.operating-cost-change').unbind('change');
-            $('.operating-cost-change').change(operatingCostChangeHandler);
+            bindChangeEventHandler('.operating-cost-change', operatingCostChangeHandler);
 
         }else if(targetTableId == '#tbl_assumptions_employees_list'){
             // Employee details table row addition
@@ -2018,10 +2013,10 @@ $(document).ready(function () {
 
             // Unbind and bind change event
             $('#tbl_assumptions_tax_slabs .input-tax-upper-limit').unbind('change');
-            $('#tbl_assumptions_tax_slabs .input-tax-upper-limit').change(inputTaxUpperLimitChangeHandler);
+            bindChangeEventHandler('#tbl_assumptions_tax_slabs .input-tax-upper-limit', inputTaxUpperLimitChangeHandler);
 
             $('#tbl_assumptions_tax_slabs .input-tax-rate').unbind('change');
-            $('#tbl_assumptions_tax_slabs .input-tax-rate').change(inputTaxRateChangeHandler);
+            bindChangeEventHandler('#tbl_assumptions_tax_slabs .input-tax-rate', inputTaxRateChangeHandler);
         }
 
 
@@ -5593,7 +5588,7 @@ $(document).ready(function () {
     }
 
     // Ensure everything is update when changed
-    $('input,textarea,select').change(function(event){
+    bindChangeEventHandler('input,textarea,select', function(event){
         $(this).attr('value', $(this).val());
         // validate
         var validationMessageSpanId = $(this).data('validate_span_id');
@@ -5613,7 +5608,7 @@ $(document).ready(function () {
             }
         }
 
-    })
+    });
 
     $('.tabbable .nav-tabs li a').click(function (event) {
         // This is suppose to handle a few things
@@ -5718,6 +5713,7 @@ $(document).ready(function () {
                     updateCurrency(getCurrency());
 
                     toggleSpinner(false, 'Done!')
+                    stepMonitor[clickedStep]['auto_generate'] = false;
                 }
             }else if(clickedStep == '#step-5' ){
                 $('#btn_regenerate_page').removeClass('hidden')
@@ -5983,16 +5979,16 @@ $(document).ready(function () {
 
     }
 
-    $('#financial_assumptions input,textarea,select').change(function(event){
+    bindChangeEventHandler('#financial_assumptions input,textarea,select', function(event){
         $(this).attr('value', $(this).val());
         autogenerateReports = true;
-    })
+    });
 
-    $('#financial_data_input input,textarea,select').change(function(event){
+    bindChangeEventHandler('#financial_data_input input,textarea,select', function(event){
         $(this).attr('value', $(this).val());
         autogenerateReports = true;
         console.log("Autogenerate flag changed!!")
-    })
+    });
 
     function saveFinancialAssumptions(){
         $('#financial_assumptions input,textarea,select').each(function(index){
@@ -6039,11 +6035,13 @@ $(document).ready(function () {
         // add titlePageId to serialized data
         data.push({name: "title_page_id", value: titlePageId});
         // add frm_bplanner_financial_data_input_page // financial_input
-        var financialInputHTML = $('#frm_bplanner_financial_data_input_page').html()
+        var financialInputHTML = $('#frm_bplanner_financial_data_input_page').html();
+
         data.push({name: "financial_input", value: financialInputHTML});
         //csrfmiddlewaretoken
         var token = getCookie('csrftoken')
         data.push({name: "csrfmiddlewaretoken", value: token});
+
 
         $.ajax({
           type: "POST",
@@ -6732,7 +6730,7 @@ $(document).ready(function () {
         return $('#id_taxation_system').val();
     }
 
-    $('#id_taxation_system').change(function (event) {
+    bindChangeEventHandler('#id_taxation_system', function (event) {
         // By default it's tiered system
         // Check value
         var systemId = $(this).val();
@@ -6745,7 +6743,7 @@ $(document).ready(function () {
             $('#div-tax_slab').addClass('hidden');
             $('#div_corporate_tax_rate').removeClass('hidden');
         }
-    })
+    });
 
     function getItemOfferedId(){
         return $('#id_offerings_products_or_services').val()
@@ -6762,7 +6760,7 @@ $(document).ready(function () {
         }
     }
 
-    $('#id_offerings_products_or_services').change(function (event) {
+    bindChangeEventHandler('#id_offerings_products_or_services', function (event) {
         // get item
         var itemOfferedId = $(this).val();
         if(itemOfferedId == 0){
@@ -6774,7 +6772,7 @@ $(document).ready(function () {
             $('.span-item_offered').text('Service')
             $('.span-item_offered_plural').text('Services')
         }
-    })
+    });
 
     function getYearTotalFromProjectionMonthsDict(dict, totalMonth){
         var total = 0;
@@ -6947,7 +6945,7 @@ $(document).ready(function () {
 
 
     $('.unit-change').unbind('change');
-    $('.unit-change').change(measurementUnitChangeHandler);
+    bindChangeEventHandler('.unit-change', measurementUnitChangeHandler);
 
 
     // Unbind/ bind events
@@ -6957,24 +6955,11 @@ $(document).ready(function () {
 
     // Unbind bind change events
     $('.operating-cost-change').unbind('change');
-    $('.operating-cost-change').change(operatingCostChangeHandler);
+    bindChangeEventHandler('.operating-cost-change', operatingCostChangeHandler)
 
     // Unbind and bind events again
     $('.hourly-rate-change').unbind('change');
-    $('.hourly-rate-change').change(employeeHourlyRateChangeHandler);
-
-    //// Sample dialog setup
-    //$('#sample-dialog').on('show.bs.modal', function (e) {
-    //  // do something..
-    //    var $link = $(e.relatedTarget)
-    //    var sample_id = $link.data('sample_id');
-    //    // do an ajax to get sample html
-    //
-    //    console.log('sampleHtml')
-    //    console.log(sampleHtml)
-    //    $('#sample-dialog .modal-body').html(sampleHtml)
-    //
-    //})
+    bindChangeEventHandler('.hourly-rate-change', employeeHourlyRateChangeHandler);
 
     function getBase64(file, selectorId, stringContainerId) {
        var reader = new FileReader();
@@ -6989,7 +6974,7 @@ $(document).ready(function () {
        };
     }
 
-    $('#input-logo').change(function (event) {
+    bindChangeEventHandler('#input-logo', function (event) {
         // File input has changed
 
         if($('#input-logo').get(0).files.length > 0){
@@ -7006,11 +6991,11 @@ $(document).ready(function () {
     })
 
 
-    $('#id_first_financial_year').change(financialPeriodChangeHandler);
+    bindChangeEventHandler('#id_first_financial_year', financialPeriodChangeHandler);
 
-    $('#id_first_financial_year_month').change(financialPeriodChangeHandler);
+    bindChangeEventHandler('#id_first_financial_year_month', financialPeriodChangeHandler)
 
-    $('#id_projection_years').change(financialPeriodChangeHandler);
+    bindChangeEventHandler('#id_projection_years', financialPeriodChangeHandler)
 
     function financialPeriodChangeHandler(event){
         // check if first month is set
@@ -7087,7 +7072,7 @@ $(document).ready(function () {
     }
 
     // update all selects...
-    $('select').change(function (index) {
+    bindChangeEventHandler('select', function (index) {
         var val = $(this).val();
         $.each($(this).children('option'), function (index, obj) {
             //console.log($(obj.val()))
